@@ -8,6 +8,7 @@ import Home from '../home.js';
 import News from '../news.js';
 import Contact from '../contact.js';
 import Users from '../users.js';
+import './menu.css'
 
  
 class Menu extends Component {
