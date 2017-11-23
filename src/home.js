@@ -16,10 +16,10 @@ class Home extends React.Component {
 
 	const operations = <Button>+更多</Button>;
 	 return (
-    	<div className="home-content">
+    	<div className="container home-content">
 	      <div className="news">
-	      <Row>
-		      <div className="news-left">
+	      <div className="row">
+		      <div className="col-sm-4 ">
 		        <Carousel autoplay>
 		           <div><img src={top1} className="aligncenter" alt="top1" /></div>
 		           <div><img src={top2} className="aligncenter" alt="top2" /></div>
@@ -27,7 +27,7 @@ class Home extends React.Component {
 		        </Carousel>
 		      </div>
 		      
-		      <div className="news-right">
+		      <div className="col-sm-4">
 			    <Tabs tabBarExtraContent={operations} className="tab-news">
 				    <TabPane tab="最新" key="1"></TabPane>
 				    <TabPane tab="新闻" key="2"></TabPane>
@@ -35,7 +35,7 @@ class Home extends React.Component {
 	  		    </Tabs>
 
 		      </div>
-		      </Row>
+		      </div>
 	      </div>
       </div>
     );
