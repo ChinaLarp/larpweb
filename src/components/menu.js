@@ -25,13 +25,6 @@ class Menu extends Component {
 			<li className='verticalline' ></li>
             <li><NavLink to="/Loginscreen">用户登录</NavLink></li>
           </ul>
-          <div className="content">
-            <Route exact path="/" component={Home}/>
-            <Route path="/news" component={News}/>
-            <Route path="/users" component={Users}/>
-            <Route path="/contact" component={Contact}/>
-            <Route path="/Loginscreen" component={Loginscreen}/>
-          </div>
         </div>
       </HashRouter>
     );

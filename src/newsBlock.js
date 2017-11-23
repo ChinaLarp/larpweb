@@ -7,7 +7,7 @@ import axios from 'axios';
 import Moment from 'moment';
 import {Card} from 'antd';
 import { Link } from 'react-router-dom';
-
+import './newsBlock.css'
  
 class NewsBlock extends React.Component {
   constructor(){
@@ -46,8 +46,8 @@ class NewsBlock extends React.Component {
         return (
 
               <li key={index}>
-              <Link to={link}>{newsItem.title}</Link>
-              <span>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
+              <Link to={link} className='link'>{newsItem.title}</Link>
+              <span className='time'>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
               </li>
               
     
@@ -56,7 +56,7 @@ class NewsBlock extends React.Component {
     }
 
     return (
-      <Card>
+      <Card className='bodyStyle bodyStruc'>
         <ul>{newsList}</ul>
       </Card>
     )

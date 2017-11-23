@@ -1,0 +1,31 @@
+.panel {
+  	background: #ffff;
+  	font-size: 14px;
+}
+.bodyStruc{
+	background: grey;
+	height: 280px;
+}
+
+ul {
+	
+	font-size: 16px;
+}
+
+
+li{
+  padding: 10px 10px 10px 0;
+
+}
+
+li .link{
+	float: left;
+	color:#fff;
+	text-align: top;
+}
+
+li .time{
+  float: right;
+  color: white;
+  width: 100px;
+}
