@@ -15,7 +15,7 @@ export default class NewsDetail extends React.Component {
     //const url = 'https://jsonplaceholder.typicode.com/users';
     // in axios access data with .data
     console.log(this.props.match.params._id)
-    axios.get('https://usbackendwjn704.larpxiaozhushou.tk/api/web/' +this.props.match.params._id)
+    axios.get('https://backend.bestlarp.com/api/web/' +this.props.match.params._id)
       .then(response => {
       	console.log(response.data)
         this.setState({
