@@ -18,7 +18,7 @@ class Home extends React.Component {
   		const operations = <div><a>+更多</a></div>;
   		
   		var tabBarStyle = {
-  			backgroundColor:"orange"
+  			color:"orange"
 		};
 
 	
@@ -36,7 +36,7 @@ class Home extends React.Component {
 		      
 		      <div className="col-sm-6">
 		      	<Tabs tabBarExtraContent={operations} className='navbar-default panel'>
-				    <TabPane tab="最新" key="1" className=''><NewsBlock count={1} type='latest' /></TabPane>
+				    <TabPane tab="最新" key="1" className='panel'><NewsBlock count={1} type='latest' /></TabPane>
 				    <TabPane tab="新闻" key="2"><NewsBlock count={1} type='news' /></TabPane>
 				    <TabPane tab="活动" key="3"><NewsBlock count={1} type='activity' /></TabPane>
 	  		    </Tabs>

@@ -5,62 +5,78 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Moment from 'moment';
-import {Card} from 'antd';
-import { Link } from 'react-router-dom';
+import NewsBlock from './newsBlock.js';
+import {Tabs, Pagination} from 'antd';
 
  
-class NewsBlock extends React.Component {
+class News extends React.Component {
   constructor(){
     super();
     this.state = {
-      data:'',
-      loading: true
+      totalNews:null,
     };
   }
 
-  componentDidMount(){
-    //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    //const url = 'https://jsonplaceholder.typicode.com/users';
-    // in axios access data with .data
-    axios.get('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&count=' +this.props.count)
+
+  render() {
+    const TabPane = Tabs.TabPane;
+    
+      var newsStyle = {
+        alignSelf: 'stretch',
+        display: "flex",
+        justifyContent:"center"
+      };
+      // use the count of items from NewsBlock to replace following variables
+      var totalLatest = 10;
+      //var totalNews = 0;
+      var totalActivities = 20;
+      var types = ['latest', 'news', 'activity'];
+
+      
+        axios.get('https://backend.bestlarp.com/api/web?type='+types[1])
       .then(response => {
+        //totalNews=response.data.length
+        //console.log('https://backend.bestlarp.com/api/web?type='+types[1])
+        //
         this.setState({
-          data: response.data,
-          loading: false
+          totalNews: response.data.length
         });
       })
       .catch(error => {
         console.log(error);
       });
-  }
-  render() {
-        let newsList;
-        Moment.locale('en');
 
-    if (this.state.loading==true) {
-      newsList= <div>'Loading'</div>;
-    } else { 
-      newsList = this.state.data.map((newsItem, index) => {
-      var link='/details/' + newsItem._id;
-        if (newsItem.type=='news'||newsItem.type=='activity'||newsItem.type=='latest'){
-        return (
 
-              <li key={index}>
-              <Link to={link}>{newsItem.title}</Link>
-              <span>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
-              </li>
-              
-    
-        );}
-      });
-    }
 
-    return (
-      <Card>
-        <ul>{newsList}</ul>
-      </Card>
-    )
-  }
+      
+    return(
+        <div className='container' style={newsStyle}>
+          
+            <div className="col-sm-10">
+              <Tabs className='navbar-default panel'>
+                <TabPane tab="最新" key="1" className='panel'><NewsBlock count={this.state.totalNews} type='latest' />
+                <Pagination total={this.state.totalNews} 
+                showTotal={total => 'Total '+total+' items'}
+                pageSize={20}
+                defaultCurrent={1}/>
+                </TabPane>
+                <TabPane tab="新闻" key="2"><NewsBlock count={this.state.totalNews} type='news' />
+                <Pagination total={this.state.totalNews} 
+                showTotal={total => 'Total '+total+' items'}
+                pageSize={20}
+                defaultCurrent={1}/>
+                </TabPane>
+                <TabPane tab="活动" key="3"><NewsBlock count={this.state.totalNews} type='activity' />
+                <Pagination total={this.state.totalNews} 
+                showTotal={total => 'Total '+total+' items'}
+                pageSize={20}
+                defaultCurrent={1}/></TabPane>
+              </Tabs>
+            </div>
+          
+        </div>
+      )
+ }
 }
  
-export default NewsBlock;
+export default News;

@@ -10,8 +10,8 @@ import { Link } from 'react-router-dom';
 import './newsBlock.css'
  
 class NewsBlock extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       data:'',
       loading: true
@@ -22,8 +22,10 @@ class NewsBlock extends React.Component {
     //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
     //const url = 'https://jsonplaceholder.typicode.com/users';
     // in axios access data with .data
-    axios.get('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&count=' +this.props.count)
+    axios.get('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
       .then(response => {
+        console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
+        console.log(response.data.length)
         this.setState({
           data: response.data,
           loading: false
@@ -45,7 +47,7 @@ class NewsBlock extends React.Component {
         if (newsItem.type=='news'||newsItem.type=='activity'||newsItem.type=='latest'){
         return (
 
-              <li key={index}>
+              <li key={index} id='newsItem'>
               <Link to={link} className='link'>{newsItem.title}</Link>
               <span className='time'>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
               </li>
@@ -57,7 +59,7 @@ class NewsBlock extends React.Component {
 
     return (
       <Card className='bodyStyle bodyStruc'>
-        <ul>{newsList}</ul>
+        <ul id='newsList'>{newsList}</ul>
       </Card>
     )
   }

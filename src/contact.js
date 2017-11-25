@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import wechatCode from './assets/img/wechat_erCode.jpg';
  
 class Contact extends React.Component {
+
+  handleClick(){
+    console.log('this is:', this);
+  }
+
   render() {
     var wechatStyle = {
               paddingTop: 20,
@@ -44,7 +49,7 @@ class Contact extends React.Component {
                       <span className="help-block"><p id="characterLeft" className="help-block ">You have reached the limit</p></span>                    
                     </div>
                       
-                  <button type="button" id="submit" name="submit" className="btn btn-primary pull-right">Submit Form</button>
+                  <button type="button" id="submit" name="submit" className="btn btn-primary pull-right" onClick={(e) => this.handleClick(e)}>Submit Form</button>
                   </form>
               </div>
           </div>
