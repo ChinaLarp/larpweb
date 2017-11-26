@@ -36,9 +36,9 @@ class Home extends React.Component {
 		      
 		      <div className="col-sm-6">
 		      	<Tabs tabBarExtraContent={operations} className='navbar-default panel'>
-				    <TabPane tab="最新" key="1" className='panel'><NewsBlock count={1} type='latest' /></TabPane>
-				    <TabPane tab="新闻" key="2"><NewsBlock count={1} type='news' /></TabPane>
-				    <TabPane tab="活动" key="3"><NewsBlock count={1} type='activity' /></TabPane>
+				    <TabPane tab="最新" key="1" className='panel'><NewsBlock count={5} type='news,activity'/></TabPane>
+				    <TabPane tab="新闻" key="2"><NewsBlock count={5} type='news' /></TabPane>
+				    <TabPane tab="活动" key="3"><NewsBlock count={5} type='activity' /></TabPane>
 	  		    </Tabs>
 		     </div>
 	      </div>

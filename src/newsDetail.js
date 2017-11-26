@@ -10,12 +10,14 @@ export default class NewsDetail extends React.Component {
     };
   }
 
+
+
   componentDidMount(){
-    //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    //const url = 'https://jsonplaceholder.typicode.com/users';
+    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
+    //const url = 'https://backend.bestlarp.com/api/web';
     // in axios access data with .data
     console.log(this.props.match.params._id)
-    axios.get('https://backend.bestlarp.com/api/web/' +this.props.match.params._id)
+    axios.get(url+'/' +this.props.match.params._id)
       .then(response => {
       	console.log(response.data)
         this.setState({
@@ -34,6 +36,20 @@ export default class NewsDetail extends React.Component {
 
   render() {
   	let itemList =[]
+  	    var newsDetailtStyle = {
+          fontSize: 18,
+          color:"#fff",
+          backgroundColor:"#888",
+          alignText:"center",
+        };
+
+      var newsStyle = {
+        alignSelf: 'stretch',
+        display: "flex",
+        justifyContent:"center",
+
+      };
+
 
   	if (!this.state.newsItem.content) {
       itemList= <div>'Loading'</div>;
@@ -42,7 +58,7 @@ export default class NewsDetail extends React.Component {
       	if (item.type==="text"){
 			return (
 			<li key={index}>
-              {item.content}
+               {item.content }
             </li>
         )
 
@@ -59,9 +75,13 @@ export default class NewsDetail extends React.Component {
     
 
     return (
-      <div>
-        <ul>{itemList}</ul>
-       </div>
+           <div className='container' style={newsStyle}>
+          
+            <div className="col-sm-8">
+            <ul className style={newsDetailtStyle}>{itemList}</ul>
+            </div>
+          
+        </div>
     )
 
   }

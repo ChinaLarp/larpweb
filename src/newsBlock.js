@@ -19,13 +19,14 @@ class NewsBlock extends React.Component {
   }
 
   componentDidMount(){
+    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
+    //const url = 'https://backend.bestlarp.com/api/web';
     //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    //const url = 'https://jsonplaceholder.typicode.com/users';
     // in axios access data with .data
-    axios.get('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
+    axios.get(url+'?type__in=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
       .then(response => {
-        console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-        console.log(response.data.length)
+        //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
+        //console.log(response.data.length)
         this.setState({
           data: response.data,
           loading: false
