@@ -53,29 +53,34 @@ class Register extends Component {
     );
   }
   handleClick(event){
-    var apiBaseUrl = "";
+    var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
     console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.password);
     //To be done:check for empty values before hitting submit
     var self = this;
     var payload={
-    "first_name": this.state.first_name,
-    "last_name":this.state.last_name,
     "email":this.state.email,
-    "password":this.state.password
+    "password":this.state.password,
+    "firstname": this.state.first_name,
+    "lastname":this.state.last_name
     }
-    axios.post(apiBaseUrl+'/register', payload)
+    axios.post(apiBaseUrl+'/user', payload)
    .then(function (response) {
      console.log(response);
      if(response.data.code == 200){
       //  console.log("registration successfull");
-       var loginscreen=[];
+      self.props.addFlashMessage({
+            type: 'success',
+            text: 'You signed up successfully. Welcome!'
+          });
+          self.context.router.push('/');
+       /*var loginscreen=[];
        loginscreen.push(<Login parentContext={this}/>);
        var loginmessage = "Not Registered yet.Go to registration";
        self.props.parentContext.setState({loginscreen:loginscreen,
        loginmessage:loginmessage,
        buttonLabel:"Register",
        isLogin:true
-        });
+     });*/
      }
    })
    .catch(function (error) {
@@ -86,4 +91,13 @@ class Register extends Component {
 const style = {
   margin: 15,
 };
+Register.propTypes = {
+  userSignupRequest: React.PropTypes.func.isRequired,
+  addFlashMessage: React.PropTypes.func.isRequired,
+  isUserExists: React.PropTypes.func.isRequired
+}
+
+Register.contextTypes = {
+  router: React.PropTypes.object.isRequired
+}
 export default Register;
