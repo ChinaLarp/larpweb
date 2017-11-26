@@ -3,10 +3,22 @@ import Header from './components/header.js'
 import Footer from './components/footer.js'
 import Menu from './components/menu.js'
 import './App.css';
-import Loginscreen from './Loginscreen'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
+import { combineReducers } from 'redux';
+import { sessionReducer } from 'redux-react-session';
+import { createStore } from 'redux';
+import { sessionService } from 'redux-react-session';
+const reducers = {
+  // ... your other reducers here ...
+  session: sessionReducer
+};
+const reducer = combineReducers(reducers);
+const store = createStore(reducer)
+const options = { refreshOnCheckAuth: true, redirectPath: '/home', driver: 'COOKIES' };
+sessionService.initSessionService(store, options)
+  .then(() => console.log('Redux React Session is ready and a session was refreshed from your storage'))
+  .catch(() => console.log('Redux React Session is ready and there is no session in your storage'));
+
 injectTapEventPlugin();
 
 class App extends Component {
