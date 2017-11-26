@@ -4,14 +4,14 @@ import {
   NavLink,
   HashRouter
 } from 'react-router-dom';
-import Home from '../home.js';
-import News from '../news.js';
-import Contact from '../contact.js';
-import Users from '../users.js';
-import Loginscreen from '../Loginscreen.js';
+import Home from '../pages/home.js';
+import News from '../pages/news.js';
+import Contact from '../pages/contact.js';
+import Users from '../pages/users.js';
+import Loginscreen from '../pages/Loginscreen.js';
 import './menu.css'
 
- 
+
 class Menu extends Component {
   render() {
     return (
@@ -30,5 +30,5 @@ class Menu extends Component {
     );
   }
 }
- 
+
 export default Menu;

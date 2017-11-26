@@ -5,6 +5,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
+//import { userSignupRequest, isUserExists } from './actions/signupActions';
+import { addFlashMessage } from '../actions/flashmessages.js';
+
 class Register extends Component {
   constructor(props){
     super(props);
@@ -68,7 +71,7 @@ class Register extends Component {
      console.log(response);
      if(response.data.code == 200){
       //  console.log("registration successfull");
-      self.props.addFlashMessage({
+      addFlashMessage({
             type: 'success',
             text: 'You signed up successfully. Welcome!'
           });
@@ -91,7 +94,7 @@ class Register extends Component {
 const style = {
   margin: 15,
 };
-Register.propTypes = {
+/*Register.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired,
   isUserExists: React.PropTypes.func.isRequired
@@ -99,5 +102,5 @@ Register.propTypes = {
 
 Register.contextTypes = {
   router: React.PropTypes.object.isRequired
-}
+}*/
 export default Register;

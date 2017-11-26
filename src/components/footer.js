@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './footer.css';
 import FooterBg from './footer-background-city.jpg'
 import {HashRouter, NavLink} from 'react-router-dom';
-import Contact from '../contact.js';
+import Contact from '../pages/contact.js';
 
 class Footer extends Component{
 	render(){
@@ -17,7 +17,7 @@ class Footer extends Component{
 		};
 
 		var copyrightStyle = {
-			color:"#ffffff", 
+			color:"#ffffff",
 			fontSize:16,
 			 padding:20
 		}
@@ -25,13 +25,13 @@ class Footer extends Component{
 		  	<div style={footerStyle}>
 		  	<HashRouter>
 		  	  <div style={copyrightStyle}>
-		  	  
 
-		      Copyright © www.larpxiaozhushou.tk |  
+
+		      Copyright © www.larpxiaozhushou.tk |
 		      <NavLink to="/contact">关于我们</NavLink>
-		      | 备案号 | 
+		      | 备案号 |
 		      <a href=''>APP</a>
-		      
+
 		      <br/>表演是一门艺术,推理是一种态度。
 		      <br/>健康游戏忠告：抵制不良游戏 拒绝盗版游戏 注意自我保护 谨防上当受骗 适度游戏益脑 沉迷游戏伤身 合理安排时间  享受健康生活
 		      <br/>本网站游戏由 LARP公司 开发运营。
