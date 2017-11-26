@@ -9,7 +9,7 @@ import Users from './pages/users.js';
 import './App.css';
 import Loginscreen from './pages/Loginscreen'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-//import FlashMessagesList from './components/flashmessagelist';
+import FlashMessagesList from './components/flashmessagelist';
 import {
   Route,
   NavLink,
@@ -28,6 +28,7 @@ class App extends Component {
       <div className="App">
         <Header class="jumbotron" style={{ position: 'fixed', width: '100%' }}/>
         <Menu class="container col-sm-8"/>
+        <FlashMessagesList />
         <HashRouter>
           <div className="content">
             <Route exact path="/" component={Home}/>
