@@ -60,7 +60,7 @@ class ScriptUpload extends React.Component {
     axios.post(url,{
       type:"game",
       name:self.state.name,
-      description: self.state.description,
+      descripion: self.state.description,
       category:self.state.category,
       characterlist:self.state.characterlist,
     }).then(response => {
@@ -71,6 +71,7 @@ class ScriptUpload extends React.Component {
       .catch(error => {
         console.log(error);
       });
+      
 
     alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
   }
