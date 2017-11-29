@@ -6,6 +6,7 @@ import Home from './pages/home.js';
 import News from './pages/news.js';
 import Contact from './pages/contact.js';
 import Users from './pages/users.js';
+import ScriptUpload from './pages/scriptUpload.js'
 import './App.css';
 import Loginscreen from './pages/Loginscreen'
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -34,6 +35,7 @@ class App extends Component {
             <Route exact path="/" component={Home}/>
             <Route path="/news" component={News}/>
             <Route path="/users" component={Users}/>
+            <Route path="/scriptUpload" component={ScriptUpload}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/Loginscreen" component={Loginscreen}/>
 			      <Route path="/details/:_id" component={NewsDetail}></Route>
