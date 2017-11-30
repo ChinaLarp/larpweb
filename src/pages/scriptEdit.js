@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 //import TextField from 'material-ui/TextField';
 import axios from 'axios';
 //import RaisedButton from 'material-ui/RaisedButton';
@@ -8,17 +10,8 @@ class ScriptUpload extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      name:'',  //Game name
-      id:'',
-      playernumber: null,
-      malenumber: 1,
-      femalenumber: 0,
-      description:'',
-      actionpoit: '',
-      category: '',
-      mapurl: '',
-      cluemethod:'',
-      characterlist: [{ description: '',sex: '男', name: '', id: ''}],
+      game_id:'5a1f4f287cf1d10c48fc4b36',
+      character_id: []
     };
   }
 
@@ -127,63 +120,26 @@ class ScriptUpload extends React.Component {
   render() {
 
     return (
-    	<div className="container">
+      <Tabs>
+        <TabList>
+          <Tab>故事剧本</Tab>
+          <Tab>人物剧本</Tab>
+        </TabList>
 
-      <form className="form-group" onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          placeholder="Game name"
-          value={this.state.name}
-          onChange={this.handleNameChange}
-        />
-        <input
-          type="text"
-          placeholder="Game id"
-          value={this.state.id}
-          onChange={this.handleidChange}
-        />
-        <input
-          type="text"
-          placeholder="Game Description"
-          value={this.state.description}
-          onChange={this.handleDescriptionChange}
-        />
-        <input
-          type="text"
-          placeholder="Game Category"
-          value={this.state.category}
-          onChange={this.handleCategoryChange}
-        />
-
-        <h4>Characters List, 男性下限：{this.state.malenumber}，女性下限：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
-
-        {this.state.characterlist.map((characterlist, idx) => (
-          <div className="characterlist">
-          <span>{idx}</span>
-          <input
-            type="text"
-            placeholder={`Character #${idx + 1} name`}
-            value={characterlist.name}
-            onChange={this.handleCharacterNameChange(idx)}
-          />
-          <span>{characterlist.sex}</span>
-            <input
-              type="text"
-              placeholder={`Character #${idx + 1} description`}
-              value={characterlist.description}
-              onChange={this.handleCharacterDescriptionChange(idx)}
-            />
-            <button type="button" onClick={this.handleRemoveCharacter(idx)} className="small">-</button>
-          </div>
-        ))}
-        <button type="button" onClick={this.handleAddMaleCharacter} className="small">Add Male Character</button>
-        <button type="button" onClick={this.handleAddFemaleCharacter} className="small">Add Female Character</button>
-        <button type="button" onClick={this.handleAddUnisexCharacter} className="small">Add Unisex Character</button>
-        <button>Save</button>
-        <button>Next</button>
-      </form>
-
-      </div>
+        <TabPanel>
+          <h2>故事剧本编辑器</h2>
+        </TabPanel>
+        <TabPanel>
+            <Tabs>
+                <TabList>
+                  <Tab>Ed</Tab>
+                </TabList>
+                <TabPanel>
+                  <h2>Ed的剧本编辑</h2>
+                </TabPanel>
+            </Tabs>
+        </TabPanel>
+      </Tabs>
     )
   }
 }
