@@ -6,7 +6,7 @@ import axios from 'axios';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-class ScriptUpload extends React.Component {
+class ScriptEdit extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -15,8 +15,53 @@ class ScriptUpload extends React.Component {
       clueinfo:[],
       plotinfo:[],
       instructinfo:[],
-      characterlist: []
+      characterlist: [],
+      cluemethod:'',
     };
+  }
+
+  handleSubmit = (evt) =>{
+    let self = this;
+        const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+    //const url = 'https://backend.bestlarp.com/api/app';
+    axios.put(url+'/'+this.props._id,{
+      clueinfo:self.state.clueinfo,
+      plotinfo:self.state.plotinfo,
+      instructinfo:self.state.instructinfo,
+      characterlist:self.state.characterlist,
+      cluemethod:self.state.cluemethod,
+    }).then(response => {
+        //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
+        console.log("post request submitted" + this.state.name)
+        return(<div><li>Game edited, please click next button to continue add more details.</li></div>);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      for (var i=0;i<self.state.characterlist.length;i++)
+          {
+            axios.put(url,{
+            gamename: self.state.name,
+            gameid: self.state.id,
+            characterid: i,
+            charactername: self.state.characterlist[i].name,
+            characterdescription: self.state.characterlist[i].description,
+            charactersex: self.state.characterlist[i].sex
+          }).then(response => {
+              //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
+              //console.log("submitted" + self.state.characterlist[i].name)
+              //return(<div><li>Game created, please click next button to continue add more details.</li></div>);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          }
+
+
+
+
+    alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
+ 
   }
   handleAddInstruction = () => {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ''}]) });
@@ -67,23 +112,44 @@ class ScriptUpload extends React.Component {
 
     this.setState({ characterlist: newcharacterlist });
   }
+
+  // !!!Debug required
   handlecharacterinfoContentChange = (idx,iidx) => (evt) => {
+   var contentList = evt.target.value.split('\n');
+
     const newcharacterinfo = this.state.characterlist[idx].characterinfo.map((characterinfo, sidx) => {
       if (iidx !== sidx) return characterinfo;
-      return { ...characterinfo, type: evt.target.value };
+      return { ...characterinfo, content: contentList };
     });
+
+    console.log(contentList)
     const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
       return { ...characterlist, characterinfo: newcharacterinfo };
     });
 
     this.setState({ characterlist: newcharacterlist });
+    console.log(this.state.characterlist[idx].characterinfo.content)
   }
 
   handleclueContentChange = (idx,iidx) => (evt) => {
     const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
       if (iidx !== sidx) return clue;
       return { ...clue, content: evt.target.value };
+    });
+
+    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, clues: newclueinfo };
+    });
+
+    this.setState({ clueinfo: newcluelist });
+  }
+
+  handleclueNumberChange = (idx,iidx) => (evt) => {
+    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+      if (iidx !== sidx) return clue;
+      return { ...clue, cluenumber: evt.target.value };
     });
 
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
@@ -106,6 +172,40 @@ class ScriptUpload extends React.Component {
 
     this.setState({ clueinfo: newcluelist });
   }
+  handleClueMethodChange= (evt) => {
+    this.setState({cluemethod: evt.target.value });
+  }
+  handleBanLocationChange = (idx) => (evt) => {
+    const newCharacter = this.state.characterlist.map((character, sidx) => {
+      if (idx !== sidx) return character;
+      return { ...character, banlocation: evt.target.value };
+    });
+
+    this.setState({ characterlist: newCharacter });
+  }
+
+  //??? Debug Required
+  handleRemoveClues= (idx,iidx) => () => {
+    var newclueinfo = this.state.clueinfo[idx].clues.filter((clue, sidx) => iidx !== sidx);
+    console.log(newclueinfo);
+
+    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+      if (idx !== sidx) return { ...clueinfo, clues: newclueinfo };
+    });
+
+    this.setState({ clueinfo: newcluelist });
+  }
+
+  handleAddClues=(idx)=>()=>{
+    const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:'', image:'', cluelocation: idx, passcode: '',}]);
+    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, clues: newclueinfo };
+    });
+
+    this.setState({ clueinfo: newcluelist });
+  }
+  
 
 
 
@@ -139,6 +239,7 @@ class ScriptUpload extends React.Component {
     return (
       <Tabs>
         <TabList>
+          <button onClick={this.handleSubmit}>save</button>
           <Tab>{this.state.gameinfo.name}</Tab>
           <Tab>人物剧本</Tab>
           <Tab>游戏线索</Tab>
@@ -148,7 +249,7 @@ class ScriptUpload extends React.Component {
         <TabPanel>
           <form className="form-group" onSubmit={this.handleSubmit}>
           <h4>搜证模式</h4>
-          <select>
+          <select onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
             <option value="replace">返还随机</option>
@@ -193,10 +294,13 @@ class ScriptUpload extends React.Component {
             </TabList>
             {this.state.characterlist.map((characterlist, idx) => (
               <TabPanel>
+              <form className="form-group" onSubmit={this.handleSubmit}>
+
               <div>
               <h4>禁止搜证地点</h4>
+
                 <span>{characterlist.banlocation}</span>
-                <select selected={characterlist.banlocation}>
+                <select onchange={this.handleBanLocationChange(idx)}>
                 {this.state.clueinfo.map((cluelocation, iidx) => (
                   <option selected="{characterlist.banlocation==cluelocation.index?selected:disabled}" value="{cluelocation.index}">{cluelocation.name}</option>
                 ))}
@@ -216,6 +320,7 @@ class ScriptUpload extends React.Component {
                 </div>
               ))}
               </div>
+              </form>
               </TabPanel>
             ))}
             </Tabs>
@@ -232,33 +337,47 @@ class ScriptUpload extends React.Component {
           </TabList>
           {this.state.clueinfo.map((cluelocation, idx) => (
             <TabPanel>
-            <h4>线索列表</h4>
+            <h3>线索列表</h3><h4>地点序号：{idx};</h4>
             {cluelocation.clues.map((clue, iidx) => (
               <div>
-              <input
+              <form className="form-group" onSubmit={this.handleSubmit}>
+              <table class="table table-striped">
+                <tr className="tableHead">
+                  
+                  <th>线索序号</th>
+                  <th>文字内容</th>
+                  <th>图片地址</th>
+                  <th>删除</th>
+                </tr>
+                <tr>
+                  <th><input
                 type="text"
+                placeholder="序号" className="shortText"
+                value={clue.cluenumber}
+                onChange={this.handleclueNumberChange(idx,iidx)}
+              /></th>
+                  <th><input
+                type="text" className="longText"
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
-              />
-              <input
-                type="text"
-                placeholder="序号"
-                value={clue.cluenumber}
-              />
-              <input
-                type="text"
-                placeholder="地点"
-                value={iidx}
-              />
-              <input
-                type="text"
+              /></th>
+                  <th><input
+                type="text" className="clueImg"
                 placeholder="图片地址"
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
-              />
+              /></th>
+              <th>
+               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(iidx)}>-</button>
+              </th>
+                </tr>
+              </table>
+              </form>
               </div>
             ))}
+
+        <button type="button" onClick={this.handleAddClues(idx)} className="small">添加新线索</button>
             </TabPanel>
           ))}
           </Tabs>
@@ -269,4 +388,4 @@ class ScriptUpload extends React.Component {
   }
 }
 
-export default ScriptUpload;
+export default ScriptEdit;

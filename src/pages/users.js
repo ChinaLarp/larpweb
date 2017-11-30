@@ -51,7 +51,7 @@ class Users extends React.Component {
         <div className='container' style={usersStyle}>
             <div className="col-sm-10">
               <Tabs tabBarExtraContent={operations} className='navbar-default panel'>
-                <TabPane tab="游戏" key="1"><GameBlock  type='game' />
+                <TabPane tab="我的剧本" key="1"><GameBlock  type='game' />
                 <Pagination total={this.state.itemCount} 
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={20}

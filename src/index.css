@@ -48,7 +48,7 @@ a :hover {
   color: #0099FF;
 }
 
-form input {
+input {
   display: block;
   width: 100%;
   font-size: 20px;
@@ -58,11 +58,11 @@ form input {
   border: 1px solid #ddd;
 }
 
-form input.error {
+input.error {
   border-color: red;
 }
 
-form button {
+ button {
   display: block;
   width: 100%;
   appearance: none;
@@ -75,16 +75,16 @@ form button {
   margin-top: 30px;
 }
 
-form button:hover {
+ button:hover {
   background-color: #669509;
 }
 
-form button:disabled {
+button:disabled {
   background-color: #dbf99f;
   color: #333;
 }
 
-form button.small {
+ button.small {
   display: inline-block;
   width: auto;
   padding: 0 20px;
@@ -92,7 +92,7 @@ form button.small {
   font-size: 14px;
 }
 
-form button.small:hover {
+button.small:hover {
   background-color: #999;
 }
 
@@ -152,5 +152,26 @@ form button.small:hover {
 }
 .uploadPanel h4{
   margin-bottom: 10px;
+}
+
+.shortText{
+  width: 100px;
+  font-size: 14px;
+}
+.longText{
+  width: 720px;
+  font-size: 14px;
+  margin: 0;
+}
+.clueImg{
+  width: 330px;
+  font-size: 14px;
+  margin: 0;
+}
+#deleteButton{
+  height: 30px;
+  margin-top: 0;
+  margin:0;
+  text-align: center;
 }
 

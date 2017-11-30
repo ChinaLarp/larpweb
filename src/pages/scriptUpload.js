@@ -130,7 +130,9 @@ class ScriptUpload extends React.Component {
         this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '无性别', name: '', id: this.state.characterlist.length+1}]) });
       //console.log(this.state.characterlist);
       }
-  handleRemoveCharacter = (idx) => () => {
+
+    //!!!Debug Required
+    handleRemoveCharacter = (idx) => () => {
     
     //this.setState({ characterlist: this.state.characterlist.filter((s, sidx) => idx !== sidx) }).then(()=>{    
       var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx);
@@ -152,7 +154,7 @@ class ScriptUpload extends React.Component {
   }
   
   handleRemoveClueLocation = (idx) => () => {
-    this.setState({ shareholders: this.state.cluelocation.filter((s, sidx) => idx !== sidx) });
+    this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => idx !== sidx) });
   }
 
   render() {
@@ -238,7 +240,7 @@ class ScriptUpload extends React.Component {
           <div className="characterlist">
           <table class="table table-striped">
           <tr className="tableHead">
-            <th>地点编号</th>
+            <th>编号</th>
             <th>搜证地点</th>
             <th>删除</th>
           </tr>
