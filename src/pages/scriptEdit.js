@@ -194,6 +194,15 @@ class ScriptUpload extends React.Component {
             {this.state.characterlist.map((characterlist, idx) => (
               <TabPanel>
               <div>
+              <h4>禁止搜证地点</h4>
+                <span>{characterlist.banlocation}</span>
+                <select selected={characterlist.banlocation}>
+                {this.state.clueinfo.map((cluelocation, iidx) => (
+                  <option selected="{characterlist.banlocation==cluelocation.index?selected:disabled}" value="{cluelocation.index}">{cluelocation.name}</option>
+                ))}
+                </select>
+              </div>
+              <div>
               <h4>角色背景</h4>
               {characterlist.characterinfo.map((characterinfo, iidx) => (
                 <div>
@@ -223,12 +232,6 @@ class ScriptUpload extends React.Component {
           </TabList>
           {this.state.clueinfo.map((cluelocation, idx) => (
             <TabPanel>
-            <h4>禁止角色</h4>
-            <select>
-            {this.state.characterlist.map((character, idx) => (
-                <option value="{character.characterid}">{character.charactername}</option>
-            ))}
-            </select>
             <h4>线索列表</h4>
             {cluelocation.clues.map((clue, iidx) => (
               <div>
