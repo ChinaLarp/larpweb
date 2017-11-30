@@ -5,6 +5,12 @@ import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
 import './home.css';
 import NewsBlock from './newsBlock.js';
+import News from './news.js';
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from 'react-router-dom';
 
 
 
@@ -15,8 +21,8 @@ class Home extends React.Component {
   render() {
 
   		const TabPane = Tabs.TabPane;
-  		const operations = <div><a>+更多</a></div>;
-
+        const operations = <HashRouter><button id="addButton"><NavLink id="editLink" to="/news">+更多</NavLink></button></HashRouter>;
+ 
   		var tabBarStyle = {
   			color:"orange"
 		};

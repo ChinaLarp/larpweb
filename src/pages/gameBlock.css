@@ -9,11 +9,12 @@
 .bodyStruc{
   background: #666;
   height: 280px;
+  font-size: 16px;
 }
 
 #gameList {
-  margin:-22px;
-  font-size: 16px;
+  margin:-60px;
+  font-size: 18px;
   border-color: #666;
 }
 
@@ -48,7 +49,7 @@
 }
 .gamelink:hover{
   color:orange;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .gamediscription{

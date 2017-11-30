@@ -8,6 +8,12 @@ import axios from 'axios';
 import Moment from 'moment';
 import GameBlock from './gameBlock.js';
 import {Tabs, Pagination} from 'antd';
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from 'react-router-dom';
+import ScriptUpload from './scriptUpload.js';
 
  
 class Users extends React.Component {
@@ -33,7 +39,7 @@ class Users extends React.Component {
 
   render(){
     const TabPane = Tabs.TabPane;
-    const operations = <div><a>创建新剧本</a></div>;
+    const operations = <HashRouter><button id="editButton"><NavLink id="editLink" to="/scriptUpload">创建新剧本</NavLink></button></HashRouter>;
  
       var usersStyle = {
         alignSelf: 'stretch',

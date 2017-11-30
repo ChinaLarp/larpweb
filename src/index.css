@@ -107,3 +107,50 @@ form button.small:hover {
   margin-left: 10px;
 }
 
+#editButton {
+  display: block;
+  width: 100%;
+  appearance: none;
+  border-radius: 5px;
+  background-color: #84c00c;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  height: 35px;
+}
+
+#editLink{
+  color: #fff;
+}
+
+#addButton{
+  appearance: none;
+  color: #eee;
+  border: none;
+  font-size: 16px;
+  height: 35px;
+}
+
+#editLink:hover{
+  color: orange;
+}
+
+.tableHead{
+  text-align: center;
+  margin: 0;
+  font-size: 18px;
+
+}
+.uploadPanel{
+  padding: 0, 20px;
+  margin-top: 30px;
+  border-top:  1px dashed #ddd;
+  text-align: center
+}
+.uploadPanel h3{
+  margin-top: 10px;
+}
+.uploadPanel h4{
+  margin-bottom: 10px;
+}
+
