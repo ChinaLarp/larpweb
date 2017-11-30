@@ -37,7 +37,7 @@ class App extends Component {
             <Route path="/news" component={News}/>
             <Route path="/users" component={Users}/>
             <Route path="/scriptUpload" component={ScriptUpload}/>
-            <Route path="/scriptEdit" component={scriptEdit}/>
+            <Route path="/scriptEdit/:_id" component={scriptEdit}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/Loginscreen" component={Loginscreen}/>
 			      <Route path="/details/:_id" component={NewsDetail}></Route>
