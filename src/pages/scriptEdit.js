@@ -24,15 +24,14 @@ class ScriptEdit extends React.Component {
     let self = this;
         const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
-    axios.put(url+'/'+this.props._id,{
-      clueinfo:self.state.clueinfo,
-      plotinfo:self.state.plotinfo,
-      instructinfo:self.state.instructinfo,
-      characterlist:self.state.characterlist,
-      cluemethod:self.state.cluemethod,
+    axios.put(url+'/'+self.state.game_id,{
+      cluelocation:self.state.clueinfo,
+      mainplot:self.state.plotinfo,
+      instruction:self.state.instructinfo,
+      cluemethod:self.state.cluemethod
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-        console.log("post request submitted" + this.state.name)
+        console.log("put game submitted" + this.state.name)
         return(<div><li>Game edited, please click next button to continue add more details.</li></div>);
       })
       .catch(error => {
@@ -40,16 +39,12 @@ class ScriptEdit extends React.Component {
       });
       for (var i=0;i<self.state.characterlist.length;i++)
           {
-            axios.put(url,{
-            gamename: self.state.name,
-            gameid: self.state.id,
-            characterid: i,
-            charactername: self.state.characterlist[i].name,
-            characterdescription: self.state.characterlist[i].description,
-            charactersex: self.state.characterlist[i].sex
+            axios.put(url+'/'+self.state.characterlist[i]._id,{
+              banlocation: self.state.characterlist[i].banlocation,
+              characterinfo: self.state.characterlist[i].characterinfo
           }).then(response => {
               //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-              //console.log("submitted" + self.state.characterlist[i].name)
+              console.log("put character submitted" + self.state.characterlist[i].name)
               //return(<div><li>Game created, please click next button to continue add more details.</li></div>);
             })
             .catch(error => {
@@ -57,11 +52,8 @@ class ScriptEdit extends React.Component {
             });
           }
 
+    alert(`Game saved: ${this.state.name} with ${this.state.characterlist.length} characters`);
 
-
-
-    alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
- 
   }
   handleAddInstruction = () => {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ''}]) });
@@ -129,7 +121,7 @@ class ScriptEdit extends React.Component {
     });
 
     this.setState({ characterlist: newcharacterlist });
-    console.log(this.state.characterlist[idx].characterinfo.content)
+    //console.log(this.state.characterlist[idx].characterinfo.content)
   }
 
   handleclueContentChange = (idx,iidx) => (evt) => {
@@ -173,7 +165,7 @@ class ScriptEdit extends React.Component {
     this.setState({ clueinfo: newcluelist });
   }
   handleClueMethodChange= (evt) => {
-    this.setState({cluemethod: evt.target.value });
+    this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: evt.target.value } });
   }
   handleBanLocationChange = (idx) => (evt) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
@@ -187,7 +179,7 @@ class ScriptEdit extends React.Component {
   //??? Debug Required
   handleRemoveClues= (idx,iidx) => () => {
     var newclueinfo = this.state.clueinfo[idx].clues.filter((clue, sidx) => iidx !== sidx);
-    console.log(newclueinfo);
+    //console.log(newclueinfo);
 
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return { ...clueinfo, clues: newclueinfo };
@@ -196,7 +188,7 @@ class ScriptEdit extends React.Component {
     this.setState({ clueinfo: newcluelist });
   }
 
-  handleAddClues=(idx)=>()=>{
+  handleAddClues = (idx) => () => {
     const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:'', image:'', cluelocation: idx, passcode: '',}]);
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
@@ -205,15 +197,11 @@ class ScriptEdit extends React.Component {
 
     this.setState({ clueinfo: newcluelist });
   }
-  
-
-
-
-    componentDidMount(){
-      const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+  componentDidMount(){
+      const url = "https://usbackendwjn704.larpxiaozhushou.tk/api/app";
       //const url = 'https://backend.bestlarp.com/api/web';
       // in axios access data with .data
-      console.log(this.props.match.params._id)
+      //console.log(this.props.match.params._id)
       this.setState({ game_id: this.props.match.params._id });
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
@@ -223,7 +211,7 @@ class ScriptEdit extends React.Component {
           this.setState({ plotinfo: response.data.mainplot});
           axios.get(url+'?type=character&gamename=' +response.data.name)
             .then(response => {
-            	console.log(response.data)
+            	//console.log(response.data)
               this.setState({ characterlist: response.data });
             })
             .catch(error => {
@@ -249,7 +237,7 @@ class ScriptEdit extends React.Component {
         <TabPanel>
           <form className="form-group" onSubmit={this.handleSubmit}>
           <h4>搜证模式</h4>
-          <select onChange={this.handleClueMethodChange}>
+          <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
             <option value="replace">返还随机</option>
@@ -298,12 +286,10 @@ class ScriptEdit extends React.Component {
 
               <div>
               <h4>禁止搜证地点</h4>
-
-                <span>{characterlist.banlocation}</span>
-                <select onchange={this.handleBanLocationChange(idx)}>
+                <select value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
                 {this.state.clueinfo.map((cluelocation, iidx) => (
-                  <option selected="{characterlist.banlocation==cluelocation.index?selected:disabled}" value="{cluelocation.index}">{cluelocation.name}</option>
-                ))}
+                   <option value={iidx.toString()}>{cluelocation.name}</option>
+                 ))}
                 </select>
               </div>
               <div>
@@ -343,7 +329,7 @@ class ScriptEdit extends React.Component {
               <form className="form-group" onSubmit={this.handleSubmit}>
               <table class="table table-striped">
                 <tr className="tableHead">
-                  
+
                   <th>线索序号</th>
                   <th>文字内容</th>
                   <th>图片地址</th>

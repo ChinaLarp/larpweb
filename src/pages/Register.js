@@ -7,7 +7,7 @@ import axios from 'axios';
 import Login from './Login';
 //import { userSignupRequest, isUserExists } from './actions/signupActions';
 import { addFlashMessage } from '../actions/flashmessages.js';
-
+import { userSignupRequest } from '../actions/signupActions';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -66,7 +66,20 @@ class Register extends Component {
     "firstname": this.state.first_name,
     "lastname":this.state.last_name
     }
-    axios.post(apiBaseUrl+'/user', payload)
+    userSignupRequest(payload)
+  .then(
+        () => {
+          console.log("callback")
+          addFlashMessage({
+            type: 'success',
+            text: 'You signed up successfully. Welcome!'
+          });
+          //this.context.router.push('/');
+        }
+        /*,
+        (err) => this.setState({ errors: err.response.data, isLoading: false })*/
+      );
+    /*axios.post(apiBaseUrl+'/user', payload)
    .then(function (response) {
      console.log(response);
      if(response.status == 200){
@@ -76,20 +89,14 @@ class Register extends Component {
             text: 'You signed up successfully. Welcome!'
           });
           //self.context.router.push('/');
-       /*var loginscreen=[];
-       loginscreen.push(<Login parentContext={this}/>);
-       var loginmessage = "Not Registered yet.Go to registration";
-       self.props.parentContext.setState({loginscreen:loginscreen,
-       loginmessage:loginmessage,
-       buttonLabel:"Register",
-       isLogin:true
-     });*/
+
      }
    })
    .catch(function (error) {
      console.log(error);
    });
-  }
+  }*/
+}
 }
 const style = {
   margin: 15,
