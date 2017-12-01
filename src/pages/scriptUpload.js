@@ -18,12 +18,28 @@ class ScriptUpload extends React.Component {
       category: '',
       mapurl: '',
       cluemethod:'',
-      characterlist: [{ description: '',sex: '女', name: '', id: 1}],
-      cluelocation:[{clues:[{content:'',passcode:'', cluenumber:'',cluelocation:''}], 
-      index:0, name:'', count:0 }],
+      characterlist: [{ description: '',sex: '女', name: '', id: 0}],
+      cluelocation:[{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:0}],
+      index:0, name:'', count:1 }],
+      mainplot:[{plotid: 0,plotname: "准备阶段",content: [{type: "请大家阅读已知内容。",content: ["准备阶段"]}]
+            },{plotid: 1,plotname: "集中讨论和搜证",content: [{type: "集中讨论和搜证",content: ["请侦探主持集中讨论和搜证"]}]
+            },{plotid: 2,plotname: "指认凶手",content: [{type: "指认凶手",content: ["请大家指认凶手。"]}]
+            },{plotid: 3,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
+          },{plotid: 4,plotname: "真相大白",content: [{type: "故事线",content: ["此处放真相"]}]}],
+      instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}]
     };
   }
-
+   fillArray=function(cluelocation) {
+    if (this.state.cluelocation.length == 0) return [];
+    var cluestatus=[]
+    for  (var i=0;i<this.state.cluelocation.length;i++) {
+      var a = [true];
+      while (a.length * 2 <= this.state.cluelocation[i].clues.length) a = a.concat(a);
+      cluestatus = cluestatus.concat([a]);
+    }
+    console.log(cluestatus)
+    return cluestatus;
+  }
   handleNameChange = (evt) => {
     this.setState({ name: evt.target.value });
   }
@@ -68,6 +84,7 @@ class ScriptUpload extends React.Component {
 
   handleSubmit = (evt) => {
   	let self=this;
+    this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
     const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
@@ -82,6 +99,9 @@ class ScriptUpload extends React.Component {
       category:self.state.category,
       characterlist:self.state.characterlist,
       cluelocation:self.state.cluelocation,
+      mainplot:self.state.mainplot,
+      instruction:self.state.instruction,
+      cluestatus:this.fillArray(this.state.cluelocation)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
         console.log("submitted" + this.state.name)
@@ -117,24 +137,24 @@ class ScriptUpload extends React.Component {
   }
 
   handleAddMaleCharacter = () => {
-    this.setState({ characterlist: this.state.characterlist.concat([{ description: '', sex: '男', name: '', id: this.state.characterlist.length+1}]) });
+    this.setState({ characterlist: this.state.characterlist.concat([{ description: '', sex: '男', name: '', id: this.state.characterlist.length}]) });
       this.setState({ malenumber: this.state.malenumber+1 });
       //console.log(this.state.characterlist);
   }
     handleAddFemaleCharacter = () => {
-      this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '女', name: '', id: this.state.characterlist.length+1}]) });
+      this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '女', name: '', id: this.state.characterlist.length}]) });
         this.setState({ femalenumber: this.state.femalenumber+1 });
       //console.log(this.state.characterlist);
     }
       handleAddUnisexCharacter = () => {
-        this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '无性别', name: '', id: this.state.characterlist.length+1}]) });
+        this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '无性别', name: '', id: this.state.characterlist.length}]) });
       //console.log(this.state.characterlist);
       }
 
     //!!!Debug Required
     handleRemoveCharacter = (idx) => () => {
-    
-    //this.setState({ characterlist: this.state.characterlist.filter((s, sidx) => idx !== sidx) }).then(()=>{    
+
+    //this.setState({ characterlist: this.state.characterlist.filter((s, sidx) => idx !== sidx) }).then(()=>{
       var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx);
       newcharacterlist = newcharacterlist.map((character, sidx) => {
       if(idx!==sidx) return { ...character, id: sidx };
@@ -150,11 +170,15 @@ class ScriptUpload extends React.Component {
     console.log(this.state.characterlist);
 }
   handleAddClueLocation = () => {
-    this.setState({ cluelocation: this.state.cluelocation.concat([{ name: '' }]) });
+    this.setState({ cluelocation: this.state.cluelocation.concat([{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:this.state.cluelocation.length}],
+    index:this.state.cluelocation.length, name:'', count:1 }]) });
   }
-  
-  handleRemoveClueLocation = (idx) => () => {
-    this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => idx !== sidx) });
+
+  handleRemoveClueLocation = () => {
+    //console.log(this.state.cluelocation.length-1)
+    //console.log(this.state.cluelocation)
+    //console.log(this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx))
+    this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx) });
   }
 
   render() {
@@ -190,9 +214,10 @@ class ScriptUpload extends React.Component {
 <div className="uploadPanel">
        <h3>当前角色列表：</h3> <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
 </div>
-        {this.state.characterlist.map((characterlist, idx) => (
+
           <div className="characterlist">
-          <table class="table table-striped">
+          <table className="table table-striped">
+          <tbody>
           <tr className="tableHead">
             <th>编号</th>
             <th>性别</th>
@@ -200,13 +225,14 @@ class ScriptUpload extends React.Component {
             <th>角色介绍</th>
             <th>删除</th>
           </tr>
+          {this.state.characterlist.map((characterlist, idx) => (
           <tr>
-          <th>{idx+1}</th>
+          <th>{characterlist.id+1}</th>
           <th>{characterlist.sex}</th>
           <th>
           <input
             type="text"
-            placeholder={`#${idx + 1} 角色名称`}
+            placeholder={`#${characterlist.id + 1} 角色名称`}
             value={characterlist.name}
             onChange={this.handleCharacterNameChange(idx)}
           />
@@ -214,7 +240,7 @@ class ScriptUpload extends React.Component {
           <th>
             <input
               type="text"
-              placeholder={`#${idx + 1} 角色介绍`}
+              placeholder={`#${characterlist.id + 1} 角色介绍`}
               value={characterlist.description}
               onChange={this.handleCharacterDescriptionChange(idx)}
             />
@@ -223,10 +249,12 @@ class ScriptUpload extends React.Component {
             <button type="button" onClick={this.handleRemoveCharacter(idx)} className="small">-</button>
             </th>
             </tr>
+                    ))}
+            </tbody>
           </table>
           </div>
-        ))}
-        
+
+
         <div className="btn-group btn-group-justified">
         <button type="button" onClick={this.handleAddMaleCharacter} className="small">添加男性角色</button>
         <button type="button" onClick={this.handleAddFemaleCharacter} className="small">添加女性角色</button>
@@ -236,35 +264,38 @@ class ScriptUpload extends React.Component {
         <div className="uploadPanel">
            <h3>当前搜证地点列表：</h3> <h4>地点个数：{this.state.cluelocation.length}</h4>
         </div>
-        {this.state.cluelocation.map((cluelocation, idx) => (
+
           <div className="characterlist">
-          <table class="table table-striped">
+          <table className="table table-striped">
+          <tbody>
           <tr className="tableHead">
             <th>编号</th>
             <th>搜证地点</th>
             <th>删除</th>
           </tr>
+          {this.state.cluelocation.map((cluelocation, idx) => (
           <tr>
-          <th>{idx+1}</th>
+          <th>{cluelocation.index+1}</th>
           <th>
           <input
             type="text"
-            placeholder={`#${idx + 1} 搜证地点`}
+            placeholder={`#${cluelocation.index + 1} 搜证地点`}
             value={cluelocation.name}
             onChange={this.handleClueLocationNameChange(idx)}
           />
           </th>
-          
+
             <th>
-            <button type="button" onClick={this.handleRemoveClueLocation(idx)} className="small">-</button>
             </th>
             </tr>
+
+          ))}
+            </tbody>
           </table>
           </div>
-        ))}
 
         <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
-       
+        <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
         <button>Save</button>
         <button>Next</button>
       </form>
