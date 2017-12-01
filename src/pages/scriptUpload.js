@@ -116,6 +116,7 @@ class ScriptUpload extends React.Component {
             type:"character",
             gamename: self.state.name,
             gameid: self.state.id,
+            banlocation: -1,
             characterid: i,
             charactername: self.state.characterlist[i].name,
             characterdescription: self.state.characterlist[i].description,

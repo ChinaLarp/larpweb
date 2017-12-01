@@ -287,6 +287,7 @@ class ScriptEdit extends React.Component {
               <div>
               <h4>禁止搜证地点</h4>
                 <select value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
+                    <option value="-1">无</option>
                 {this.state.clueinfo.map((cluelocation, iidx) => (
                    <option value={iidx.toString()}>{cluelocation.name}</option>
                  ))}
