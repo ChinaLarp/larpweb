@@ -22,9 +22,10 @@ class ScriptUpload extends React.Component {
       cluelocation:[{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:0}],
       index:0, name:'', count:1 }],
       mainplot:[{plotid: 0,plotname: "准备阶段",content: [{type: "请大家阅读已知内容。",content: ["准备阶段"]}]
-            },{plotid: 1,plotname: "集中讨论和搜证",content: [{type: "集中讨论和搜证",content: ["请侦探主持集中讨论和搜证"]}]
-            },{plotid: 2,plotname: "指认凶手",content: [{type: "指认凶手",content: ["请大家指认凶手。"]}]
-            },{plotid: 3,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
+    },{plotid: 1,plotname: "集中讨论和搜证(第二阶段)",content: [{type: "集中讨论和搜证(第二阶段)",content: ["请侦探主持集中讨论和搜证"]}]
+  },{plotid: 2,plotname: "集中讨论和搜证(第三阶段)",content: [{type: "集中讨论和搜证(第三阶段)",content: ["请侦探主持集中讨论和搜证"]}]
+        },{plotid: 3,plotname: "指认凶手",content: [{type: "指认凶手",content: ["请大家指认凶手。"]}]
+      },{plotid: 4,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
           },{plotid: 4,plotname: "真相大白",content: [{type: "故事线",content: ["此处放真相"]}]}],
       instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}],
       characterinfo:[{type:'', content:['请输入故事内容']}],
@@ -131,6 +132,7 @@ class ScriptUpload extends React.Component {
             characterdescription: self.state.characterlist[i].description,
             charactersex: self.state.characterlist[i].sex,
             characterinfo:self.state.characterinfo,
+            characterplot:self.state.mainplot,
           }).then(response => {
               //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
               //console.log("submitted" + self.state.characterlist[i].name)

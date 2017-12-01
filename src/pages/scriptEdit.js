@@ -20,11 +20,11 @@ class ScriptEdit extends React.Component {
     };
   }
   fillArray=function(cluelocation) {
-   if (this.state.cluelocation.length == 0) return [];
+   if (cluelocation.length == 0) return [];
    var cluestatus=[]
-   for  (var i=0;i<this.state.cluelocation.length;i++) {
+   for  (var i=0;i<cluelocation.length;i++) {
      var a = [true];
-     while (a.length * 2 <= this.state.cluelocation[i].clues.length) a = a.concat(a);
+     while (a.length * 2 <= cluelocation[i].clues.length) a = a.concat(a);
      cluestatus = cluestatus.concat([a]);
    }
    console.log(cluestatus)
@@ -39,7 +39,7 @@ class ScriptEdit extends React.Component {
       mainplot:self.state.plotinfo,
       instruction:self.state.instructinfo,
       cluemethod:self.state.cluemethod,
-      cluestatus:this.fillArray(this.state.cluelocation)
+      cluestatus:this.fillArray(this.state.clueinfo)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
         console.log("put game submitted" + this.state.name)
@@ -114,6 +114,28 @@ class ScriptEdit extends React.Component {
     });
 
     this.setState({ plotinfo: newplotinfo });
+  }
+  handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
+    const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+      if (iidx !== sidx) return plot;
+      return { ...plot, plotname: evt.target.value };
+    });
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterplot: newplotinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
+  }
+  handleCharacterPlotContentChange = (idx,iidx) => (evt) => {
+    const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+      if (iidx !== sidx) return plot;
+      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]};
+    });
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterplot: newplotinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
   }
   handlecharacterinfoTypeChange = (idx,iidx) => (evt) => {
     const newcharacterinfo = this.state.characterlist[idx].characterinfo.map((characterinfo, sidx) => {
@@ -197,7 +219,7 @@ class ScriptEdit extends React.Component {
 
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo };
+      return { ...clueinfo, clues: newclueinfo ,count:this.state.clueinfo[idx].clues.length};
     });
 
     console.log(newcluelist);
@@ -208,7 +230,7 @@ class ScriptEdit extends React.Component {
     const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:this.state.clueinfo[idx].clues.length, image:'', cluelocation: idx, passcode: '',}]);
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo };
+      return { ...clueinfo, clues: newclueinfo ,count:this.state.clueinfo[idx].clues.length};
     });
 
     this.setState({ clueinfo: newcluelist });
@@ -325,6 +347,25 @@ class ScriptEdit extends React.Component {
                   disabled="disabled"
                 />
                 <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
+                </div>
+              ))}
+              </div>
+              <div>
+              <h4>人物剧本</h4>
+              {characterlist.characterplot.map((plot, iidx) => (
+                <div>
+                <input
+                  type="text"
+                  placeholder="序号" className="shortText" disabled="disabled"
+                  value={plot.plotid}
+                />
+                <input
+                  type="text"
+                  placeholder="信息类型"
+                  value={plot.plotname}
+                  onChange={this.handleCharacterPlotNameChange(idx,iidx)}
+                />
+                <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
                 </div>
               ))}
               </div>
