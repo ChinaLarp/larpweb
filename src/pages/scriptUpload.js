@@ -27,7 +27,7 @@ class ScriptUpload extends React.Component {
             },{plotid: 3,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
           },{plotid: 4,plotname: "真相大白",content: [{type: "故事线",content: ["此处放真相"]}]}],
       instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}],
-      characterinfo:[{type:'', content:null}],
+      characterinfo:[{type:'', content:['请输入故事内容']}],
     };
   }
    fillArray=function(cluelocation) {
@@ -84,12 +84,12 @@ class ScriptUpload extends React.Component {
   }
 
   handleCharacterInfoTypeChange = (idx) => (evt) => {
-    const newCharacterInfo= this.state.characterinfo.map((characterinfo, sidx) => {
+    const newcharacterInfo= this.state.characterinfo.map((characterinfo, sidx) => {
       if (idx !== sidx) return characterinfo;
       return { ...characterinfo, type: evt.target.value };
     });
 
-    this.setState({ characterinfo: newCharacterInfo});
+    this.setState({ characterinfo: newcharacterInfo});
   }
   handleSubmit = (evt) => {
   	let self=this;
@@ -191,7 +191,7 @@ class ScriptUpload extends React.Component {
     this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx) });
   }
   handleAddCharacterInfoType = () => {
-    this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:null}])});
+    this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:['请输入故事内容']}])});
     }
 
   handleRemoveCharacterInfoType = () => {
@@ -299,7 +299,7 @@ class ScriptUpload extends React.Component {
           <input
             type="text"
             className="longText"
-            placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”`}
+            placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”,“你的目的”`}
             value={characterinfo.type}
             onChange={this.handleCharacterInfoTypeChange(idx)}
             required
@@ -318,7 +318,7 @@ class ScriptUpload extends React.Component {
 
         <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
         <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
-        
+
 
         <div className="uploadPanel">
            <h3>当前搜证地点列表：</h3> <h4>地点个数：{this.state.cluelocation.length}</h4>
