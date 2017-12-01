@@ -19,7 +19,17 @@ class ScriptEdit extends React.Component {
       cluemethod:'',
     };
   }
-
+  fillArray=function(cluelocation) {
+   if (this.state.cluelocation.length == 0) return [];
+   var cluestatus=[]
+   for  (var i=0;i<this.state.cluelocation.length;i++) {
+     var a = [true];
+     while (a.length * 2 <= this.state.cluelocation[i].clues.length) a = a.concat(a);
+     cluestatus = cluestatus.concat([a]);
+   }
+   console.log(cluestatus)
+   return cluestatus;
+ }
   handleSubmit = (evt) =>{
     let self = this;
         const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
@@ -28,7 +38,8 @@ class ScriptEdit extends React.Component {
       cluelocation:self.state.clueinfo,
       mainplot:self.state.plotinfo,
       instruction:self.state.instructinfo,
-      cluemethod:self.state.cluemethod
+      cluemethod:self.state.cluemethod,
+      cluestatus:this.fillArray(this.state.cluelocation)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
         console.log("put game submitted" + this.state.name)
@@ -59,13 +70,18 @@ class ScriptEdit extends React.Component {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ''}]) });
   }
   handleRemoveInstruction = (idx) => () => {
+
     this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
   }
   handleAddPlot =  ()  => {
-    this.setState({ plotinfo: this.state.plotinfo.concat([{ plotid: this.state.plotinfo.length, plotname: '',content: ''}]) });
+    this.setState({ plotinfo: this.state.plotinfo.concat([{ plotid: this.state.plotinfo.length, plotname: '',content: [{type:'',content:['']}]}]) });
   }
   handleRemovePlot = () => {
-    this.setState({ plotinfo: this.state.plotinfo.filter((s, sidx) => sidx !== (this.state.plotinfo.length-1)) });
+    var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== (this.state.plotinfo.length-1));
+    newplotinfo = newplotinfo.map((plot, sidx) => {
+    return { ...plot, plotid: sidx };
+  });
+    this.setState({ plotinfo: newplotinfo });
   }
   handleInstructTypeChange = (idx) => (evt) => {
     const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
@@ -86,7 +102,15 @@ class ScriptEdit extends React.Component {
   handlePlotNameChange = (idx) => (evt) => {
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
-      return { ...plot, type: evt.target.value };
+      return { ...plot, plotname: evt.target.value };
+    });
+
+    this.setState({ plotinfo: newplotinfo });
+  }
+  handlePlotContentChange = (idx) => (evt) => {
+    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      if (idx !== sidx) return plot;
+      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]  };
     });
 
     this.setState({ plotinfo: newplotinfo });
@@ -138,19 +162,7 @@ class ScriptEdit extends React.Component {
     this.setState({ clueinfo: newcluelist });
   }
 
-  handleclueNumberChange = (idx,iidx) => (evt) => {
-    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
-      if (iidx !== sidx) return clue;
-      return { ...clue, cluenumber: evt.target.value };
-    });
 
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
-      if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo };
-    });
-
-    this.setState({ clueinfo: newcluelist });
-  }
   handleclueImageChange = (idx,iidx) => (evt) => {
     const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
       if (iidx !== sidx) return clue;
@@ -178,18 +190,22 @@ class ScriptEdit extends React.Component {
 
   //??? Debug Required
   handleRemoveClues= (idx,iidx) => () => {
-    var newclueinfo = this.state.clueinfo[idx].clues.filter((clue, sidx) => iidx !== sidx);
-    //console.log(newclueinfo);
+    var newclueinfo=this.state.clueinfo[idx].clues.filter((clue, sidx) => iidx !== sidx);
+    newclueinfo = newclueinfo.map((plot, sidx) => {
+    return { ...plot, cluenumber: sidx };
+  });
 
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
-      if (idx !== sidx) return { ...clueinfo, clues: newclueinfo };
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, clues: newclueinfo };
     });
 
+    console.log(newcluelist);
     this.setState({ clueinfo: newcluelist });
   }
 
   handleAddClues = (idx) => () => {
-    const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:'', image:'', cluelocation: idx, passcode: '',}]);
+    const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:this.state.clueinfo[idx].clues.length, image:'', cluelocation: idx, passcode: '',}]);
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
       return { ...clueinfo, clues: newclueinfo };
@@ -261,11 +277,16 @@ class ScriptEdit extends React.Component {
             <div>
             <input
               type="text"
+              placeholder="序号" className="shortText" disabled="disabled"
+              value={plot.plotid}
+            />
+            <input
+              type="text"
               placeholder="信息类型"
               value={plot.plotname}
               onChange={this.handlePlotNameChange(idx)}
             />
-            <textarea rows="4" cols="100" name="content" value={plot.plotname}  onChange={this.handlePlotNameChange(idx)}/>
+            <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handlePlotContentChange(idx)}/>
             </div>
           ))}
           <button type="button" onClick={this.handleRemovePlot} className="small">减少模块</button>
@@ -301,7 +322,7 @@ class ScriptEdit extends React.Component {
                   type="text"
                   placeholder="说明要素"
                   value={characterinfo.type}
-                  onChange={this.handlecharacterinfoTypeChange(idx,iidx)}
+                  disabled="disabled"
                 />
                 <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
                 </div>
@@ -328,7 +349,7 @@ class ScriptEdit extends React.Component {
             {cluelocation.clues.map((clue, iidx) => (
               <div>
               <form className="form-group" onSubmit={this.handleSubmit}>
-              <table class="table table-striped">
+              <table className="table table-striped">
                 <tr className="tableHead">
 
                   <th>线索序号</th>
@@ -338,11 +359,10 @@ class ScriptEdit extends React.Component {
                 </tr>
                 <tr>
                   <th><input
-                type="text"
-                placeholder="序号" className="shortText"
-                value={clue.cluenumber}
-                onChange={this.handleclueNumberChange(idx,iidx)}
-              /></th>
+                    type="text"
+                    placeholder="序号" className="shortText" disabled="disabled"
+                    value={clue.cluenumber}
+                  /></th>
                   <th><input
                 type="text" className="longText"
                 placeholder="文字内容"
@@ -356,7 +376,7 @@ class ScriptEdit extends React.Component {
                 onChange={this.handleclueImageChange(idx,iidx)}
               /></th>
               <th>
-               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(iidx)}>-</button>
+               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
               </th>
                 </tr>
               </table>
