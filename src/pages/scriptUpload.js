@@ -26,7 +26,8 @@ class ScriptUpload extends React.Component {
             },{plotid: 2,plotname: "指认凶手",content: [{type: "指认凶手",content: ["请大家指认凶手。"]}]
             },{plotid: 3,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
           },{plotid: 4,plotname: "真相大白",content: [{type: "故事线",content: ["此处放真相"]}]}],
-      instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}]
+      instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}],
+      characterinfo:[{type:'', content:null}],
     };
   }
    fillArray=function(cluelocation) {
@@ -82,6 +83,14 @@ class ScriptUpload extends React.Component {
     this.setState({ cluelocation: newClueLocation});
   }
 
+  handleCharacterInfoTypeChange = (idx) => (evt) => {
+    const newCharacterInfo= this.state.characterinfo.map((characterinfo, sidx) => {
+      if (idx !== sidx) return characterinfo;
+      return { ...characterinfo, type: evt.target.value };
+    });
+
+    this.setState({ characterinfo: newCharacterInfo});
+  }
   handleSubmit = (evt) => {
   	let self=this;
     this.fillArray(this.state.cluelocation)
@@ -120,7 +129,8 @@ class ScriptUpload extends React.Component {
             characterid: i,
             charactername: self.state.characterlist[i].name,
             characterdescription: self.state.characterlist[i].description,
-            charactersex: self.state.characterlist[i].sex
+            charactersex: self.state.characterlist[i].sex,
+            characterinfo:self.state.characterinfo,
           }).then(response => {
               //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
               //console.log("submitted" + self.state.characterlist[i].name)
@@ -157,8 +167,7 @@ class ScriptUpload extends React.Component {
 
     //this.setState({ characterlist: this.state.characterlist.filter((s, sidx) => idx !== sidx) }).then(()=>{
       var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx);
-      newcharacterlist = newcharacterlist.map((character, sidx) => {
-      if(idx!==sidx) return { ...character, id: sidx };
+      newcharacterlist = newcharacterlist.map((character, sidx) => {return { ...character, id: sidx };
     });
     console.log(newcharacterlist);
     this.setState({ characterlist: newcharacterlist });//});
@@ -181,6 +190,17 @@ class ScriptUpload extends React.Component {
     //console.log(this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx))
     this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx) });
   }
+  handleAddCharacterInfoType = () => {
+    this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:null}])});
+    }
+
+  handleRemoveCharacterInfoType = () => {
+    //console.log(this.state.cluelocation.length-1)
+    //console.log(this.state.cluelocation)
+    //console.log(this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx))
+    this.setState({ characterinfo: this.state.characterinfo.filter((s, sidx) => (this.state.characterinfo.length-1) !== sidx) });
+  }
+
 
   render() {
 
@@ -263,6 +283,44 @@ class ScriptUpload extends React.Component {
         </div>
 
         <div className="uploadPanel">
+           <h3>创建角色故事模板：</h3> <h4>模板类型总数：{this.state.cluelocation.length}</h4>
+        </div>
+          <div className="characterlist">
+          <table className="table table-striped">
+          <tbody>
+          <tr className="tableHead">
+            <th>编号</th>
+            <th>角色故事模板类型</th>
+          </tr>
+          {this.state.characterinfo.map((characterinfo, idx) => (
+          <tr>
+          <th>{idx+1}</th>
+          <th>
+          <input
+            type="text"
+            className="longText"
+            placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”`}
+            value={characterinfo.type}
+            onChange={this.handleCharacterInfoTypeChange(idx)}
+            required
+          />
+          </th>
+
+            <th>
+            </th>
+            </tr>
+
+          ))}
+            </tbody>
+          </table>
+          </div>
+
+
+        <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
+        <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
+        
+
+        <div className="uploadPanel">
            <h3>当前搜证地点列表：</h3> <h4>地点个数：{this.state.cluelocation.length}</h4>
         </div>
 
@@ -272,7 +330,6 @@ class ScriptUpload extends React.Component {
           <tr className="tableHead">
             <th>编号</th>
             <th>搜证地点</th>
-            <th>删除</th>
           </tr>
           {this.state.cluelocation.map((cluelocation, idx) => (
           <tr>

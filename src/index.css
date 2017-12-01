@@ -117,6 +117,7 @@ button.small:hover {
   border: none;
   font-size: 16px;
   height: 35px;
+  margin-top: 0px;
 }
 
 #editLink{
@@ -129,6 +130,7 @@ button.small:hover {
   border: none;
   font-size: 16px;
   height: 35px;
+  margin-top: 0px;
 }
 
 #editLink:hover{
