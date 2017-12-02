@@ -38,7 +38,7 @@ class ScriptEdit extends React.Component {
       cluelocation:self.state.clueinfo,
       mainplot:self.state.plotinfo,
       instruction:self.state.instructinfo,
-      cluemethod:self.state.cluemethod,
+      cluemethod:self.state.gameinfo.cluemethod,
       cluestatus:this.fillArray(this.state.clueinfo)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
@@ -219,7 +219,7 @@ class ScriptEdit extends React.Component {
 
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo ,count:this.state.clueinfo[idx].clues.length};
+      return { ...clueinfo, clues: newclueinfo ,count:newclueinfo.length};
     });
 
     console.log(newcluelist);
@@ -230,7 +230,7 @@ class ScriptEdit extends React.Component {
     const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:this.state.clueinfo[idx].clues.length, image:'', cluelocation: idx, passcode: '',}]);
     const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo ,count:this.state.clueinfo[idx].clues.length};
+      return { ...clueinfo, clues: newclueinfo ,count:newclueinfo.length};
     });
 
     this.setState({ clueinfo: newcluelist });
@@ -278,7 +278,7 @@ class ScriptEdit extends React.Component {
           <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
-            <option value="replace">返还随机</option>
+            <option value="return">返还随机</option>
           </select>
           <h4>游戏说明</h4>
           {this.state.instructinfo.map((instruct, idx) => (
