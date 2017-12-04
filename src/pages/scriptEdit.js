@@ -129,7 +129,7 @@ class ScriptEdit extends React.Component {
   handleCharacterPlotContentChange = (idx,iidx) => (evt) => {
     const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
       if (iidx !== sidx) return plot;
-      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]};
+      return { ...plot, content: evt.target.value.split('\n')};
     });
     const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
@@ -263,6 +263,8 @@ class ScriptEdit extends React.Component {
   render() {
 
     return (
+
+      	<div className="container">
       <Tabs>
         <TabList>
           <button onClick={this.handleSubmit}>save</button>
@@ -365,7 +367,10 @@ class ScriptEdit extends React.Component {
                   value={plot.plotname}
                   onChange={this.handleCharacterPlotNameChange(idx,iidx)}
                 />
-                <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
+
+                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
+
+
                 </div>
               ))}
               </div>
@@ -432,6 +437,7 @@ class ScriptEdit extends React.Component {
           </div>
           </TabPanel>
       </Tabs>
+      </div>
     )
   }
 }
