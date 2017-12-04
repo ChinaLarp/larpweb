@@ -4,10 +4,17 @@ import './header.css';
 
 class Header extends Component{
 	render(){
+
+		var headerStyle = {
+			height:200,
+			marginTop:0,
+		}
 		return(
-		  <div className="header">
-		    <img src={logo} className="aligncenter" alt="logo" />
-	      </div>
+		  
+		  <div className="jumbotron" >
+		    <img src={logo} className="img-responsiver" style={headerStyle} alt="logo" />
+		    </div>
+	      
 	);
 	}
 }

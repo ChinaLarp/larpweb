@@ -32,7 +32,7 @@ class Home extends React.Component {
     	<div className="container home-content">
 
 	      <div className="row">
-		      <div className="col-sm-6">
+		      <div className="col-xs-6 col-sm-6 col-lg-6">
 		        <Carousel autoplay>
 		           <div><img src={top1} className="aligncenter" alt="top1" /></div>
 		           <div><img src={top2} className="aligncenter" alt="top2" /></div>
@@ -40,7 +40,7 @@ class Home extends React.Component {
 		        </Carousel>
 		      </div>
 
-		      <div className="col-sm-6">
+		      <div className="col-xs-6 col-sm-6 col-lg-6">
 		      	<Tabs tabBarExtraContent={operations} className='navbar-default panel'>
 				    <TabPane tab="最新" key="1" className='panel'><NewsBlock count={5} type='news,activity'/></TabPane>
 				    <TabPane tab="新闻" key="2"><NewsBlock count={5} type='news' /></TabPane>
