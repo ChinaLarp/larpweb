@@ -72,7 +72,7 @@ class Register extends Component {
           type: 'success',
           text: 'You signed up successfully. Welcome!'
         });
-        this.context.router.push('/')
+        window.location.reload()
       }}
       ,(res,err)=>{
         console.log("failed")
