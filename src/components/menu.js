@@ -24,7 +24,7 @@ class Menu extends Component {
             <li><NavLink to="/users">剧本创作</NavLink></li>
             <li><NavLink to="/scriptUpload">剧本上传</NavLink></li>
             <li><NavLink to="/contact">联系我们</NavLink></li>
-			<li className='verticalline' ></li>
+			      <li className='verticalline' ></li>
             <li><NavLink to="/Loginscreen">用户登录</NavLink></li>
           </ul>
         </div>

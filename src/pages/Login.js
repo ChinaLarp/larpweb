@@ -3,12 +3,13 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 class Login extends Component {
 constructor(props){
   super(props);
   this.state={
-  username:'',
+  email:'',
   password:''
   }
  }
@@ -19,27 +20,11 @@ constructor(props){
  "email":this.state.username,
  "password":this.state.password
  }
- axios.post(apiBaseUrl+'login', payload)
- .then(function (response) {
- console.log(response);
- if(response.data.code == 200){
- console.log("Login successfull");
- var uploadScreen=[];
- uploadScreen.push(<uploadScreen appContext={self.props.appContext}/>)
- self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
- }
- else if(response.data.code == 204){
- console.log("Username password do not match");
- alert("username password do not match")
- }
- else{
- console.log("Username does not exists");
- alert("Username does not exist");
- }
- })
- .catch(function (error) {
- console.log(error);
- });
+var result=this.props.login(this.state)
+.then(
+  (res) => window.location.reload(),
+  //(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
+)
  }
 render() {
     return (
@@ -49,7 +34,7 @@ render() {
            <TextField
              hintText="Enter your Username"
              floatingLabelText="Username"
-             onChange = {(event,newValue) => this.setState({username:newValue})}
+             onChange = {(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
              <TextField
@@ -69,4 +54,5 @@ render() {
 const style = {
  margin: 15,
 };
+
 export default Login;

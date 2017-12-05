@@ -6,8 +6,8 @@ import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
 //import { userSignupRequest, isUserExists } from './actions/signupActions';
-import { addFlashMessage } from '../actions/flashmessages.js';
-import { userSignupRequest } from '../actions/signupActions';
+//import { addFlashMessage } from '../actions/flashmessages';
+//import { userSignupRequest } from '../actions/signupActions';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -66,36 +66,26 @@ class Register extends Component {
     "firstname": this.state.first_name,
     "lastname":this.state.last_name
     }
-    userSignupRequest(payload)
-  .then(
-        () => {
-          console.log("callback")
-          addFlashMessage({
-            type: 'success',
-            text: 'You signed up successfully. Welcome!'
-          });
-          //this.context.router.push('/');
-        }
-        /*,
-        (err) => this.setState({ errors: err.response.data, isLoading: false })*/
-      );
-    /*axios.post(apiBaseUrl+'/user', payload)
-   .then(function (response) {
-     console.log(response);
-     if(response.status == 200){
-        console.log("registration successfull");
-      addFlashMessage({
-            type: 'success',
-            text: 'You signed up successfully. Welcome!'
-          });
-          //self.context.router.push('/');
+    axios.post(apiBaseUrl+'/user', payload).then((res)=>{
+      if (res.data.success){
+        this.props.addFlashMessage({
+          type: 'success',
+          text: 'You signed up successfully. Welcome!'
+        });
+        this.context.router.push('/')
+      }}
+      ,(res,err)=>{
+        console.log("failed")
+        this.props.addFlashMessage({
+          type: 'failed',
+          text: 'Try another email!'
+        });
+      }
 
-     }
-   })
-   .catch(function (error) {
-     console.log(error);
-   });
-  }*/
+
+
+    )
+
 }
 }
 const style = {

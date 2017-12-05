@@ -19,8 +19,9 @@ export function logout() {
 }
 
 export function login(data) {
+  var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
   return dispatch => {
-    return axios.post('/api/auth', data).then(res => {
+    return axios.post(apiBaseUrl+'/auth', data).then(res => {
       const token = res.data.token;
       localStorage.setItem('jwtToken', token);
       setAuthorizationToken(token);
