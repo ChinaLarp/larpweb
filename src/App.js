@@ -27,9 +27,10 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Header class="jumbotron" style={{ position: 'fixed', width: '100%' }}/>
-        <Menu class="container col-sm-8"/>
+      <div className="App container">
+      <div className="jumbotron">
+        <Header />
+        <Menu />
         <FlashMessagesList />
         <HashRouter>
           <div className="content">
@@ -45,6 +46,7 @@ class App extends Component {
 
       </HashRouter>
         <Footer class="jumbotron"/>
+        </div>
       </div>
     );
   }

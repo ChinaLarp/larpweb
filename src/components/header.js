@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import logo from './logo.png';
-import './header.css';
+
 
 class Header extends Component{
 	render(){
 
 		var headerStyle = {
-			height:200,
-			marginTop:0,
+			maxHeight:200,
+			margin:"Auto",
 		}
 		return(
-		  
-		  <div className="jumbotron" >
-		    <img src={logo} className="img-responsiver" style={headerStyle} alt="logo" />
-		    </div>
-	      
+		  <div className="row">
+			  <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			    <img src={logo} className="img-responsiver" style={headerStyle} alt="logo" />
+			  </div>
+	      </div>
 	);
 	}
 }
