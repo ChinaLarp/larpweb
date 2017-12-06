@@ -2,19 +2,22 @@
   	background: #888;
   	font-size: 1px;
   	color: #fff;
+    border: none;
 }
 
 
 
 .bodyStruc{
 	background: #666;
-	height: 280px;
+	font-size: 14px;
+  border: none;
 }
 
 #newsList {
 	margin:-22px;
-	font-size: 16px;
-	border-color: #666;
+  border-top: 10px black;
+  border: 1px black;
+  padding: none;
 }
 
 
@@ -22,9 +25,9 @@
   margin:0px;
   padding: 10px 10px 10px 0;
   border-bottom: 1px dashed #ccc;
-  	display: flex;
-    justify-content:left;
-    align-self: stretch;
+  display: flex;
+  justify-content:left;
+  align-self: stretch;
 }
 
 #newsItem::before{

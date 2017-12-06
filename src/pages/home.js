@@ -24,12 +24,17 @@ class Home extends React.Component {
         const operations = <HashRouter><button id="addButton"><NavLink id="editLink" to="/news">+更多</NavLink></button></HashRouter>;
  
   		var tabBarStyle = {
-  			color:"orange"
+  			color:"orange",
+  			fontSize:16,
+  			backgroundColor: "#111",
+  			margin:0,
+  			border:"none",
+  			fontFamily: "sans-serif",
 		};
 
 
 	 return (
-    	<div className="container home-content">
+    	<div className="container">
 
 	      <div className="row no-gutters">
 		      <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -41,8 +46,8 @@ class Home extends React.Component {
 		      </div>
 
 		      <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-		      	<Tabs tabBarExtraContent={operations} className='navbar-default panel'>
-				    <TabPane tab="最新" key="1" className='panel'><NewsBlock count={5} type='news,activity'/></TabPane>
+		      	<Tabs tabBarExtraContent={operations} tabBarStyle={tabBarStyle}>
+				    <TabPane tab="最新" key="1"><NewsBlock count={5} type='news,activity'/></TabPane>
 				    <TabPane tab="新闻" key="2"><NewsBlock count={5} type='news' /></TabPane>
 				    <TabPane tab="活动" key="3"><NewsBlock count={5} type='activity' /></TabPane>
 	  		    </Tabs>

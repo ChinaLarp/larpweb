@@ -11,6 +11,13 @@ body {
 h1, h2,h3,h4,h5, p, ul, li {
   font-family: sans-serif;
 }
+.logocontainer{
+    display: flex;
+  justify-content:  center;
+}
+.logo{
+  width:80%;
+}
 
 /* Menu starts */
 
@@ -190,3 +197,20 @@ button.small:hover {
   text-align: center;
 }
 
+/* footer starts*/
+.footer{
+  padding-top: 20px;
+  background-image: url('./components/footer-background-city.jpg');
+  background-size: 100%;
+  background-position: top center;
+  font-size:16px;
+  font-family: sans-serif;
+  vertical-align:bottom;
+  text-align:center;
+}
+.copyright{
+  color:#ffffff; font-size:16px; padding:20px;
+  font-family: sans-serif;
+}
+
+/* footer ends*/
