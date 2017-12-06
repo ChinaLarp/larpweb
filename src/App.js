@@ -27,10 +27,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App container">
-      <div className="jumbotron">
-        <Header />
-        <Menu />
+      <div className="App">
+        <div className="jumbotron" style={{backgroundColor:"transparent" }}>
+        <div className="container">
+          <Header />
+          <Menu />
+          </div>
+        </div>
         <FlashMessagesList />
         <HashRouter>
           <div className="content">
@@ -45,9 +48,14 @@ class App extends Component {
           </div>
 
       </HashRouter>
-        <Footer class="jumbotron"/>
+
+        <div className="jumbotron" style={{backgroundColor:"transparent"}}>
+        <div className="container">
+          <Footer />
+          </div>
         </div>
-      </div>
+        </div>
+      
     );
   }
 }

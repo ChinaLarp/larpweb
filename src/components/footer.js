@@ -6,7 +6,7 @@ import Contact from '../pages/contact.js';
 class Footer extends Component{
 	render(){
 		return(
-			<div className="container">
+			
 				<div className="row">
 				  	<div className="footer col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					  	<HashRouter>
@@ -27,7 +27,7 @@ class Footer extends Component{
 					      </HashRouter>
 				      </div>
 			      </div>
-		      </div>
+		     
 
 	    );
 	}
