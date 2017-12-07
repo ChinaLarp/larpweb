@@ -17,7 +17,7 @@ class Loginscreen extends Component {
       password:'',
       loginscreen:[],
       loginmessage:'',
-      buttonLabel:'Register',
+      buttonLabel:'注册',
       isLogin:true,
       firstname:''
     }
@@ -36,13 +36,13 @@ class Loginscreen extends Component {
         var loginmessage = "You have already logged in";
         this.setState({loginscreen:loginscreen,
                       loginmessage:loginmessage,
-                      buttonLabel:"Logout"})
+                      buttonLabel:"退出"})
       });
 
     }else{
     var loginscreen=[];
     loginscreen.push(<Login login={this.props.login} parentContext={this} appContext={this.props.parentContext}/>);
-    var loginmessage = "Not registered yet, Register Now";
+    var loginmessage = "尚未注册，请先注册用户！";
     this.setState({
                   loginscreen:loginscreen,
                   loginmessage:loginmessage
@@ -61,22 +61,22 @@ class Loginscreen extends Component {
       const { userSignupRequest, addFlashMessage } = this.props;
       loginscreen.push(<Register userSignupRequest={this.props.userSignupRequest}
             addFlashMessage={this.props.addFlashMessage} parentContext={this}/>);
-      loginmessage = "Already registered.Go to Login";
+      loginmessage = "已经注册，请直接登录！";
       this.setState({
                      loginscreen:loginscreen,
                      loginmessage:loginmessage,
-                     buttonLabel:"Login",
+                     buttonLabel:"登录",
                      isLogin:false
                    })
     }
     else{
       var loginscreen=[];
       loginscreen.push(<Login login={this.props.login}  parentContext={this}/>);
-      loginmessage = "Not Registered yet.Go to registration";
+      loginmessage = "尚未注册，请先注册新用户！";
       this.setState({
                      loginscreen:loginscreen,
                      loginmessage:loginmessage,
-                     buttonLabel:"Register",
+                     buttonLabel:"注册",
                      isLogin:true
                    })
     }

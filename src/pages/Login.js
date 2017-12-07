@@ -29,22 +29,23 @@ var result=this.props.login(this.state)
 render() {
     return (
       <div>
+      <h3>用户登录</h3>
         <MuiThemeProvider>
           <div>
            <TextField
-             hintText="Enter your Username"
-             floatingLabelText="Username"
+             hintText="请输入email或用户名"
+             floatingLabelText="用户名"
              onChange = {(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
              <TextField
                type="password"
-               hintText="Enter your Password"
-               floatingLabelText="Password"
+               hintText="请输入密码"
+               floatingLabelText="密码"
                onChange = {(event,newValue) => this.setState({password:newValue})}
                />
              <br/>
-             <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+             <RaisedButton label="登录" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
          </div>
          </MuiThemeProvider>
       </div>

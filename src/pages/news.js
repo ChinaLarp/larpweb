@@ -86,8 +86,8 @@ class News extends React.Component {
     return(
         <div className='container' style={newsStyle}>
           
-            <div className="col-sm-10">
-              <Tabs className='navbar-default panel'>
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+              <Tabs className='tabBar'>
                 <TabPane tab="新闻" key="1"><NewsBlock  type='news' />
                 <Pagination total={this.state.itemCount[0]} 
                 showTotal={total => 'Total '+total+' items'}

@@ -8,32 +8,39 @@ body {
   margin: 0;
 }
 
-h1, h2,h3,h4,h5, p, ul, li {
+h1, h2,h3,h4,h5, p, ul, li,{
   font-family: sans-serif;
 }
 
 .logo{
   width:80%;
+  margin-top: 20px;
+  margin-bottom: 0px;
 }
 
 /* Menu starts */
 
-.verticalline{
-  border-left:medium #CC0000 solid;
-  height:3px;
+.brandItem{
+  display: inline;
+  list-style-type: none;
+  margin: 0;
+  font-size: 20px;
+  font-weight:bold;
+  text-align: center;
+  background-color: #111;
+  color:#FFF;
+  font-family: sans-serif;
 }
 
-ul.header li {
+.menuItem {
   display: inline;
   list-style-type: none;
   margin: 0;
   font-size: 18px;
+  font-family: sans-serif;
 }
-ul.header {
-  background-color: #111;
-  padding: 0;
-}
-ul.header li a {
+
+.header li a {
   color: #FFF;
   font-weight: bold;
   text-decoration: none;
@@ -51,7 +58,11 @@ a :hover {
 
 .content {
   background-color: #FFF;
-  padding: 20px;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-family: sans-serif;
 }
 .content h2 {
   padding: 0;
@@ -65,10 +76,108 @@ a :hover {
   color: #0099FF;
 }
 
+/* Homepage starts: */
+/* carousel*/
+
+.ant-carousel .slick-slide {
+  text-align: center;
+  height: 330px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.ant-carousel .slick-slide img{
+  display: block;
+  width: 100%;
+  height: 330px;
+  margin: 0 auto;
+}
+
+/* NewsBlock*/
+.news-block{
+  background: #666;
+  font-size: 14px;
+  border: none;
+  height:295px;
+}
+
+#editLink{
+  color: #fff;
+  font-size: 14px;
+  font-family: sans-serif;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#editLink:hover{
+  color: orange;
+}
+/* NewsBlock.js starts */
+#newsList {
+  margin:-22px;
+  border-top: 10px black;
+  border: 1px black;
+  padding: none;
+}
+
+
+#newsItem{
+  margin:0px;
+  padding: 10px 10px 10px 0px;
+  border-bottom: 1px dashed #ccc;
+  font-family: sans-serif;
+  display: flex;
+  justify-content:left;
+  align-self: stretch;
+}
+
+#newsItem::before{
+  content: '▲';
+  display: inline-block;
+  float: left;
+  color: #888;
+  transform:rotate(90deg);
+  -ms-transform:rotate(90deg);  /* IE 9 */
+  -moz-transform:rotate(90deg);   /* Firefox */
+  -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+  -o-transform:rotate(90deg);   /* Opera */
+}
+
+
+.link{
+  display: flex;
+  margin-left: 10px;
+  justify-content:  left;
+  color:#fff;
+  font-family: sans-serif;
+    width: 70%;
+    overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.link:hover{
+  color:orange;
+  font-size: 16px;
+}
+
+.time{
+  color: #eee;
+  float: right;
+  font-family: sans-serif;
+  width: 20%;
+
+}
+.time:hover{
+
+}
+/* NewsBlock.js starts */
+
 input {
   display: block;
   width: 100%;
-  font-size: 20px;
+  font-size: 16px;
   padding: 5px 10px;
   margin: 10px 0;
   border-radius: 5px;
@@ -77,6 +186,16 @@ input {
 
 input.error {
   border-color: red;
+}
+
+textarea{
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  padding: 5px 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
  button {
@@ -105,6 +224,7 @@ button:disabled {
   display: inline-block;
   width: auto;
   padding: 0 20px;
+  margin: 20px;
   background-color: #777;
   font-size: 14px;
 }
@@ -121,24 +241,7 @@ button.small:hover {
 
 .characterlist button {
   margin: 0;
-  margin-left: 10px;
-}
-
-#editButton {
-  display: block;
-  width: 100%;
-  appearance: none;
-  border-radius: 5px;
-  background-color: #84c00c;
-  color: #fff;
-  border: none;
-  font-size: 16px;
-  height: 35px;
-  margin-top: 0px;
-}
-
-#editLink{
-  color: #fff;
+  margin-top: 10px;
 }
 
 #addButton{
@@ -148,10 +251,6 @@ button.small:hover {
   font-size: 16px;
   height: 35px;
   margin-top: 0px;
-}
-
-#editLink:hover{
-  color: orange;
 }
 
 .tableHead{
@@ -174,24 +273,124 @@ button.small:hover {
 }
 
 .shortText{
-  width: 100px;
-  font-size: 14px;
+  width: 8%;
+  font-size: 16px;
+  margin-left:10px;
 }
 .longText{
-  width: 500px;
-  font-size: 14px;
-  margin: 0;
+  width: 60%;
+  font-size: 16px;
+  margin-left: 10px;
 }
 .clueImg{
-  width: 200px;
-  font-size: 14px;
-  margin: 0;
+  width: 25%;
+  font-size: 16px;
+  margin-left: 10px;
+}
+.clueDelete{
+  width: 7%;
+}
+.tableText{
+  font-size: 16px;
+  margin-top: 20px;
+  text-align: left;
 }
 #deleteButton{
   height: 30px;
-  margin-top: 0;
-  margin:0;
+  margin-top: 100px;
   text-align: center;
+}
+
+/* Game Block starts*/
+#createButton{
+  height: 35px;
+  margin: auto;
+  text-align: center;
+
+}
+
+.tabBar{
+        color:#FFF;
+        font-size: 16px;
+        background-color: #111;
+        margin-top:10px;
+        margin-bottom:0px;
+        border: none;
+        font-family: sans-serif;
+
+}
+
+.bodyStruc{
+  background: #666;
+  height: 300px;
+  font-size: 16px;
+}
+
+#gameList {
+  margin:-60px;
+  font-size: 18px;
+  border-color: #666;
+}
+
+
+#games{
+  margin:0px;
+  padding: 10px 10px 10px 0;
+  border-bottom: 1px dashed #ccc;
+    display: flex;
+    justify-content:left;
+    align-self: stretch;
+}
+
+#games::before{
+  content: '▲';
+  display: inline-block;
+  float: left;
+  color: #888;
+  transform:rotate(90deg);
+  -ms-transform:rotate(90deg);  /* IE 9 */
+  -moz-transform:rotate(90deg);   /* Firefox */
+  -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+  -o-transform:rotate(90deg);   /* Opera */
+}
+
+
+.gamelink{
+  display: flex;
+  justify-content:  left;
+  color:#fff;
+  width: 20%;
+  margin-left: 10px;
+}
+.gamelink:hover{
+  color:orange;
+  font-size: 18px;
+}
+
+.gamediscription{
+  color: #eee;
+  float: right;
+  width: 70%;
+  overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+
+}
+
+/* Game Block ends*/
+
+.gameDescription{
+  overflow: hidden;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 3;
+}
+
+.gameDescriptionMore{
+  overflow: hidden;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 5;
 }
 
 /* footer starts*/
@@ -200,13 +399,13 @@ button.small:hover {
   background-image: url('./components/footer-background-city.jpg');
   background-size: 100%;
   background-position: top center;
-  font-size:16px;
+  font-size:14px;
   font-family: sans-serif;
   vertical-align:bottom;
   text-align:center;
 }
 .copyright{
-  color:#ffffff; font-size:16px; padding:20px;
+  color:#ffffff; font-size:14px; padding:20px;
   font-family: sans-serif;
 }
 

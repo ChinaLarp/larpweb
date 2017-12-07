@@ -21,22 +21,23 @@ class Register extends Component {
   render() {
     return (
       <div>
+      <h3>新用户注册</h3>
         <MuiThemeProvider>
           <div>
            <TextField
-             hintText="Enter your First Name"
-             floatingLabelText="First Name"
-             onChange = {(event,newValue) => this.setState({first_name:newValue})}
-             />
-           <br/>
-           <TextField
-             hintText="Enter your Last Name"
-             floatingLabelText="Last Name"
+             hintText="请输入您的姓"
+             floatingLabelText="姓"
              onChange = {(event,newValue) => this.setState({last_name:newValue})}
              />
            <br/>
            <TextField
-             hintText="Enter your Email"
+             hintText="请输入您的名"
+             floatingLabelText="名"
+             onChange = {(event,newValue) => this.setState({first_name:newValue})}
+             />
+           <br/>
+           <TextField
+             hintText="请输入您的电子邮箱"
              type="email"
              floatingLabelText="Email"
              onChange = {(event,newValue) => this.setState({email:newValue})}
@@ -44,12 +45,12 @@ class Register extends Component {
            <br/>
            <TextField
              type = "password"
-             hintText="Enter your Password"
-             floatingLabelText="Password"
+             hintText="请输入您的密码"
+             floatingLabelText="密码"
              onChange = {(event,newValue) => this.setState({password:newValue})}
              />
            <br/>
-           <RaisedButton label="Submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+           <RaisedButton label="提交" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
           </div>
          </MuiThemeProvider>
       </div>

@@ -37,10 +37,10 @@ export default class NewsDetail extends React.Component {
   render() {
   	let itemList =[]
   	    var newsDetailtStyle = {
-          fontSize: 18,
-          color:"#fff",
-          backgroundColor:"#888",
+          fontSize: 16,
+          color:"#000",
           alignText:"center",
+          width:"100%",
         };
 
       var newsStyle = {
@@ -77,7 +77,8 @@ export default class NewsDetail extends React.Component {
     return (
            <div className='container' style={newsStyle}>
           
-            <div className="col-sm-8">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+            <h3>{this.state.newsItem.title}</h3>
             <ul className style={newsDetailtStyle}>{itemList}</ul>
             </div>
           

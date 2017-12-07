@@ -215,6 +215,7 @@ class ScriptUpload extends React.Component {
           placeholder="剧本名称"
           value={this.state.name}
           onChange={this.handleNameChange}
+          required
         />
         <input
           type="text"
@@ -227,12 +228,14 @@ class ScriptUpload extends React.Component {
           placeholder="剧本介绍"
           value={this.state.description}
           onChange={this.handleDescriptionChange}
+          required
         />
         <input
           type="text"
           placeholder="剧本类别"
           value={this.state.category}
           onChange={this.handleCategoryChange}
+          required
         />
 <div className="uploadPanel">
        <h3>当前角色列表：</h3> <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
@@ -250,14 +253,15 @@ class ScriptUpload extends React.Component {
           </tr>
           {this.state.characterlist.map((characterlist, idx) => (
           <tr>
-          <th>{characterlist.id+1}</th>
-          <th>{characterlist.sex}</th>
+          <th><div className="tableText">{characterlist.id+1}</div></th>
+          <th><div className="tableText">{characterlist.sex}</div></th>
           <th>
           <input
             type="text"
             placeholder={`#${characterlist.id + 1} 角色名称`}
             value={characterlist.name}
             onChange={this.handleCharacterNameChange(idx)}
+            required
           />
           </th>
           <th>
@@ -296,20 +300,16 @@ class ScriptUpload extends React.Component {
           </tr>
           {this.state.characterinfo.map((characterinfo, idx) => (
           <tr>
-          <th>{idx+1}</th>
+          <th><div className="tableText">{idx+1}</div></th>
           <th>
           <input
             type="text"
-            className="longText"
             placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”,“你的目的”`}
             value={characterinfo.type}
             onChange={this.handleCharacterInfoTypeChange(idx)}
             required
           />
           </th>
-
-            <th>
-            </th>
             </tr>
 
           ))}
@@ -323,7 +323,7 @@ class ScriptUpload extends React.Component {
 
 
         <div className="uploadPanel">
-           <h3>当前搜证地点列表：</h3> <h4>地点个数：{this.state.cluelocation.length}</h4>
+           <h3>当前搜证地点列表：</h3> <h4>地点总数：{this.state.cluelocation.length}</h4>
         </div>
 
           <div className="characterlist">
@@ -335,18 +335,16 @@ class ScriptUpload extends React.Component {
           </tr>
           {this.state.cluelocation.map((cluelocation, idx) => (
           <tr>
-          <th>{cluelocation.index+1}</th>
+          <th><div className="tableText">{cluelocation.index+1}</div></th>
           <th>
           <input
             type="text"
             placeholder={`#${cluelocation.index + 1} 搜证地点`}
             value={cluelocation.name}
             onChange={this.handleClueLocationNameChange(idx)}
+            required
           />
           </th>
-
-            <th>
-            </th>
             </tr>
 
           ))}
