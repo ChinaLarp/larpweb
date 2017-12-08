@@ -24,7 +24,7 @@ class Menu extends Component {
          <Navbar inverse collapseOnSelect fixedTop>
           <Navbar.Header>
             <Navbar.Brand className="brandItem">
-              <NavLink exact to="/">全名侦探社</NavLink>
+              <NavLink exact to="/">全民侦探社</NavLink>
             </Navbar.Brand>
             <Navbar.Toggle style={{float:"right", width:44, textAligh:"center"}}/>
           </Navbar.Header>
