@@ -63,7 +63,7 @@ class ScriptEdit extends React.Component {
             });
           }
 
-    alert(`Game saved!`);
+    alert(`Game saved: ${this.state.name} with ${this.state.characterlist.length} characters`);
 
   }
   handleAddInstruction = () => {
@@ -129,7 +129,7 @@ class ScriptEdit extends React.Component {
   handleCharacterPlotContentChange = (idx,iidx) => (evt) => {
     const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
       if (iidx !== sidx) return plot;
-      return { ...plot, content: evt.target.value.split('\n')};
+      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]};
     });
     const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
@@ -276,18 +276,15 @@ class ScriptEdit extends React.Component {
 
         <TabPanel>
           <form className="form-group" onSubmit={this.handleSubmit}>
-          
           <h4>搜证模式</h4>
           <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
           </select>
-          
-          <div>
-          <h3 style={{float:"left"}}>游戏说明</h3><br/>
+          <h4>游戏说明</h4>
           {this.state.instructinfo.map((instruct, idx) => (
-            <div style={{width:"100%",paddingTo:20}}>
+            <div>
             <input
               type="text"
               placeholder="说明要素"
@@ -295,17 +292,18 @@ class ScriptEdit extends React.Component {
               onChange={this.handleInstructTypeChange(idx)}
             />
             <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} />
-            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除该信息</button>
+            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">-</button>
             </div>
           ))}
           <button type="button" onClick={this.handleAddInstruction} className="small">添加模块</button>
-          </div>
-          
-          <div ><h3 style={{float:"left"}}>详细流程</h3><br/></div>
-
+          <h4>公开信息</h4>
           {this.state.plotinfo.map((plot, idx) => (
-            <div style={{width:"100%",paddingTop:20}}>
-            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+            <div>
+            <input
+              type="text"
+              placeholder="序号" className="shortText" disabled="disabled"
+              value={plot.plotid}
+            />
             <input
               type="text"
               placeholder="信息类型"
@@ -341,9 +339,9 @@ class ScriptEdit extends React.Component {
                 </select>
               </div>
               <div>
-              <h3 style={{float:"left"}}>角色背景</h3><br/>
+              <h4>角色背景</h4>
               {characterlist.characterinfo.map((characterinfo, iidx) => (
-                <div style={{width:"100%",paddingTop:20}}>
+                <div>
                 <input
                   type="text"
                   placeholder="说明要素"
@@ -355,10 +353,14 @@ class ScriptEdit extends React.Component {
               ))}
               </div>
               <div>
-              <h3 style={{float:"left"}}>流程剧本</h3><br/>
+              <h4>人物剧本</h4>
               {characterlist.characterplot.map((plot, iidx) => (
-                <div style={{width:"100%",paddingTop:20}}>
-                <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+                <div>
+                <input
+                  type="text"
+                  placeholder="序号" className="shortText" disabled="disabled"
+                  value={plot.plotid}
+                />
                 <input
                   type="text"
                   placeholder="信息类型"
@@ -366,7 +368,7 @@ class ScriptEdit extends React.Component {
                   onChange={this.handleCharacterPlotNameChange(idx,iidx)}
                 />
 
-                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
+                  <textarea rows="4" cols="100" name="content" value={plot.content.join}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
 
 
                 </div>
@@ -396,31 +398,31 @@ class ScriptEdit extends React.Component {
               <table className="table table-striped">
                 <tr className="tableHead">
 
-                  <th>序号</th>
-                  <th>内容</th>
-                  <th>图片</th>
+                  <th>线索序号</th>
+                  <th>文字内容</th>
+                  <th>图片地址</th>
                   <th>删除</th>
                 </tr>
                 <tr>
-                  <th className="shortText" ><input
+                  <th><input
                     type="text"
-                    placeholder="序号" disabled="disabled"
+                    placeholder="序号" className="shortText" disabled="disabled"
                     value={clue.cluenumber}
                   /></th>
-                  <th className="longText"><input
-                type="text" 
+                  <th><input
+                type="text" className="longText"
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
-                  <th className="clueImg"><input
-                type="text"
+                  <th><input
+                type="text" className="clueImg"
                 placeholder="图片地址"
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
               /></th>
-              <th className="clueDelete">
-               <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
+              <th>
+               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
               </th>
                 </tr>
               </table>
