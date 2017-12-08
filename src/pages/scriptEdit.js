@@ -63,7 +63,7 @@ class ScriptEdit extends React.Component {
             });
           }
 
-    alert(`Game saved: ${this.state.name} with ${this.state.characterlist.length} characters`);
+    alert(`Game saved!`);
 
   }
   handleAddInstruction = () => {
@@ -276,15 +276,18 @@ class ScriptEdit extends React.Component {
 
         <TabPanel>
           <form className="form-group" onSubmit={this.handleSubmit}>
+          
           <h4>搜证模式</h4>
           <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
           </select>
-          <h4>游戏说明</h4>
+          
+          <div>
+          <h3 style={{float:"left"}}>游戏说明</h3><br/>
           {this.state.instructinfo.map((instruct, idx) => (
-            <div>
+            <div style={{width:"100%",paddingTo:20}}>
             <input
               type="text"
               placeholder="说明要素"
@@ -292,18 +295,17 @@ class ScriptEdit extends React.Component {
               onChange={this.handleInstructTypeChange(idx)}
             />
             <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} />
-            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">-</button>
+            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除该信息</button>
             </div>
           ))}
           <button type="button" onClick={this.handleAddInstruction} className="small">添加模块</button>
-          <h4>公开信息</h4>
+          </div>
+          
+          <div ><h3 style={{float:"left"}}>详细流程</h3><br/></div>
+
           {this.state.plotinfo.map((plot, idx) => (
-            <div>
-            <input
-              type="text"
-              placeholder="序号" className="shortText" disabled="disabled"
-              value={plot.plotid}
-            />
+            <div style={{width:"100%",paddingTop:20}}>
+            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
             <input
               type="text"
               placeholder="信息类型"
@@ -339,9 +341,9 @@ class ScriptEdit extends React.Component {
                 </select>
               </div>
               <div>
-              <h4>角色背景</h4>
+              <h3 style={{float:"left"}}>角色背景</h3><br/>
               {characterlist.characterinfo.map((characterinfo, iidx) => (
-                <div>
+                <div style={{width:"100%",paddingTop:20}}>
                 <input
                   type="text"
                   placeholder="说明要素"
@@ -353,14 +355,10 @@ class ScriptEdit extends React.Component {
               ))}
               </div>
               <div>
-              <h4>人物剧本</h4>
+              <h3 style={{float:"left"}}>流程剧本</h3><br/>
               {characterlist.characterplot.map((plot, iidx) => (
-                <div>
-                <input
-                  type="text"
-                  placeholder="序号" className="shortText" disabled="disabled"
-                  value={plot.plotid}
-                />
+                <div style={{width:"100%",paddingTop:20}}>
+                <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
                 <input
                   type="text"
                   placeholder="信息类型"
@@ -398,31 +396,31 @@ class ScriptEdit extends React.Component {
               <table className="table table-striped">
                 <tr className="tableHead">
 
-                  <th>线索序号</th>
-                  <th>文字内容</th>
-                  <th>图片地址</th>
+                  <th>序号</th>
+                  <th>内容</th>
+                  <th>图片</th>
                   <th>删除</th>
                 </tr>
                 <tr>
-                  <th><input
+                  <th className="shortText" ><input
                     type="text"
-                    placeholder="序号" className="shortText" disabled="disabled"
+                    placeholder="序号" disabled="disabled"
                     value={clue.cluenumber}
                   /></th>
-                  <th><input
-                type="text" className="longText"
+                  <th className="longText"><input
+                type="text" 
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
-                  <th><input
-                type="text" className="clueImg"
+                  <th className="clueImg"><input
+                type="text"
                 placeholder="图片地址"
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
               /></th>
-              <th>
-               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
+              <th className="clueDelete">
+               <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
               </th>
                 </tr>
               </table>

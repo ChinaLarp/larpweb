@@ -7,7 +7,6 @@ import axios from 'axios';
 import Moment from 'moment';
 import {Card} from 'antd';
 import { Link } from 'react-router-dom';
-import './newsBlock.css'
  
 class NewsBlock extends React.Component {
   constructor(props){
@@ -59,7 +58,7 @@ class NewsBlock extends React.Component {
     }
 
     return (
-      <Card className='bodyStyle bodyStruc'>
+      <Card className='news-block'>
         <ul id='newsList'>{newsList}</ul>
       </Card>
     )

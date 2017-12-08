@@ -8,7 +8,8 @@ class Footer extends Component{
 		return(
 			
 				<div className="row">
-				  	<div className="footer col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				  	<div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				  	<div className="footer">
 					  	<HashRouter>
 						  	  <div className="copyright">
 
@@ -25,6 +26,7 @@ class Footer extends Component{
 						      <br/>
 						      </div>
 					      </HashRouter>
+					      </div>
 				      </div>
 			      </div>
 		     

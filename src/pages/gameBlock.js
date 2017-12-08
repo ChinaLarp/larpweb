@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import {Card} from 'antd';
 import { Link } from 'react-router-dom';
-import './gameBlock.css';
 import {Tabs, Pagination} from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -58,7 +57,7 @@ class GameBlock extends React.Component {
 
   }
   render() {
-    const operations = <HashRouter><button id="editButton"><NavLink id="editLink" to="/scriptUpload">创建新剧本</NavLink></button></HashRouter>;
+    const operations = <HashRouter><button id="createButton"><NavLink to="/scriptUpload">创建新剧本</NavLink></button></HashRouter>;
     const TabPane = Tabs.TabPane;
     let gamesList;
     if (this.state.loading==true) {
@@ -76,7 +75,7 @@ class GameBlock extends React.Component {
     }
 
     return (
-      <Tabs tabBarExtraContent={operations} className='navbar-default panel'>
+      <Tabs tabBarExtraContent={operations} className="tabBar">
       <TabPane tab="我的剧本" key="1">
       <Card className='bodyStyle bodyStruc'>
       <ul id='gamesList'>{gamesList}</ul>

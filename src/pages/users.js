@@ -17,6 +17,7 @@ import {
 import ScriptUpload from './scriptUpload.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Loginscreen from './Loginscreen.js';
 
 class Users extends React.Component {
   constructor(props){
@@ -41,11 +42,17 @@ class Users extends React.Component {
     if (this.props.auth.isAuthenticated) {
       content= <GameBlock/>;
     } else {
-      content = <h3>please login first</h3>
+      content = <HashRouter>
+      <div>
+      <h3>想要创作属于你的推理剧本吗?</h3>
+      <br/>
+      <h3>大侦探，请先<NavLink to="/Loginscreen">登录/注册</NavLink>。</h3>
+      </div>
+      </HashRouter>;
     }
     return(
         <div className='container' style={usersStyle}>
-            <div className="col-sm-10">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                 {content}
             </div>
         </div>
