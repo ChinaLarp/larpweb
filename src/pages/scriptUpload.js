@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 //import TextField from 'material-ui/TextField';
 import axios from 'axios';
+
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -99,9 +102,10 @@ class ScriptUpload extends React.Component {
     const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
     axios.post(url,{
-      type:"game",
+      type:"draft",
       name:self.state.name,
       id:self.state.id,
+      author:this.props.auth.user.id,
       descripion: self.state.description,
       playernumber: self.state.characterlist.length,
       malenumber: self.state.malenumber,
@@ -365,4 +369,13 @@ class ScriptUpload extends React.Component {
   }
 }
 
-export default ScriptUpload;
+ScriptUpload.propTypes = {
+  auth: PropTypes.object.isRequired
+}
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps, {})(ScriptUpload);
