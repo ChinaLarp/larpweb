@@ -17,6 +17,11 @@ import {Navbar, Nav, NavItem} from 'react-bootstrap';
 
 
 class Menu extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+    };
+  }
   render() {
     return (
 
@@ -39,6 +44,7 @@ class Menu extends Component {
             <Nav pullRight>
               <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>
               <li className="menuItem"><NavLink to="/Register">注册</NavLink></li>
+              <li className="menuItem">{this.props.auth.user.id}</li>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -50,4 +56,13 @@ class Menu extends Component {
   }
 }
 
-export default Menu;
+Menu.propTypes = {
+  auth: PropTypes.object.isRequired
+}
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps, {})(Menu);
