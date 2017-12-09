@@ -24,6 +24,20 @@ class Menu extends Component {
     };
   }
   render() {
+    let User_info;
+    if (this.props.auth.isAuthenticated==false) {
+      User_info=
+      <Nav pullRight>
+        <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>
+        <li className="menuItem"><NavLink to="/Register">注册</NavLink></li>
+      </Nav>
+        ;
+    } else {
+      User_info =
+      <Nav pullRight><li className="menuItem"><NavLink to="/Loginscreen">{this.props.auth.user.firstname} {this.props.auth.user.lastname}</NavLink></li>
+    </Nav>
+;
+    }
     return (
 
       <HashRouter>
@@ -42,11 +56,7 @@ class Menu extends Component {
               <li className="menuItem"><NavLink to="/users">剧本创作</NavLink></li>
               <li className="menuItem"><NavLink to="/contact">联系我们</NavLink></li>
             </Nav>
-            <Nav pullRight>
-              <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>
-              <li className="menuItem"><NavLink to="/Register">注册</NavLink></li>
-              <li className="menuItem"><NavLink to="/users">{this.props.auth.user.firstname} {this.props.auth.user.lastname}</NavLink></li>
-            </Nav>
+            {User_info}
           </Navbar.Collapse>
         </Navbar>
 
