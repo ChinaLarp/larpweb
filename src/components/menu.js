@@ -45,7 +45,8 @@ class Menu extends Component {
             <Nav pullRight>
               <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>
               <li className="menuItem"><NavLink to="/Register">注册</NavLink></li>
-              <li className="menuItem">{this.props.auth.user.id}</li>
+              <li className="menuItem">{this.props.auth.user.firstname}</li>
+              <li className="menuItem">{this.props.auth.user.lastname}</li>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
