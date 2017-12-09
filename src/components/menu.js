@@ -13,7 +13,8 @@ import ScriptUpload from '../pages/scriptUpload.js';
 import Loginscreen from '../pages/Loginscreen.js';
 import Register from '../pages/Register.js';
 import {Navbar, Nav, NavItem} from 'react-bootstrap';
-
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
 class Menu extends Component {
