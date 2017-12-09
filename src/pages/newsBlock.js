@@ -7,42 +7,28 @@ import axios from 'axios';
 import Moment from 'moment';
 import {Card} from 'antd';
 import { Link } from 'react-router-dom';
- 
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 class NewsBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data:'',
-      loading: true
+      loading: false
     };
   }
 
   componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    //const url = 'https://backend.bestlarp.com/api/web';
-    //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    // in axios access data with .data
-    axios.get(url+'?type__in=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-      .then(response => {
-        //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-        //console.log(response.data.length)
-        this.setState({
-          data: response.data,
-          loading: false
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
   render() {
         let newsList;
         Moment.locale('en');
-
-    if (this.state.loading==true) {
+    if (this.props.posts.fetched==false) {
       newsList= <div>'Loading'</div>;
-    } else { 
-      newsList = this.state.data.map((newsItem, index) => {
+    } else {
+      var post=this.props.posts.posts
+      console.log(post)
+      newsList = post.map((newsItem, index) => {
       var link='/details/' + newsItem._id;
         if (newsItem.type=='news'||newsItem.type=='activity'||newsItem.type=='latest'){
         return (
@@ -51,8 +37,6 @@ class NewsBlock extends React.Component {
               <Link to={link} className='link'>{newsItem.title}</Link>
               <span className='time'>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
               </li>
-              
-    
         );}
       });
     }
@@ -64,5 +48,14 @@ class NewsBlock extends React.Component {
     )
   }
 }
- 
-export default NewsBlock;
+
+NewsBlock.propTypes = {
+  posts: PropTypes.object.isRequired
+}
+function mapStateToProps(state) {
+  return {
+    posts: state.posts
+  };
+}
+
+export default connect(mapStateToProps, { })(NewsBlock);

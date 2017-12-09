@@ -18,52 +18,17 @@ class GameBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data:[],
-      loading: true
     };
   }
 
-  componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/';
-    //const url = 'https://backend.bestlarp.com/api/web';
-    //const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
-    // in axios access data with .data
-      console.log(this.props.auth.user.id)
-    if (this.props.auth.user.id=='5a273150c55b0d1ce0d6754d'){
-      axios.get(url+'app?type=game')
-        .then(response => {
-          console.log(response.data)
-          this.setState({
-            data: response.data,
-            loading: false
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }else{
-      axios.get(url+'app?type=draft&author='+this.props.auth.id)
-        .then(response => {
-          console.log(response.data)
-          this.setState({
-            data: response.data,
-            loading: false
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-
-  }
   render() {
     const operations = <HashRouter><button id="createButton"><NavLink to="/scriptUpload">创建新剧本</NavLink></button></HashRouter>;
     const TabPane = Tabs.TabPane;
     let gamesList;
-    if (this.state.loading==true) {
+    if (this.props.auth.drafts.length<-1) {
       gamesList= <div>'Loading'</div>;
     } else {
-      gamesList = this.state.data.map((game, index) => {
+      gamesList = this.props.auth.drafts.map((game, index) => {
       var link='/scriptEdit/' + game._id;
         return (
               <li key={index} id='games'>
@@ -80,7 +45,7 @@ class GameBlock extends React.Component {
       <Card className='bodyStyle bodyStruc'>
       <ul id='gamesList'>{gamesList}</ul>
       </Card>
-      <Pagination total={this.state.data.length}
+      <Pagination total={this.props.auth.drafts.length}
       showTotal={total => 'Total '+total+' items'}
       pageSize={20}
       defaultCurrent={1}/>

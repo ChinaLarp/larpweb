@@ -8,42 +8,29 @@ import Moment from 'moment';
 import {Tabs, Pagination,Card} from 'antd';
 import qs from 'qs';
 import Filter from 'redux-filter';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
- 
-class Games extends React.Component {
+
+class Products extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data:[],
-      itemCount:null,
-      loading:true,
     };
   }
   componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
-    let self=this;
-    axios.get(url+'?type=game').then(response => {
-      console.log("print it out:")
-      console.log(response.data)
-      self.setState({
-        data: response.data,
-        itemCount: response.data.length,
-        loading: false,
-      }) 
-    }) 
-    
-    
+
   }
 
   render() {
     let gameList;
-    
-    if (this.state.loading==true) {
+
+    if (this.props.products.fetched==false) {
       gameList= <div>'Loading'</div>;
     } else {
-      gameList = this.state.data.map((game, index) => {
+      gameList = this.props.products.products.map((game, index) => {
       var link='/gamedetails/' + game._id;
       //<Link to={link} className='gamelink'>{game.name}</Link>
         return (
@@ -62,25 +49,35 @@ class Games extends React.Component {
         );
       });
     }
-  
+
 
     return(
         <div className='container'>
-          
+
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                
+
                   {gameList}
-                
-                <Pagination total={this.state.itemCount} 
+
+                <Pagination total={this.props.products.products.length}
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={12}
                 defaultCurrent={1}/>
 
             </div>
-          
+
         </div>
       )
  }
 }
- 
-export default Games;
+
+
+Products.propTypes = {
+  auth: PropTypes.object.isRequired
+}
+function mapStateToProps(state) {
+  return {
+    products: state.products
+  };
+}
+
+export default connect(mapStateToProps, {})(Products);
