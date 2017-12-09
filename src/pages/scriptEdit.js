@@ -405,25 +405,25 @@ class ScriptEdit extends React.Component {
 
                 {cluelocation.clues.map((clue, iidx) => (
                 <tr>
-                  <th><input
+                  <th className="shortText"><input
                     type="text"
-                    placeholder="序号" className="shortText" disabled="disabled"
+                    placeholder="序号"  disabled="disabled"
                     value={clue.cluenumber}
                   /></th>
-                  <th><input
-                type="text" className="longText"
+                  <th className="longText"><input
+                type="text" 
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
-                  <th><input
-                type="text" className="clueImg"
+                  <th className="clueImg"><input
+                type="text" 
                 placeholder="图片地址"
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
               /></th>
               <th>
-               <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
+               <button type="button" className="small clueDelete" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
               </th>
                 </tr>
                             ))}
