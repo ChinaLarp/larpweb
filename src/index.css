@@ -276,16 +276,21 @@ button.small:hover {
   width: 8%;
   font-size: 16px;
   margin-left:10px;
+
+  padding-right: 20px;
 }
 .longText{
   width: 60%;
   font-size: 16px;
   margin-left: 10px;
+  padding-right: 20px;
 }
 .clueImg{
   width: 25%;
   font-size: 16px;
   margin-left: 10px;
+
+  padding-right: 20px;
 }
 .clueDelete{
   width: 7%;
@@ -297,7 +302,6 @@ button.small:hover {
 }
 #deleteButton{
   height: 30px;
-  margin-top: 100px;
   text-align: center;
 }
 

@@ -282,9 +282,11 @@ class ScriptEdit extends React.Component {
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
           </select>
-          <h4>游戏说明</h4>
+          <div>
+          <h3 style={{float:"left"}}>游戏说明</h3>
+          <br/>
           {this.state.instructinfo.map((instruct, idx) => (
-            <div>
+            <div style={{margin:10,marginTop:20}}>
             <input
               type="text"
               placeholder="说明要素"
@@ -296,14 +298,14 @@ class ScriptEdit extends React.Component {
             </div>
           ))}
           <button type="button" onClick={this.handleAddInstruction} className="small">添加新模块</button>
-          <h4>公开信息</h4>
+          </div>
+
+          <div>
+          <h3 style={{float:"left"}}>流程控制</h3>
+          <br/>
           {this.state.plotinfo.map((plot, idx) => (
-            <div>
-            <input
-              type="text"
-              placeholder="序号" className="shortText" disabled="disabled"
-              value={plot.plotid}
-            />
+            <div style={{margin:10,marginTop:20}}>
+            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
             <input
               type="text"
               placeholder="信息类型"
@@ -315,6 +317,7 @@ class ScriptEdit extends React.Component {
           ))}
           <button type="button" onClick={this.handleRemovePlot} className="small">减少模块</button>
           <button type="button" onClick={this.handleAddPlot} className="small">添加模块</button>
+          </div>
           </form>
         </TabPanel>
 
@@ -339,9 +342,9 @@ class ScriptEdit extends React.Component {
                 </select>
               </div>
               <div>
-              <h4>角色背景</h4>
+              <h3 style={{float:"left"}}>角色背景</h3><br/>
               {characterlist.characterinfo.map((characterinfo, iidx) => (
-                <div>
+                <div style={{margin:10,marginTop:20}}>
                 <input
                   type="text"
                   placeholder="说明要素"
@@ -353,14 +356,11 @@ class ScriptEdit extends React.Component {
               ))}
               </div>
               <div>
-              <h4>人物剧本</h4>
+              <h3 style={{float:"left"}}>人物流程剧本</h3>
+              <br/>
               {characterlist.characterplot.map((plot, iidx) => (
-                <div>
-                <input
-                  type="text"
-                  placeholder="序号" className="shortText" disabled="disabled"
-                  value={plot.plotid}
-                />
+            <div style={{margin:10,marginTop:20}}>
+            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
                 <input
                   type="text"
                   placeholder="信息类型"
@@ -395,10 +395,10 @@ class ScriptEdit extends React.Component {
             {cluelocation.clues.map((clue, iidx) => (
               <div>
               <form className="form-group" onSubmit={this.handleSubmit}>
-              <table className="table table-striped">
+              <table className="table table-striped tableText">
                 <tr className="tableHead">
 
-                  <th>线索序号</th>
+                  <th>序号</th>
                   <th>文字内容</th>
                   <th>图片地址</th>
                   <th>删除</th>
@@ -421,8 +421,8 @@ class ScriptEdit extends React.Component {
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
               /></th>
-              <th>
-               <button type="button" className="small clueDelete" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
+              <th className="clueDelete">
+               <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
               </th>
                 </tr>
               </table>
