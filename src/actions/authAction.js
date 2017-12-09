@@ -1,12 +1,18 @@
 import axios from 'axios';
 import setAuthorizationToken from '../utils/setTocken';
 import jwtDecode from 'jwt-decode';
-import { SET_CURRENT_USER } from './types';
+import { SET_CURRENT_USER, SET_USER_DRADTS } from './types';
 
 export function setCurrentUser(user) {
   return {
     type: SET_CURRENT_USER,
     user
+  };
+}
+export function setDrafts(drafts) {
+  return {
+    type: SET_USER_DRADTS,
+    drafts
   };
 }
 
@@ -17,7 +23,20 @@ export function logout() {
     dispatch(setCurrentUser({}));
   }
 }
-
+export function getdraft(user){
+  var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
+  return dispatch => {
+    if(user.id=='5a273150c55b0d1ce0d6754d'){
+      return axios.get(apiBaseUrl+'/api/app?type=game').then(res=>{
+        dispatch(setDrafts(res.data));
+      });
+    }else{
+      return axios.get(apiBaseUrl+'/api/app?type=draft&author='+user.id).then(res=>{
+        dispatch(setDrafts(res.data));
+      });
+  }
+  }
+}
 export function login(data) {
   var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
   return dispatch => {
@@ -26,6 +45,7 @@ export function login(data) {
       localStorage.setItem('jwtToken', token);
       setAuthorizationToken(token);
       dispatch(setCurrentUser(jwtDecode(token)));
+      getdraft(jwtDecode(token)).then((res)=>dispatch(setDrafts(res)));
     });
   }
 }

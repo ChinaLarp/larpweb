@@ -1,4 +1,12 @@
 import React, { Component } from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from 'react-router-dom';
+
+//compnents
 import Header from './components/header.js'
 import Footer from './components/footer.js'
 import Menu from './components/menu.js'
@@ -11,13 +19,7 @@ import scriptEdit from './pages/scriptEdit.js';
 import ScriptUpload from './pages/scriptUpload.js';
 import Loginscreen from './pages/Loginscreen';
 import Register from './pages/Register.js';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import FlashMessagesList from './components/flashmessagelist';
-import {
-  Route,
-  NavLink,
-  HashRouter
-} from 'react-router-dom';
 import NewsDetail from './pages/newsDetail.js';
 import GameDetail from './pages/gameDetail.js';
 //import MediaQuery from 'react-responsive';
@@ -29,12 +31,11 @@ class App extends Component {
 
   render() {
     var jumbotronStyle={
-          backgroundColor:"transparent", 
-          paddingTop:10, 
-          paddingBottom:10, 
+          backgroundColor:"transparent",
+          paddingTop:10,
+          paddingBottom:10,
           marginBottom:10,
           }
-
     return (
       <div className="App">
         <div className="jumbotron" style={jumbotronStyle}>
@@ -42,10 +43,7 @@ class App extends Component {
           <Header />
           <Menu />
           </div>
-
         </div>
-
-          
         <FlashMessagesList />
         <HashRouter>
           <div className="content">
@@ -61,16 +59,13 @@ class App extends Component {
 			      <Route path="/details/:_id" component={NewsDetail}></Route>
             <Route path="/gamedetails/:_id" component={GameDetail}></Route>
           </div>
-
-      </HashRouter>
-
+        </HashRouter>
         <div className="jumbotron" style={jumbotronStyle}>
         <div className="container">
           <Footer />
           </div>
         </div>
-        </div>
-      
+      </div>
     );
   }
 }
