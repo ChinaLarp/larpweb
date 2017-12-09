@@ -30,7 +30,7 @@ class NewsBlock extends React.Component {
       console.log(post)
       newsList = post.map((newsItem, index) => {
       var link='/details/' + newsItem._id;
-        if (newsItem.type=='news'||newsItem.type=='activity'||newsItem.type=='latest'){
+        if (newsItem.type==this.props.type||this.props.type=='all'){
         return (
 
               <li key={index} id='newsItem'>
@@ -50,7 +50,8 @@ class NewsBlock extends React.Component {
 }
 
 NewsBlock.propTypes = {
-  posts: PropTypes.object.isRequired
+  posts: PropTypes.object.isRequired,
+  type: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
   return {
