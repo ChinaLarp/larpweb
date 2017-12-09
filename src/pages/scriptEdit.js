@@ -368,7 +368,7 @@ class ScriptEdit extends React.Component {
                   onChange={this.handleCharacterPlotNameChange(idx,iidx)}
                 />
 
-                  <textarea rows="4" cols="100" name="content" value={plot.content.join}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
+                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
 
 
                 </div>
