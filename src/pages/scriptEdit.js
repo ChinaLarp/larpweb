@@ -129,7 +129,7 @@ class ScriptEdit extends React.Component {
   handleCharacterPlotContentChange = (idx,iidx) => (evt) => {
     const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
       if (iidx !== sidx) return plot;
-      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]};
+      return { ...plot, content: evt.target.value.split('\n')};
     });
     const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
@@ -392,7 +392,6 @@ class ScriptEdit extends React.Component {
           {this.state.clueinfo.map((cluelocation, idx) => (
             <TabPanel>
             <h3>线索列表</h3><h4>地点序号：{idx};</h4>
-            {cluelocation.clues.map((clue, iidx) => (
               <div>
               <form className="form-group" onSubmit={this.handleSubmit}>
               <table className="table table-striped">
@@ -403,6 +402,8 @@ class ScriptEdit extends React.Component {
                   <th>图片地址</th>
                   <th>删除</th>
                 </tr>
+
+                {cluelocation.clues.map((clue, iidx) => (
                 <tr>
                   <th><input
                     type="text"
@@ -425,10 +426,11 @@ class ScriptEdit extends React.Component {
                <button type="button" className="small" id="deleteButton" onClick={this.handleRemoveClues(idx,iidx)}>-</button>
               </th>
                 </tr>
+                            ))}
               </table>
               </form>
               </div>
-            ))}
+
 
         <button type="button" onClick={this.handleAddClues(idx)} className="small">添加新线索</button>
             </TabPanel>
