@@ -52,7 +52,8 @@ class ScriptEdit extends React.Component {
           {
             axios.put(url+'/'+self.state.characterlist[i]._id,{
               banlocation: self.state.characterlist[i].banlocation,
-              characterinfo: self.state.characterlist[i].characterinfo
+              characterinfo: self.state.characterlist[i].characterinfo,
+              characterplot: self.state.characterlist[i].characterplot
           }).then(response => {
               //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
               console.log("put character submitted" + self.state.characterlist[i].name)
@@ -411,13 +412,13 @@ class ScriptEdit extends React.Component {
                     value={clue.cluenumber}
                   /></th>
                   <th className="longText"><input
-                type="text" 
+                type="text"
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
                   <th className="clueImg"><input
-                type="text" 
+                type="text"
                 placeholder="图片地址"
                 value={clue.image}
                 onChange={this.handleclueImageChange(idx,iidx)}
