@@ -22,7 +22,7 @@ class Home extends React.Component {
 
   		const TabPane = Tabs.TabPane;
         const operations = <HashRouter><NavLink id="editLink" to="/news">+更多</NavLink></HashRouter>;
- 
+
   		var tabBarStyle = {
   			color:"orange",
   			fontSize:16,
@@ -49,7 +49,7 @@ class Home extends React.Component {
 
 		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 		      	<Tabs tabBarExtraContent={operations} tabBarStyle={tabBarStyle}>
-				    <TabPane tab="最新" key="1" className="news-block"><NewsBlock count={7} type='news,activity'/></TabPane>
+				    <TabPane tab="最新" key="1" className="news-block"><NewsBlock count={7} type='all'/></TabPane>
 				    <TabPane tab="新闻" key="2" className="news-block"><NewsBlock count={7} type='news'/></TabPane>
 				    <TabPane tab="活动" key="3" className="news-block"><NewsBlock count={7} type='activity' /></TabPane>
 	  		    </Tabs>
