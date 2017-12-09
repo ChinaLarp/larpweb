@@ -203,7 +203,7 @@ textarea{
   width: 100%;
   appearance: none;
   border-radius: 5px;
-  background-color: #84c00c;
+  background-color: black;
   color: #fff;
   border: none;
   font-size: 16px;
@@ -212,11 +212,11 @@ textarea{
 }
 
  button:hover {
-  background-color: #669509;
+  background-color: #333;
 }
 
 button:disabled {
-  background-color: #dbf99f;
+  background-color: black;
   color: #333;
 }
 
@@ -410,3 +410,11 @@ display: -webkit-box;
 }
 
 /* footer ends*/
+
+/* login register*/
+.buttonAlignCenter{
+  margin:0 auto;
+  display: flex;
+  justify-content:center;
+  align-self: stretch;
+}

@@ -87,11 +87,10 @@ class Loginscreen extends Component {
         {this.state.loginscreen}
         <div>
           {this.state.loginmessage}
-          <MuiThemeProvider>
-            <div>
-               <RaisedButton label={this.state.buttonLabel} primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-           </div>
-          </MuiThemeProvider>
+          <div className="buttonAlignCenter">
+            <button button type="button" style={style} onClick={(event) => this.handleClick(event)}>{this.state.buttonLabel}</button>
+          </div>
+          
         </div>
       </div>
     );
@@ -99,6 +98,9 @@ class Loginscreen extends Component {
 }
 const style = {
   margin: 15,
+  width: "4%",
+  color: "#FFF",
+  backgroundColor: "black",
 };
 Loginscreen.propTypes = {
   userSignupRequest: PropTypes.func.isRequired,

@@ -267,7 +267,7 @@ class ScriptEdit extends React.Component {
       	<div className="container">
       <Tabs>
         <TabList>
-          <button onClick={this.handleSubmit}>save</button>
+          <button onClick={this.handleSubmit}>保存</button>
           <Tab>{this.state.gameinfo.name}</Tab>
           <Tab>人物剧本</Tab>
           <Tab>游戏线索</Tab>
@@ -292,10 +292,10 @@ class ScriptEdit extends React.Component {
               onChange={this.handleInstructTypeChange(idx)}
             />
             <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} />
-            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">-</button>
+            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
             </div>
           ))}
-          <button type="button" onClick={this.handleAddInstruction} className="small">添加模块</button>
+          <button type="button" onClick={this.handleAddInstruction} className="small">添加新模块</button>
           <h4>公开信息</h4>
           {this.state.plotinfo.map((plot, idx) => (
             <div>

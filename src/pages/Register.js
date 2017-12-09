@@ -50,7 +50,9 @@ class Register extends Component {
              onChange = {(event,newValue) => this.setState({password:newValue})}
              />
            <br/>
-           <RaisedButton label="提交" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+           <div className="buttonAlignCenter">
+           <button primary={true} style={style} onClick={(event) => this.handleClick(event)}>提交</button>
+           </div>
           </div>
          </MuiThemeProvider>
       </div>
@@ -91,6 +93,9 @@ class Register extends Component {
 }
 const style = {
   margin: 15,
+  width: "4%",
+  color: "#FFF",
+  backgroundColor: "black",
 };
 /*Register.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,

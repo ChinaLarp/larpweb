@@ -28,7 +28,7 @@ var result=this.props.login(this.state)
  }
 render() {
     return (
-      <div>
+      <div style={{color:"orange"}}>
       <h3>用户登录</h3>
         <MuiThemeProvider>
           <div>
@@ -45,7 +45,9 @@ render() {
                onChange = {(event,newValue) => this.setState({password:newValue})}
                />
              <br/>
-             <RaisedButton label="登录" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+             <div className="buttonAlignCenter">
+              <button primary={true} style={style} onClick={(event) => this.handleClick(event)}>登录</button>
+            </div>
          </div>
          </MuiThemeProvider>
       </div>
@@ -54,6 +56,8 @@ render() {
 }
 const style = {
  margin: 15,
+ backgroundColor:"black",
+ width:"4%",
 };
 
 export default Login;
