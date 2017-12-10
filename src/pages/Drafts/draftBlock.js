@@ -14,7 +14,7 @@ import {
   NavLink,
   HashRouter
 } from 'react-router-dom';
-class GameBlock extends React.Component {
+class draftBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -22,14 +22,14 @@ class GameBlock extends React.Component {
   }
 
   render() {
-    const operations = <HashRouter><button id="createButton"><NavLink to="/scriptUpload">创建新剧本</NavLink></button></HashRouter>;
+    const operations = <HashRouter><button id="createButton"><NavLink to="/DraftCreate">创建新剧本</NavLink></button></HashRouter>;
     const TabPane = Tabs.TabPane;
     let gamesList;
     if (this.props.auth.drafts.length<-1) {
       gamesList= <div>'Loading'</div>;
     } else {
       gamesList = this.props.auth.drafts.map((game, index) => {
-      var link='/scriptEdit/' + game._id;
+      var link='/draftEdit/' + game._id;
         return (
               <li key={index} id='games'>
               <Link to={link} className='gamelink'>{game.name}</Link>
@@ -54,7 +54,7 @@ class GameBlock extends React.Component {
     )
   }
 }
-GameBlock.propTypes = {
+draftBlock.propTypes = {
   auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
@@ -63,4 +63,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(GameBlock);
+export default connect(mapStateToProps, {})(draftBlock);

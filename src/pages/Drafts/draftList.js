@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Moment from 'moment';
-import GameBlock from './gameBlock.js';
+import draftBlock from './draftBlock.js';
 
 import {Tabs, Pagination} from 'antd';
 import {
@@ -14,12 +14,12 @@ import {
   NavLink,
   HashRouter
 } from 'react-router-dom';
-import ScriptUpload from './scriptUpload.js';
+import DraftCreate from './DraftCreate.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Loginscreen from './Loginscreen.js';
+import Loginscreen from '../Login/Loginscreen.js';
 
-class Users extends React.Component {
+class draftList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -34,13 +34,13 @@ class Users extends React.Component {
 
   render(){
     let content
-    var usersStyle = {
+    var draftListStyle = {
       alignSelf: 'stretch',
       display: "flex",
       justifyContent:"center"
     };
     if (this.props.auth.isAuthenticated) {
-      content= <GameBlock/>;
+      content= <draftBlock/>;
     } else {
       content = <HashRouter>
       <div>
@@ -51,7 +51,7 @@ class Users extends React.Component {
       </HashRouter>;
     }
     return(
-        <div className='container' style={usersStyle}>
+        <div className='container' style={draftListStyle}>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                 {content}
             </div>
@@ -62,7 +62,7 @@ class Users extends React.Component {
 }
 
 
-Users.propTypes = {
+draftList.propTypes = {
   auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
@@ -71,4 +71,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(Users);
+export default connect(mapStateToProps, {})(draftList);

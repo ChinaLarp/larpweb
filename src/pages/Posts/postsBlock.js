@@ -1,5 +1,5 @@
 /*
- Newsbloc loading news title and publish date;
+ postsbloc loading posts title and publish date;
 */
 
 import React, { Component } from 'react';
@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class NewsBlock extends React.Component {
+class postsBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -21,35 +21,35 @@ class NewsBlock extends React.Component {
   componentDidMount(){
   }
   render() {
-        let newsList;
+        let postsList;
         Moment.locale('en');
     if (this.props.posts.fetched==false) {
-      newsList= <div>'Loading'</div>;
+      postsList= <div>'Loading'</div>;
     } else {
       var post=this.props.posts.posts
       console.log(post)
-      newsList = post.map((newsItem, index) => {
-      var link='/details/' + newsItem._id;
-        if (newsItem.type==this.props.type||this.props.type=='all'){
+      postsList = post.map((postsItem, index) => {
+      var link='/details/' + postsItem._id;
+        if (postsItem.type==this.props.type||this.props.type=='all'){
         return (
 
-              <li key={index} id='newsItem'>
-              <Link to={link} className='link'>{newsItem.title}</Link>
-              <span className='time'>{Moment(newsItem.date).format('YYYY-MM-DD')}</span>
+              <li key={index} id='postsItem'>
+              <Link to={link} className='link'>{postsItem.title}</Link>
+              <span className='time'>{Moment(postsItem.date).format('YYYY-MM-DD')}</span>
               </li>
         );}
       });
     }
 
     return (
-      <Card className='news-block'>
-        <ul id='newsList'>{newsList}</ul>
+      <Card className='posts-block'>
+        <ul id='postsList'>{postsList}</ul>
       </Card>
     )
   }
 }
 
-NewsBlock.propTypes = {
+postsBlock.propTypes = {
   posts: PropTypes.object.isRequired,
   type: PropTypes.object.isRequired
 }
@@ -59,4 +59,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { })(NewsBlock);
+export default connect(mapStateToProps, { })(postsBlock);

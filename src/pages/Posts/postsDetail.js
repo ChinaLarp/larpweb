@@ -2,11 +2,11 @@ import React from 'react';
 import {Row, Col, BackTop} from 'antd';
 import axios from 'axios'
 
-export default class NewsDetail extends React.Component {
+export default class postsDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newsItem: {}
+      postsItem: {}
     };
   }
 
@@ -21,7 +21,7 @@ export default class NewsDetail extends React.Component {
       .then(response => {
       	console.log(response.data)
         this.setState({
-          newsItem: response.data,
+          postsItem: response.data,
           loading: false
         });
       })
@@ -31,19 +31,19 @@ export default class NewsDetail extends React.Component {
   }
 
   createMarkup() {
-    return this.state.newsItem.content;
+    return this.state.postsItem.content;
   }
 
   render() {
   	let itemList =[]
-  	    var newsDetailtStyle = {
+  	    var postsDetailtStyle = {
           fontSize: 16,
           color:"#000",
           alignText:"center",
           width:"100%",
         };
 
-      var newsStyle = {
+      var postsStyle = {
         alignSelf: 'stretch',
         display: "flex",
         justifyContent:"center",
@@ -51,10 +51,10 @@ export default class NewsDetail extends React.Component {
       };
 
 
-  	if (!this.state.newsItem.content) {
+  	if (!this.state.postsItem.content) {
       itemList= <div>'Loading'</div>;
-    } else { 
-      itemList = this.state.newsItem.content.map((item, index) => {
+    } else {
+      itemList = this.state.postsItem.content.map((item, index) => {
       	if (item.type==="text"){
 			return (
 			<li key={index}>
@@ -69,19 +69,19 @@ export default class NewsDetail extends React.Component {
             </li>
         )
       	}
-		
+
       });
     }
-    
+
 
     return (
-           <div className='container' style={newsStyle}>
-          
+           <div className='container' style={postsStyle}>
+
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
-            <h3>{this.state.newsItem.title}</h3>
-            <ul className style={newsDetailtStyle}>{itemList}</ul>
+            <h3>{this.state.postsItem.title}</h3>
+            <ul className style={postsDetailtStyle}>{itemList}</ul>
             </div>
-          
+
         </div>
     )
 

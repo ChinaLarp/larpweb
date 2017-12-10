@@ -3,11 +3,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import Login from './Login';
 import Register from './Register';
-import { userSignupRequest } from '../actions/signupActions';
-import { addFlashMessage } from '../actions/flashmessages.js';
+import { userSignupRequest } from '../../actions/signupActions';
+import { addFlashMessage } from '../../actions/flashmessages.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login,logout } from '../actions/authAction';
+import { login,logout } from '../../actions/authAction';
 import axios from 'axios';
 class Loginscreen extends Component {
   constructor(props){
@@ -41,7 +41,7 @@ class Loginscreen extends Component {
 
     }else{
     var loginscreen=[];
-    loginscreen.push(<Login login={this.props.login} parentContext={this} appContext={this.props.parentContext}/>);
+    loginscreen.push(<Login login={this.props.login} addFlashMessage={this.props.addFlashMessage} parentContext={this} appContext={this.props.parentContext}/>);
     var loginmessage = "尚未注册，请先注册用户！";
     this.setState({
                   loginscreen:loginscreen,
@@ -71,7 +71,7 @@ class Loginscreen extends Component {
     }
     else{
       var loginscreen=[];
-      loginscreen.push(<Login login={this.props.login}  parentContext={this}/>);
+      loginscreen.push(<Login login={this.props.login} addFlashMessage={this.props.addFlashMessage}   parentContext={this}/>);
       loginmessage = "尚未注册，请先注册新用户！";
       this.setState({
                      loginscreen:loginscreen,
@@ -90,7 +90,7 @@ class Loginscreen extends Component {
           <div className="buttonAlignCenter">
             <button button type="button" style={style} onClick={(event) => this.handleClick(event)}>{this.state.buttonLabel}</button>
           </div>
-          
+
         </div>
       </div>
     );

@@ -6,7 +6,7 @@ import axios from 'axios';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-class ScriptEdit extends React.Component {
+class draftEdit extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -445,4 +445,4 @@ class ScriptEdit extends React.Component {
   }
 }
 
-export default ScriptEdit;
+export default draftEdit;

@@ -5,9 +5,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
-//import { userSignupRequest, isUserExists } from './actions/signupActions';
-//import { addFlashMessage } from '../actions/flashmessages';
-//import { userSignupRequest } from '../actions/signupActions';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -73,7 +70,7 @@ class Register extends Component {
       if (res.data.success){
         this.props.addFlashMessage({
           type: 'success',
-          text: 'You signed up successfully. Welcome!'
+          text: '你已成功注册. 欢迎!'
         });
         window.location.reload()
       }}
@@ -81,7 +78,7 @@ class Register extends Component {
         console.log("failed")
         this.props.addFlashMessage({
           type: 'failed',
-          text: 'Try another email!'
+          text: '改邮箱已经被注册!'
         });
       }
 

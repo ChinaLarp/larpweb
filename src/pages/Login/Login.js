@@ -3,6 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 class Login extends Component {
@@ -22,8 +23,18 @@ constructor(props){
  }
 var result=this.props.login(this.state)
 .then(
-  (res) => window.location.reload(),
-  //(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
+  (res) => {
+    this.props.addFlashMessage({
+    type: 'success',
+    text: '欢迎回来!'
+  });
+    this.context.router.history.push('/draftList');},
+  (err) => {
+    this.props.addFlashMessage({
+      type: 'failed',
+      text: '用户名或密码错误!'
+    });
+    this.setState({ errors: err.response.data.errors, isLoading: false })}
 )
  }
 render() {
@@ -59,5 +70,8 @@ const style = {
  backgroundColor:"black",
  width:"4%",
 };
+Login.contextTypes = {
+  router: PropTypes.object.isRequired
+}
 
-export default Login;
+export default connect(null, {  })(Login);

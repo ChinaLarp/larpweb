@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-class ScriptUpload extends React.Component {
+class DraftCreate extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -367,7 +367,7 @@ class ScriptUpload extends React.Component {
   }
 }
 
-ScriptUpload.propTypes = {
+DraftCreate.propTypes = {
   auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
@@ -376,4 +376,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(ScriptUpload);
+export default connect(mapStateToProps, {})(DraftCreate);
