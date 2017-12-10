@@ -4,7 +4,7 @@ import top1 from '../assets/img/top1.png';
 import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
 //import './home.css';
-import postsBlock from './Posts/postsBlock.js';
+import Postsblock from './Posts/postsblock.js';
 import posts from './Posts/posts.js';
 import {
   Route,
@@ -49,9 +49,9 @@ class Home extends React.Component {
 
 		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 		      	<Tabs tabBarExtraContent={operations} tabBarStyle={tabBarStyle}>
-				    <TabPane tab="最新" key="1" className="news-block"><postsBlock count={7} type='all'/></TabPane>
-				    <TabPane tab="新闻" key="2" className="news-block"><postsBlock count={7} type='news'/></TabPane>
-				    <TabPane tab="活动" key="3" className="news-block"><postsBlock count={7} type='activity' /></TabPane>
+				    <TabPane tab="最新" key="1" className="news-block"><Postsblock count={7} type='all'/></TabPane>
+				    <TabPane tab="新闻" key="2" className="news-block"><Postsblock count={7} type='news'/></TabPane>
+				    <TabPane tab="活动" key="3" className="news-block"><Postsblock count={7} type='activity' /></TabPane>
 	  		    </Tabs>
 		     </div>
 	      </div>

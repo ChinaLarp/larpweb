@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class postsBlock extends React.Component {
+class Postsblock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -33,7 +33,7 @@ class postsBlock extends React.Component {
         if (postsItem.type==this.props.type||this.props.type=='all'){
         return (
 
-              <li key={index} id='postsItem'>
+              <li key={index} id='newsItem'>
               <Link to={link} className='link'>{postsItem.title}</Link>
               <span className='time'>{Moment(postsItem.date).format('YYYY-MM-DD')}</span>
               </li>
@@ -42,14 +42,14 @@ class postsBlock extends React.Component {
     }
 
     return (
-      <Card className='posts-block'>
+      <Card className='news-block'>
         <ul id='postsList'>{postsList}</ul>
       </Card>
     )
   }
 }
 
-postsBlock.propTypes = {
+Postsblock.propTypes = {
   posts: PropTypes.object.isRequired,
   type: PropTypes.object.isRequired
 }
@@ -59,4 +59,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { })(postsBlock);
+export default connect(mapStateToProps, { })(Postsblock);

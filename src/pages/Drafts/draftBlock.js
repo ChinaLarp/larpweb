@@ -14,7 +14,7 @@ import {
   NavLink,
   HashRouter
 } from 'react-router-dom';
-class draftBlock extends React.Component {
+class DraftBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -54,7 +54,7 @@ class draftBlock extends React.Component {
     )
   }
 }
-draftBlock.propTypes = {
+DraftBlock.propTypes = {
   auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
@@ -63,4 +63,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(draftBlock);
+export default connect(mapStateToProps, {})(DraftBlock);

@@ -15,8 +15,8 @@ class FlashMessagesList extends React.Component {
   }
 }
 FlashMessagesList.propTypes = {
-  messages: PropTypes.object.isRequired,
-  deleteFlashMessage: PropTypes.object.isRequired
+  messages: PropTypes.array.isRequired,
+  deleteFlashMessage: PropTypes.func.isRequired
 }
 
 

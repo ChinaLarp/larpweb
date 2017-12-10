@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Moment from 'moment';
-import draftBlock from './draftBlock.js';
+import DraftBlock from './draftBlock.js';
 
 import {Tabs, Pagination} from 'antd';
 import {
@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loginscreen from '../Login/Loginscreen.js';
 
-class draftList extends React.Component {
+class DraftList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -40,7 +40,7 @@ class draftList extends React.Component {
       justifyContent:"center"
     };
     if (this.props.auth.isAuthenticated) {
-      content= <draftBlock/>;
+      content= <DraftBlock/>;
     } else {
       content = <HashRouter>
       <div>
@@ -62,7 +62,7 @@ class draftList extends React.Component {
 }
 
 
-draftList.propTypes = {
+DraftList.propTypes = {
   auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
@@ -71,4 +71,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(draftList);
+export default connect(mapStateToProps, {})(DraftList);

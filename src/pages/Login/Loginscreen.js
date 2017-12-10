@@ -17,7 +17,7 @@ class Loginscreen extends Component {
       password:'',
       loginscreen:[],
       loginmessage:'',
-      buttonLabel:'注册',
+      buttonLabel:'',
       isLogin:true,
       firstname:''
     }
@@ -25,19 +25,12 @@ class Loginscreen extends Component {
   componentWillMount(){
     console.log(this.props.auth.isAuthenticated)
     if(this.props.auth.isAuthenticated){
-      var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
-
-        console.log(this.state.firstname)
-      axios.get(apiBaseUrl+'/api/web/'+this.props.auth.user.id).then(res => {
-        console.log(res.data.firstname)
-        this.setState({ firstname:res.data.firstname})
-        var loginscreen=[];
-        loginscreen.push(<a href="#" >Hello{res.data.firstname}</a>);
-        var loginmessage = "You have already logged in";
-        this.setState({loginscreen:loginscreen,
-                      loginmessage:loginmessage,
-                      buttonLabel:"退出"})
-      });
+      var loginscreen=[];
+      loginscreen.push(<a href="#" >Hello{this.props.auth.user.firstname}</a>);
+      var loginmessage = "You have already logged in";
+      this.setState({loginscreen:loginscreen,
+                    loginmessage:loginmessage,
+                    buttonLabel:"退出"})
 
     }else{
     var loginscreen=[];
