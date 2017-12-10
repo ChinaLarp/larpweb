@@ -35,4 +35,4 @@ render(
     <App history={BrowserRouter} />
   </Provider>, document.getElementById('root'));
 
-//registerServiceWorker();
+registerServiceWorker();
