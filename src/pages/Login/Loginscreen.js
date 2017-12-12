@@ -38,7 +38,8 @@ class Loginscreen extends Component {
     var loginmessage = "尚未注册，请先注册用户！";
     this.setState({
                   loginscreen:loginscreen,
-                  loginmessage:loginmessage
+                  loginmessage:loginmessage,
+                  buttonLabel:"注册"
                     })
     }
 
@@ -48,7 +49,15 @@ class Loginscreen extends Component {
     var loginmessage;
     if(this.props.auth.isAuthenticated){
       this.props.logout()
-      window.location.reload()
+      var loginscreen=[];
+      loginscreen.push(<Login login={this.props.login} addFlashMessage={this.props.addFlashMessage}   parentContext={this}/>);
+      loginmessage = "尚未注册，请先注册新用户！";
+      this.setState({
+                     loginscreen:loginscreen,
+                     loginmessage:loginmessage,
+                     buttonLabel:"注册",
+                     isLogin:true
+                   })
     }else if(this.state.isLogin){
       var loginscreen=[];
       const { userSignupRequest, addFlashMessage } = this.props;

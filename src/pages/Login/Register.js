@@ -12,13 +12,16 @@ class Register extends Component {
       first_name:'',
       last_name:'',
       email:'',
-      password:''
+      password:'',
+      errors: {},
+      passwordcomfirm:''
     }
   }
   render() {
     return (
       <div>
       <h3>新用户注册</h3>
+      { this.state.errors.form && <div className="alert alert-danger">{this.state.errors.form}</div> }
         <MuiThemeProvider>
           <div>
            <TextField
@@ -47,6 +50,13 @@ class Register extends Component {
              onChange = {(event,newValue) => this.setState({password:newValue})}
              />
            <br/>
+           <TextField
+             type = "password"
+             hintText="请再次输入您的密码"
+             floatingLabelText="密码"
+             onChange = {(event,newValue) => this.setState({passwordcomfirm:newValue})}
+             />
+           <br/>
            <div className="buttonAlignCenter">
            <button primary={true} className="loginButton" onClick={(event) => this.handleClick(event)}>提交</button>
            </div>
@@ -55,7 +65,19 @@ class Register extends Component {
       </div>
     );
   }
+  isValid() {
+    var errors={}
+    var isValid=true
+    if (this.state.password!==this.state.passwordcomfirm){
+      errors={form:'密码输入不同'}
+      this.setState({ errors });
+      isValid=false
+    }
+  return isValid;
+}
   handleClick(event){
+    event.preventDefault();
+    if (this.isValid()) {
     var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
     console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.password);
     //To be done:check for empty values before hitting submit
@@ -75,16 +97,11 @@ class Register extends Component {
         window.location.reload()
       }}
       ,(res,err)=>{
-        console.log("failed")
         this.props.addFlashMessage({
           type: 'failed',
           text: '改邮箱已经被注册!'
         });
-      }
-
-
-
-    )
+      }    )}
 
 }
 }
