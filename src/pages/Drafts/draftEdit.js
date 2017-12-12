@@ -19,7 +19,7 @@ class draftEdit extends React.Component {
       cluemethod:'',
     };
   }
-  fillArray=function(cluelocation) {
+  fillArray = (cluelocation) => {
    if (cluelocation.length == 0) return [];
    var cluestatus=[]
    for  (var i=0;i<cluelocation.length;i++) {

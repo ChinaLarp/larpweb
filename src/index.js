@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Router, BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -30,9 +30,7 @@ if (localStorage.jwtToken) {
 }
 store.dispatch(fetchpost())
 store.dispatch(fetchproducts())
-render(
-  <Provider store={store}>
-    <App history={BrowserRouter} />
-  </Provider>, document.getElementById('root'));
+
+ReactDOM.render(<Provider store={store}><App history={BrowserRouter} /></Provider>, document.getElementById('root'));
 
 registerServiceWorker();

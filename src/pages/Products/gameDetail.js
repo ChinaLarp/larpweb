@@ -52,14 +52,13 @@ export default class GameDetail extends React.Component {
         alignSelf: 'stretch',
         display: "flex",
         justifyContent:"center",
-
       };
 
-    
+
 
     return (
            <div className='container' style={newsStyle}>
-          
+
             <div className="card col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div className="row" >
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -82,7 +81,7 @@ export default class GameDetail extends React.Component {
                     this.state.plotInfo.map((plot, index)=>
                       (<p className="card-text">{plot.content.join('\n')}</p>))
                   }
-               
+
                 </div>
               </div>
 
@@ -102,9 +101,9 @@ export default class GameDetail extends React.Component {
                </div>
                 </div>
               </div>
-            
+
             </div>
-          
+
         </div>
     )
 

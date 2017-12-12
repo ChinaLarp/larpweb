@@ -34,7 +34,14 @@ class DraftCreate extends React.Component {
       characterinfo:[{type:'', content:['请输入故事内容']}],
     };
   }
-   fillArray=function(cluelocation) {
+
+  handleNameChange = (evt) => {
+    this.setState({ name: evt.target.value });
+  }
+  handleidChange = (evt) => {
+    this.setState({ id: evt.target.value });
+  }
+  fillArray = (cluelocation) =>  {
     if (this.state.cluelocation.length == 0) return [];
     var cluestatus=[]
     for  (var i=0;i<this.state.cluelocation.length;i++) {
@@ -45,13 +52,6 @@ class DraftCreate extends React.Component {
     console.log(cluestatus)
     return cluestatus;
   }
-  handleNameChange = (evt) => {
-    this.setState({ name: evt.target.value });
-  }
-  handleidChange = (evt) => {
-    this.setState({ id: evt.target.value });
-  }
-
   handleDescriptionChange = (evt) => {
     this.setState({ description: evt.target.value });
   }
