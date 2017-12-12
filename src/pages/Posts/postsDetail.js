@@ -36,20 +36,6 @@ export default class postsDetail extends React.Component {
 
   render() {
   	let itemList =[]
-  	    var postsDetailtStyle = {
-          fontSize: 16,
-          color:"#000",
-          alignText:"center",
-          width:"100%",
-        };
-
-      var postsStyle = {
-        alignSelf: 'stretch',
-        display: "flex",
-        justifyContent:"center",
-
-      };
-
 
   	if (!this.state.postsItem.content) {
       itemList= <div>'Loading'</div>;
@@ -75,11 +61,11 @@ export default class postsDetail extends React.Component {
 
 
     return (
-           <div className='container' style={postsStyle}>
+           <div className='container' className="postsAlignCenter">
 
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
             <h3>{this.state.postsItem.title}</h3>
-            <ul className style={postsDetailtStyle}>{itemList}</ul>
+            <ul className="postsDetailt">{itemList}</ul>
             </div>
 
         </div>

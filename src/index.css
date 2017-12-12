@@ -422,3 +422,41 @@ display: -webkit-box;
   justify-content:center;
   align-self: stretch;
 }
+
+/* contact page starts */
+.wechatCode{
+  margin-top:10px;
+  width: 215px;
+  height: 215px;
+  vertical-align: bottom;
+  text-align: center;
+}
+
+.ontactInput{
+  width: 460px;
+}
+/* contact page ends */
+
+/* posts page starts */
+.postsAlignCenter{
+  align-self: stretch;
+  display: flex;
+  justify-content:center;
+}
+/* posts page ends */
+
+/* postsDetail page starts */
+.postsDetailt{
+  font-size: 16px;
+  color:#000;
+  text-align: center;
+  width:100%;
+}
+/* posts page ends */
+
+.loginButton{
+  margin: 15;
+  background-color:black;
+  color: #FFF;
+  width: 4%;
+}

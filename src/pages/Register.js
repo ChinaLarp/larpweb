@@ -5,6 +5,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
+//import { userSignupRequest, isUserExists } from './actions/signupActions';
+//import { addFlashMessage } from '../actions/flashmessages';
+//import { userSignupRequest } from '../actions/signupActions';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -48,7 +51,7 @@ class Register extends Component {
              />
            <br/>
            <div className="buttonAlignCenter">
-           <button primary={true} className="loginButton" onClick={(event) => this.handleClick(event)}>提交</button>
+           <button primary={true} style={style} onClick={(event) => this.handleClick(event)}>提交</button>
            </div>
           </div>
          </MuiThemeProvider>
@@ -70,7 +73,7 @@ class Register extends Component {
       if (res.data.success){
         this.props.addFlashMessage({
           type: 'success',
-          text: '你已成功注册. 欢迎!'
+          text: 'You signed up successfully. Welcome!'
         });
         window.location.reload()
       }}
@@ -78,7 +81,7 @@ class Register extends Component {
         console.log("failed")
         this.props.addFlashMessage({
           type: 'failed',
-          text: '改邮箱已经被注册!'
+          text: 'Try another email!'
         });
       }
 
@@ -88,7 +91,12 @@ class Register extends Component {
 
 }
 }
-
+const style = {
+  margin: 15,
+  width: "4%",
+  color: "#FFF",
+  backgroundColor: "black",
+};
 /*Register.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
   addFlashMessage: React.PropTypes.func.isRequired,

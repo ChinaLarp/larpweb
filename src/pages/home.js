@@ -4,7 +4,7 @@ import top1 from '../assets/img/top1.png';
 import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
 //import './home.css';
-import Postsblock from './Posts/postsblock.js';
+import Postsblock from './Posts/postsBlock.js';
 import posts from './Posts/posts.js';
 import {
   Route,

@@ -3,7 +3,6 @@ import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 class Login extends Component {
@@ -23,18 +22,8 @@ constructor(props){
  }
 var result=this.props.login(this.state)
 .then(
-  (res) => {
-    this.props.addFlashMessage({
-    type: 'success',
-    text: '欢迎回来!'
-  });
-    this.context.router.history.push('/draftList');},
-  (err) => {
-    this.props.addFlashMessage({
-      type: 'failed',
-      text: '用户名或密码错误!'
-    });
-    this.setState({ errors: err.response.data.errors, isLoading: false })}
+  (res) => window.location.reload(),
+  //(err) => this.setState({ errors: err.response.data.errors, isLoading: false })
 )
  }
 render() {
@@ -57,7 +46,7 @@ render() {
                />
              <br/>
              <div className="buttonAlignCenter">
-              <button primary={true} className="loginButton" onClick={(event) => this.handleClick(event)}>登录</button>
+              <button primary={true} style={style} onClick={(event) => this.handleClick(event)}>登录</button>
             </div>
          </div>
          </MuiThemeProvider>
@@ -65,9 +54,10 @@ render() {
     );
   }
 }
+const style = {
+ margin: 15,
+ backgroundColor:"black",
+ width:"4%",
+};
 
-Login.contextTypes = {
-  router: PropTypes.object.isRequired
-}
-
-export default connect(null, {  })(Login);
+export default Login;
