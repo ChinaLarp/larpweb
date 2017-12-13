@@ -30,8 +30,6 @@ class DraftList extends React.Component {
   componentDidMount(){
 
   }
-
-
   render(){
     let content
     var draftListStyle = {

@@ -11,6 +11,7 @@ import Header from './components/header.js'
 import Footer from './components/footer.js'
 import Menu from './components/menu.js'
 import Home from './pages/home.js';
+import postEdit from './pages/PostEdit/postEdit.js';
 import posts from './pages/Posts/posts.js';
 import Games from './pages/Products/games.js';
 import Contact from './pages/contact.js';
@@ -22,7 +23,7 @@ import Register from './pages/Login/Register.js';
 import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
-//import MediaQuery from 'react-responsive';
+
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -47,8 +48,9 @@ class App extends Component {
         </div>
 
         <HashRouter>
-          <div className="content">
+          <div className="content" >
             <Route exact path="/" component={Home}/>
+            <Route path="/13478545921/:_id" component={postEdit}/>
             <Route path="/posts" component={posts}/>
             <Route path="/games" component={Games}/>
             <Route path="/draftList" component={draftList}/>
