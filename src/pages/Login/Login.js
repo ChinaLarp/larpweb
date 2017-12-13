@@ -11,7 +11,8 @@ constructor(props){
   super(props);
   this.state={
   email:'',
-  password:''
+  password:'',
+  errors: {}
   }
  }
  handleClick(event){
@@ -30,11 +31,7 @@ var result=this.props.login(this.state)
   });
     this.context.router.history.push('/draftList');},
   (err) => {
-    this.props.addFlashMessage({
-      type: 'failed',
-      text: '用户名或密码错误!'
-    });
-    this.setState({ errors: err.response.data.errors, isLoading: false })}
+    this.setState({ errors: {form:'用户名或密码错误!'}})}
 )
  }
 render() {
@@ -42,6 +39,7 @@ render() {
       <div style={{color:"orange"}}>
       <h3>用户登录</h3>
         <MuiThemeProvider>
+        { this.state.errors.form && <div className="alert alert-danger">{this.state.errors.form}</div> }
           <div>
            <TextField
              hintText="请输入email或用户名"
