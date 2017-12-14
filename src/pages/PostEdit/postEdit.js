@@ -154,11 +154,11 @@ class PostEdit extends React.Component {
                 <button type="submit" onClick={this.handleUpload(idx)}>上传图片</button>
               </form>
               }
-              <button type="button" onClick={this.handleRemoveItem(idx)} className="small">删除此模块</button>
+              <button type="button" onClick={this.handleRemoveItem(idx)} className="small">删除此段落</button>
               </div>
             ))}
 
-          <button type="button" onClick={this.handleAddItem} className="small">添加新模块</button>
+          <button type="button" onClick={this.handleAddItem} className="small">添加新段落</button>
           </div>
           </form>
 

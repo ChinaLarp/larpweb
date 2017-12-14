@@ -455,6 +455,10 @@ display: -webkit-box;
   text-align: center;
   width:100%;
 }
+
+.postImg{
+  width: 500px;
+}
 /* posts page ends */
 
 .loginButton{

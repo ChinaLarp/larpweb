@@ -44,14 +44,16 @@ export default class postsDetail extends React.Component {
       	if (item.type==="text"){
 			return (
 			<li key={index}>
-               {item.content }
+               <br/>
+               <p style={{fontSize:18,textAlign:"left",textIndent:"2em"}}>{item.content }</p>
+               
             </li>
         )
 
       	}else if (item.type==="image"){
       		return (
 			<li key={index}>
-              <img src={item.content} />
+              <img src={item.content} style={{width:"60%"}}/>
             </li>
         )
       	}
