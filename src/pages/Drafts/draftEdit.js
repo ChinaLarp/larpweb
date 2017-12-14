@@ -32,7 +32,7 @@ class draftEdit extends React.Component {
  }
   handleSubmit = (evt) =>{
     let self = this;
-        const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+        const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
     axios.put(url+'/'+self.state.game_id,{
       cluelocation:self.state.clueinfo,
@@ -237,7 +237,7 @@ class draftEdit extends React.Component {
     this.setState({ clueinfo: newcluelist });
   }
   componentDidMount(){
-      const url = "https://usbackendwjn704.larpxiaozhushou.tk/api/app";
+      const url = "https://chinabackend.bestlarp.com/api/app";
       //const url = 'https://backend.bestlarp.com/api/web';
       // in axios access data with .data
       //console.log(this.props.match.params._id)

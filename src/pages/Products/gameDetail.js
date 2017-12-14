@@ -16,7 +16,7 @@ export default class GameDetail extends React.Component {
 
 
   componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+    const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/web';
     // in axios access data with .data
     console.log(this.props.match.params._id)

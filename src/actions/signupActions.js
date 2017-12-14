@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function userSignupRequest(userData) {
-  var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
+  var apiBaseUrl = "https://chinabackend.bestlarp.com";
   return dispatch => {
     return axios.post(apiBaseUrl+'/user', userData);
   }

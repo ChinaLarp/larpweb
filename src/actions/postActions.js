@@ -11,7 +11,7 @@ export function setPosts(posts) {
 
 
 export function fetchpost() {
-  var Url = "https://usbackendwjn704.larpxiaozhushou.tk/api/web?type__in=news,activity";
+  var Url = "https://chinabackend.bestlarp.com/api/web?type__in=news,activity";
   return dispatch => {
     return axios.get(Url).then(res => {
       dispatch(setPosts(res.data));

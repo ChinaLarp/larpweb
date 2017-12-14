@@ -11,7 +11,7 @@ export function setProducts(products) {
 
 
 export function fetchproducts() {
-  var Url = "https://usbackendwjn704.larpxiaozhushou.tk/api/app?type__in=game";
+  var Url = "https://chinabackend.bestlarp.com/api/app?type__in=game";
   return dispatch => {
     return axios.get(Url).then(res => {
       dispatch(setProducts(res.data));

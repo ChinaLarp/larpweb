@@ -13,7 +13,7 @@ export default class postsDetail extends React.Component {
 
 
   componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
+    const url = 'https://chinabackend.bestlarp.com/api/web';
     //const url = 'https://backend.bestlarp.com/api/web';
     // in axios access data with .data
     console.log(this.props.match.params._id)

@@ -24,7 +24,7 @@ export function logout() {
   }
 }
 export function getdraft(user){
-  var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
+  var apiBaseUrl = "https://chinabackend.bestlarp.com";
   return dispatch => {
     if(user.id=='5a273150c55b0d1ce0d6754d'){
       return axios.get(apiBaseUrl+'/api/app?type=game').then(res=>{
@@ -38,7 +38,7 @@ export function getdraft(user){
   }
 }
 export function login(data) {
-  var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
+  var apiBaseUrl = "https://chinabackend.bestlarp.com";
   return dispatch => {
     return axios.post(apiBaseUrl+'/auth', data).then(res => {
       const token = res.data.token;

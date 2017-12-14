@@ -20,7 +20,7 @@ class Contact extends React.Component {
 
   handleClick(event){
     let self=this
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/web';
+    const url = 'https://chinabackend.bestlarp.com/api/web';
     //const url = 'https://backend.bestlarp.com/api/web';
     axios.post(url,{
       type:"contact",

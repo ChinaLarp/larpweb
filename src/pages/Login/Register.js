@@ -78,7 +78,7 @@ class Register extends Component {
   handleClick(event){
     event.preventDefault();
     if (this.isValid()) {
-    var apiBaseUrl = "https://usbackendwjn704.larpxiaozhushou.tk";
+    var apiBaseUrl = "https://chinabackend.bestlarp.com";
     console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.password);
     //To be done:check for empty values before hitting submit
     var self = this;

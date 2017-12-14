@@ -99,7 +99,7 @@ class DraftCreate extends React.Component {
   	let self=this;
     this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+    const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
     axios.post(url,{
       type:"draft",
