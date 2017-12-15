@@ -34,7 +34,7 @@ class Menu extends Component {
         ;
     } else {
       User_info =
-      <Nav pullRight><li className="menuItem"><NavLink to="/Loginscreen">{this.props.auth.user.firstname} {this.props.auth.user.lastname}</NavLink></li>
+      <Nav pullRight><li className="menuItem"><NavLink to="/Loginscreen">{this.props.auth.user.username} </NavLink></li>
     </Nav>
 ;
     }

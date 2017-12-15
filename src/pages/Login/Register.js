@@ -9,8 +9,7 @@ class Register extends Component {
   constructor(props){
     super(props);
     this.state={
-      first_name:'',
-      last_name:'',
+      username:'',
       email:'',
       password:'',
       errors: {},
@@ -25,21 +24,15 @@ class Register extends Component {
         <MuiThemeProvider>
           <div>
            <TextField
-             hintText="请输入您的姓"
-             floatingLabelText="姓"
-             onChange = {(event,newValue) => this.setState({last_name:newValue})}
-             />
-           <br/>
-           <TextField
-             hintText="请输入您的名"
-             floatingLabelText="名"
-             onChange = {(event,newValue) => this.setState({first_name:newValue})}
+             hintText="请输入您的用户名"
+             floatingLabelText="用户名"
+             onChange = {(event,newValue) => this.setState({username:newValue})}
              />
            <br/>
            <TextField
              hintText="请输入您的电子邮箱"
              type="email"
-             floatingLabelText="Email"
+             floatingLabelText="电子邮箱"
              onChange = {(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
@@ -53,7 +46,7 @@ class Register extends Component {
            <TextField
              type = "password"
              hintText="请再次输入您的密码"
-             floatingLabelText="密码"
+             floatingLabelText="再次输入密码"
              onChange = {(event,newValue) => this.setState({passwordcomfirm:newValue})}
              />
            <br/>
@@ -79,14 +72,13 @@ class Register extends Component {
     event.preventDefault();
     if (this.isValid()) {
     var apiBaseUrl = "https://chinabackend.bestlarp.com";
-    console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.password);
+    console.log("values",this.state.username,this.state.email,this.state.password);
     //To be done:check for empty values before hitting submit
     var self = this;
     var payload={
     "email":this.state.email,
     "password":this.state.password,
-    "firstname": this.state.first_name,
-    "lastname":this.state.last_name
+    "username": this.state.username
     }
     axios.post(apiBaseUrl+'/user', payload).then((res)=>{
       if (res.data.success){
