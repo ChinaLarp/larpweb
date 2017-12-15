@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 //import TextField from 'material-ui/TextField';
+import randomString from 'random-string';
 import axios from 'axios';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
+var files
 class draftEdit extends React.Component {
   constructor(props){
     super(props)
@@ -39,6 +40,9 @@ class draftEdit extends React.Component {
       mainplot:self.state.plotinfo,
       instruction:self.state.instructinfo,
       cluemethod:self.state.gameinfo.cluemethod,
+      mapurl:self.state.gameinfo.mapurl,
+      iconurl:self.state.gameinfo.iconurl,
+      coverurl:self.state.gameinfo.coverurl,
       cluestatus:this.fillArray(this.state.clueinfo)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
@@ -67,6 +71,72 @@ class draftEdit extends React.Component {
     alert(`Game saved: ${this.state.name} with ${this.state.characterlist.length} characters`);
 
   }
+  onFileChange(e) {
+         files = e.target.files || e.dataTransfer.files;
+         if (!files.length) {
+             console.log('no files');
+         }
+         console.log(files);
+         console.log(files[0].name.split('.')[1])
+     }
+  handleGameImgUpload = (cat) => (evt) =>{
+       evt.preventDefault()
+         var filename=this.state.gameinfo.id+cat+'.'+files[0].name.split('.')[1]
+         console.log(cat)
+         const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+         let data = new FormData();
+           data.append('image', files.item(0), filename);
+           const config = {
+               headers: { 'content-type': 'multipart/form-data' }
+           }
+           axios.post(imageurl, data, config).then(response => {
+             switch (cat) {
+               case 'icon':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: filename }});
+                 break;
+               case 'cover':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: filename }});
+                 break;
+               case 'map':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: filename }});
+                 break;
+               default:
+             }
+           })
+           .catch(error => {
+             console.log(error);
+           });
+         alert(`Image saved`);
+       }
+  handleUpload = (idx,iidx) => (evt) =>{
+    evt.preventDefault()
+      var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
+      console.log(filename)
+      const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+      let data = new FormData();
+        data.append('image', files.item(0), filename);
+        const config = {
+            headers: { 'content-type': 'multipart/form-data' }
+        }
+        axios.post(imageurl, data, config).then(response => {
+        const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+          if (iidx !== sidx) return clue;
+          return { ...clue, image: 'https://chinabackend.bestlarp.com/pic/'+filename };
+        });
+        const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+          if (idx !== sidx) return clueinfo;
+          return { ...clueinfo, clues: newclueinfo };
+        });
+        this.setState({ clueinfo: newcluelist });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      alert(`Image saved`);
+    }
   handleAddInstruction = () => {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ''}]) });
   }
@@ -274,15 +344,24 @@ class draftEdit extends React.Component {
           <Tab>游戏线索</Tab>
         </TabList>
 
-
         <TabPanel>
           <form className="form-group" onSubmit={this.handleSubmit}>
           <h4>搜证模式</h4>
+          <div>
           <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
             <option value="random">随机抽取</option>
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
-          </select>
+          </select></div>
+          {this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl}/>}
+          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
+          <button type="button" onClick={this.handleGameImgUpload('icon')}>上传游戏图标</button>
+          {this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl}/>}
+          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
+          <button type="button" onClick={this.handleGameImgUpload('cover')}>上传游戏封面</button>
+          {this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl}/>}
+          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
+          <button type="button" onClick={this.handleGameImgUpload('map')}>上传现场地图</button>
           <div>
           <h3 style={{float:"left"}}>游戏说明</h3>
           <br/>
@@ -405,29 +484,27 @@ class draftEdit extends React.Component {
                 </tr>
 
                 {cluelocation.clues.map((clue, iidx) => (
-                <tr>
-                  <th className="shortText"><input
-                    type="text"
-                    placeholder="序号"  disabled="disabled"
-                    value={clue.cluenumber}
-                  /></th>
-                  <th className="longText"><input
+                  <tr>
+                    <th className="shortText"><input
+                      type="text"
+                      placeholder="序号"  disabled="disabled"
+                      value={clue.cluenumber}
+                    /></th><th className="longText">
+                  <input
                 type="text"
                 placeholder="文字内容"
                 value={clue.content}
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
-                  <th className="clueImg"><input
-                type="text"
-                placeholder="图片地址"
-                value={clue.image}
-                onChange={this.handleclueImageChange(idx,iidx)}
-              /></th>
+                <th className="clueImg">
+                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={"https://chinabackend.bestlarp.com/pic/"+clue.image}/>}
+                <input type="file" name='sampleFile' onChange={this.onFileChange}/>
+                <button type="submit" onClick={this.handleUpload(idx,iidx)}>上传图片</button></th>
               <th className="clueDelete">
                <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
               </th>
                 </tr>
-                            ))}
+                ))}
               </table>
               </form>
               </div>
