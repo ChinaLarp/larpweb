@@ -94,17 +94,7 @@ class Register extends Component {
           text: '改邮箱已经被注册!'
         });
       }    )}
-
 }
 }
 
-/*Register.propTypes = {
-  userSignupRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired,
-  isUserExists: React.PropTypes.func.isRequired
-}
-
-Register.contextTypes = {
-  router: React.PropTypes.object.isRequired
-}*/
 export default Register;

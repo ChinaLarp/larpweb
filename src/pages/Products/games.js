@@ -1,7 +1,3 @@
-/*
- Newsbloc loading news title and publish date;
-*/
-
 import React, { Component } from 'react';
 import axios from 'axios';
 import Moment from 'moment';
@@ -10,9 +6,7 @@ import qs from 'qs';
 import Filter from 'redux-filter';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { Link } from 'react-router-dom';
-
 
 class Products extends React.Component {
   constructor(props){
@@ -23,10 +17,8 @@ class Products extends React.Component {
   componentDidMount(){
 
   }
-
   render() {
     let gameList;
-
     if (this.props.products.fetched==false) {
       gameList= <div>'Loading'</div>;
     } else {
@@ -55,22 +47,16 @@ class Products extends React.Component {
         <div className='container'>
 
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
                   {gameList}
-
                 <Pagination total={this.props.products.products.length}
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={12}
                 defaultCurrent={1}/>
-
             </div>
-
         </div>
       )
  }
 }
-
-
 Products.propTypes = {
   auth: PropTypes.object.isRequired
 }

@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 //import TextField from 'material-ui/TextField';
 import axios from 'axios';
-
+import md5 from 'md5'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { addFlashMessage } from '../../actions/flashmessages.js';
+import { getdraft } from '../../actions/authAction.js';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -96,61 +98,63 @@ class DraftCreate extends React.Component {
     this.setState({ characterinfo: newcharacterInfo});
   }
   handleSubmit = (evt) => {
-  	let self=this;
     this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
     const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
     axios.post(url,{
-      type:"draft",
-      name:self.state.name,
-      id:self.state.id,
-      author:this.props.auth.user.id,
-      descripion: self.state.description,
-      playernumber: self.state.characterlist.length,
-      malenumber: self.state.malenumber,
-      femalenumber: self.state.femalenumber,
-      category:self.state.category,
-      characterlist:self.state.characterlist,
-      cluelocation:self.state.cluelocation,
-      mainplot:self.state.mainplot,
-      instruction:self.state.instruction,
-      cluestatus:this.fillArray(this.state.cluelocation)
+      type: "draft",
+      name: this.state.name,
+      id: this.state.id,
+      author: this.props.auth.user.id,
+      descripion: this.state.description,
+      playernumber: this.state.characterlist.length,
+      malenumber: this.state.malenumber,
+      femalenumber: this.state.femalenumber,
+      category: this.state.category,
+      characterlist: this.state.characterlist,
+      cluelocation: this.state.cluelocation,
+      mainplot: this.state.mainplot,
+      instruction: this.state.instruction,
+      cluestatus: this.fillArray(this.state.cluelocation),
+      signature: md5("xiaomaomi")
     }).then(response => {
-        //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-        console.log("submitted" + this.state.name)
-        return(<div><li>Game created, please click next button to continue add more details.</li></div>);
+      this.props.addFlashMessage({
+        type: 'success',
+        text: '你已成功创建剧本，现在可以点击进入编辑剧本。'
+      });
       })
       .catch(error => {
         console.log(error);
       });
-      for (var i=0;i<self.state.characterlist.length;i++)
+      var promises=[]
+      for (var i=0;i<this.state.characterlist.length;i++)
           {
-            axios.post(url,{
+            var promise=axios.post(url,{
             type:"character",
-            gamename: self.state.name,
-            gameid: self.state.id,
+            gamename: this.state.name,
+            gameid: this.state.id,
             banlocation: -1,
             characterid: i,
-            charactername: self.state.characterlist[i].name,
-            characterdescription: self.state.characterlist[i].description,
-            charactersex: self.state.characterlist[i].sex,
-            characterinfo:self.state.characterinfo,
-            characterplot:self.state.mainplot,
+            charactername: this.state.characterlist[i].name,
+            characterdescription: this.state.characterlist[i].description,
+            charactersex: this.state.characterlist[i].sex,
+            characterinfo:this.state.characterinfo,
+            characterplot:this.state.mainplot,
+            signature: md5("xiaomaomi")
           }).then(response => {
-              //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-              //console.log("submitted" + self.state.characterlist[i].name)
-              //return(<div><li>Game created, please click next button to continue add more details.</li></div>);
+            promises.push(promise)
             })
             .catch(error => {
               console.log(error);
             });
           }
-
-
-
-
-    alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
+          Promise.all(promises).then((result)=>{
+            console.log("All done")
+            this.props.getdraft(this.props.auth.user)
+            this.context.router.history.push('/draftList');
+          })
+            //  alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
   }
 
   handleAddMaleCharacter = () => {
@@ -191,9 +195,6 @@ class DraftCreate extends React.Component {
   }
 
   handleRemoveClueLocation = () => {
-    //console.log(this.state.cluelocation.length-1)
-    //console.log(this.state.cluelocation)
-    //console.log(this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx))
     this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx) });
   }
   handleAddCharacterInfoType = () => {
@@ -201,18 +202,12 @@ class DraftCreate extends React.Component {
     }
 
   handleRemoveCharacterInfoType = () => {
-    //console.log(this.state.cluelocation.length-1)
-    //console.log(this.state.cluelocation)
-    //console.log(this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx))
+
     this.setState({ characterinfo: this.state.characterinfo.filter((s, sidx) => (this.state.characterinfo.length-1) !== sidx) });
   }
-
-
   render() {
-
     return (
     	<div className="container">
-
       <form className="form-group" onSubmit={this.handleSubmit}>
         <input
           type="text"
@@ -366,9 +361,13 @@ class DraftCreate extends React.Component {
     )
   }
 }
-
+DraftCreate.contextTypes = {
+  router: PropTypes.object.isRequired
+}
 DraftCreate.propTypes = {
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  addFlashMessage: PropTypes.func.isRequired,
+  getdraft: PropTypes.func.isRequired
 }
 function mapStateToProps(state) {
   return {
@@ -376,4 +375,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(DraftCreate);
+export default connect(mapStateToProps, { addFlashMessage,getdraft })(DraftCreate);

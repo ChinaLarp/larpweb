@@ -27,7 +27,7 @@ export function getdraft(user){
   var apiBaseUrl = "https://chinabackend.bestlarp.com";
   return dispatch => {
     if(user.id=='5a273150c55b0d1ce0d6754d'){
-      return axios.get(apiBaseUrl+'/api/app?type=game').then(res=>{
+      return axios.get(apiBaseUrl+'/api/app?type__in=game,draft').then(res=>{
         dispatch(setDrafts(res.data));
       });
     }else{

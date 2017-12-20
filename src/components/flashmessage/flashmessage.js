@@ -14,17 +14,13 @@ class FlashMessage extends React.Component {
   render() {
     const { id, type, text } = this.props.message;
     return (
-
       <div className={classnames('alert','alert-dismissable', {
         'alert-success': type === 'success',
         'alert-danger': type === 'error'
       })}>
       <strong>{text}</strong>
       <a className="close" data-dismiss="alert" aria-label="close" onClick={this.onClick} >&times;</a>
-      
       </div>
-
-
     );
   }
 }

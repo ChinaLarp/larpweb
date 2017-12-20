@@ -2,17 +2,19 @@ import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 //import TextField from 'material-ui/TextField';
+import md5 from 'md5'
 import randomString from 'random-string';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
+import { getdraft } from '../../actions/authAction.js';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var files
 class draftEdit extends React.Component {
-  constructor(props){
-    super(props)
+  constructor(props, context){
+    super(props, context)
     this.state = {
       game_id:'5a1f4f287cf1d10c48fc4b36',
       gameinfo:{},
@@ -35,17 +37,16 @@ class draftEdit extends React.Component {
    return cluestatus;
  }
   handleSubmit = (evt) =>{
-    let self = this;
         const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
-    axios.put(url+'/'+self.state.game_id,{
-      cluelocation:self.state.clueinfo,
-      mainplot:self.state.plotinfo,
-      instruction:self.state.instructinfo,
-      cluemethod:self.state.gameinfo.cluemethod,
-      mapurl:self.state.gameinfo.mapurl,
-      iconurl:self.state.gameinfo.iconurl,
-      coverurl:self.state.gameinfo.coverurl,
+    axios.put(url+'/'+this.state.game_id,{
+      cluelocation:this.state.clueinfo,
+      mainplot:this.state.plotinfo,
+      instruction:this.state.instructinfo,
+      cluemethod:this.state.gameinfo.cluemethod,
+      mapurl:this.state.gameinfo.mapurl,
+      iconurl:this.state.gameinfo.iconurl,
+      coverurl:this.state.gameinfo.coverurl,
       cluestatus:this.fillArray(this.state.clueinfo)
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
@@ -55,15 +56,15 @@ class draftEdit extends React.Component {
       .catch(error => {
         console.log(error);
       });
-      for (var i=0;i<self.state.characterlist.length;i++)
+      for (var i=0;i<this.state.characterlist.length;i++)
           {
-            axios.put(url+'/'+self.state.characterlist[i]._id,{
-              banlocation: self.state.characterlist[i].banlocation,
-              characterinfo: self.state.characterlist[i].characterinfo,
-              characterplot: self.state.characterlist[i].characterplot
+            axios.put(url+'/'+this.state.characterlist[i]._id,{
+              banlocation: this.state.characterlist[i].banlocation,
+              characterinfo: this.state.characterlist[i].characterinfo,
+              characterplot: this.state.characterlist[i].characterplot
           }).then(response => {
               //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
-              console.log("put character submitted" + self.state.characterlist[i].name)
+              console.log("put character submitted" + this.state.characterlist[i].name)
               //return(<div><li>Game created, please click next button to continue add more details.</li></div>);
             })
             .catch(error => {
@@ -76,6 +77,89 @@ class draftEdit extends React.Component {
              text: '游戏剧本已保存!'
            });
 
+  }
+  handleDelete = (evt) =>{
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    //const url = 'https://backend.bestlarp.com/api/app';
+    axios.delete(url+'/'+this.state.game_id,{
+      data:{ signature: md5(this.state.game_id+"xiaomaomi") }
+    }).then(response => {
+      this.props.getdraft(this.props.auth.user)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      var promises=[]
+      for (var i=0;i<this.state.characterlist.length;i++)
+          {
+            var promise = axios.delete(url+'/'+this.state.characterlist[i]._id,{
+              data:{ signature: md5(this.state.characterlist[i]._id+"xiaomaomi") }
+          }).then(response => {
+              promises.push(promise)
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          }
+          Promise.all(promises).then((result)=>{
+            console.log("All done")
+            this.props.addFlashMessage({
+               type: 'failed',
+               text: '游戏剧本已被删除!'
+             });
+             this.context.router.history.push('/draftList');
+          })
+
+  }
+  handlePublish = (evt) =>{
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    //const url = 'https://backend.bestlarp.com/api/app';
+    axios.post(url,{
+      type: "game",
+      name: this.state.gameinfo.name,
+      id: this.state.gameinfo.id,
+      author: this.state.gameinfo.author,
+      descripion: this.state.gameinfo.descripion,
+      playernumber: this.state.gameinfo.playernumber,
+      malenumber: this.state.gameinfo.malenumber,
+      femalenumber: this.state.gameinfo.femalenumber,
+      category: this.state.gameinfo.category,
+      characterlist: this.state.gameinfo.characterlist,
+      cluelocation:this.state.clueinfo,
+      mainplot:this.state.plotinfo,
+      instruction:this.state.instructinfo,
+      cluemethod:this.state.gameinfo.cluemethod,
+      mapurl:this.state.gameinfo.mapurl,
+      iconurl:this.state.gameinfo.iconurl,
+      coverurl:this.state.gameinfo.coverurl,
+      cluestatus:this.fillArray(this.state.clueinfo)
+    }).then(response => {
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      for (var i=0;i<this.state.characterlist.length;i++)
+          {axios.post(url,{
+            type:"character",
+            gamename: this.state.gameinfo.name,
+            gameid: this.state.gameinfo.id,
+            characterid: this.state.characterlist[i].characterid,
+            banlocation: this.state.characterlist[i].banlocation,
+            characterinfo: this.state.characterlist[i].characterinfo,
+            characterplot: this.state.characterlist[i].characterplot,
+            charactername: this.state.characterlist[i].name,
+            characterdescription: this.state.characterlist[i].description,
+            charactersex: this.state.characterlist[i].sex,
+          }).then(response => {
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          }
+          this.props.addFlashMessage({
+             type: 'success',
+             text: '游戏剧本已保存!'
+           });
   }
   onFileChange(e) {
          files = e.target.files || e.dataTransfer.files;
@@ -348,6 +432,8 @@ class draftEdit extends React.Component {
       <Tabs>
         <TabList>
           <button onClick={this.handleSubmit}>保存</button>
+          <button onClick={this.handleDelete}>删除</button>
+          {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <button onClick={this.handlePublish}>发表</button>}
           <Tab>{this.state.gameinfo.name}</Tab>
           <Tab>人物剧本</Tab>
           <Tab>游戏线索</Tab>
@@ -530,10 +616,13 @@ class draftEdit extends React.Component {
     )
   }
 }
-
+draftEdit.contextTypes = {
+  router: PropTypes.object.isRequired
+}
 draftEdit.propTypes = {
   addFlashMessage: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  getdraft: PropTypes.func.isRequired
 }
 function mapStateToProps(state) {
   return {
@@ -541,4 +630,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { addFlashMessage})(draftEdit);
+export default connect(mapStateToProps, { addFlashMessage, getdraft })(draftEdit);
