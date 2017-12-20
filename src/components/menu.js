@@ -52,9 +52,9 @@ class Menu extends Component {
             <Nav>
               <li className="menuItem"><NavLink exact to="/">官网首页</NavLink></li>
               <li className="menuItem"><NavLink to="/posts">新闻公告</NavLink></li>
-              <li className="menuItem"><NavLink to="/games">游戏剧本</NavLink></li>
-              <li className="menuItem"><NavLink to="/draftList">剧本创作</NavLink></li>
-              <li className="menuItem"><NavLink to="/contact">联系我们</NavLink></li>
+              <li className="menuItem"><NavLink to="/games">游戏介绍</NavLink></li>
+              <li className="menuItem"><NavLink to="/draftList">我要创作</NavLink></li>
+              <li className="menuItem"><NavLink to="/contact">关于我们</NavLink></li>
             </Nav>
             {User_info}
           </Navbar.Collapse>

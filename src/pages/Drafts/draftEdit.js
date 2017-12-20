@@ -4,6 +4,9 @@ import 'react-tabs/style/react-tabs.css';
 //import TextField from 'material-ui/TextField';
 import randomString from 'random-string';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { addFlashMessage } from '../../actions/flashmessages.js';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var files
@@ -68,7 +71,10 @@ class draftEdit extends React.Component {
             });
           }
 
-    alert(`Game saved: ${this.state.name} with ${this.state.characterlist.length} characters`);
+          this.props.addFlashMessage({
+             type: 'success',
+             text: '游戏剧本已保存!'
+           });
 
   }
   onFileChange(e) {
@@ -109,7 +115,10 @@ class draftEdit extends React.Component {
            .catch(error => {
              console.log(error);
            });
-         alert(`Image saved`);
+        this.props.addFlashMessage({
+           type: 'success',
+           text: '图片上传成功!'
+         });
        }
   handleUpload = (idx,iidx) => (evt) =>{
     evt.preventDefault()
@@ -522,4 +531,14 @@ class draftEdit extends React.Component {
   }
 }
 
-export default draftEdit;
+draftEdit.propTypes = {
+  addFlashMessage: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+}
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps, { addFlashMessage})(draftEdit);

@@ -26,8 +26,8 @@ class Loginscreen extends Component {
     console.log(this.props.auth.isAuthenticated)
     if(this.props.auth.isAuthenticated){
       var loginscreen=[];
-      loginscreen.push(<a href="#" >Hello{this.props.auth.user.firstname}</a>);
-      var loginmessage = "You have already logged in";
+      loginscreen.push(<a href="#" >你好{this.props.auth.user.username}</a>);
+      var loginmessage = "您已经登陆";
       this.setState({loginscreen:loginscreen,
                     loginmessage:loginmessage,
                     buttonLabel:"退出"})
