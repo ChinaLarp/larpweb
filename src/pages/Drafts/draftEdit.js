@@ -461,13 +461,13 @@ scrollToTop() {
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
           </select></div>
-          {this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl}/>}
+          {this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={this.state.gameinfo.iconurl}/>}
           <input type="file" name='sampleFile' onChange={this.onFileChange}/>
           <button type="button" onClick={this.handleGameImgUpload('icon')}>上传游戏图标</button>
-          {this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl}/>}
+          {this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={this.state.gameinfo.coverurl}/>}
           <input type="file" name='sampleFile' onChange={this.onFileChange}/>
           <button type="button" onClick={this.handleGameImgUpload('cover')}>上传游戏封面</button>
-          {this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl}/>}
+          {this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={this.state.gameinfo.mapurl}/>}
           <input type="file" name='sampleFile' onChange={this.onFileChange}/>
           <button type="button" onClick={this.handleGameImgUpload('map')}>上传现场地图</button>
           <div>
@@ -605,7 +605,7 @@ scrollToTop() {
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
                 <th className="clueImg">
-                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={"https://chinabackend.bestlarp.com/pic/"+clue.image}/>}
+                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={clue.image}/>}
                 <input type="file" name='sampleFile' onChange={this.onFileChange}/>
                 <button type="submit" onClick={this.handleUpload(idx,iidx)}>上传图片</button></th>
               <th className="clueDelete">
