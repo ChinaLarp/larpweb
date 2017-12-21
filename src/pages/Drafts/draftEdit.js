@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
 import { getdraft } from '../../actions/authAction.js';
+import ScrollButton from '../../components/scrollButton.js';
+import ScrollToTop from 'react-scroll-up'
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var files
@@ -23,8 +25,19 @@ class draftEdit extends React.Component {
       instructinfo:[],
       characterlist: [],
       cluemethod:'',
+      intervalId: 0
     };
   }
+  scrollStep() {
+  if (window.pageYOffset === 0) {
+      clearInterval(this.state.intervalId);
+  }
+  window.scroll(0, window.pageYOffset - this.props.scrollStepInPx);
+}
+scrollToTop() {
+  let intervalId = setInterval(this.scrollStep.bind(this), this.props.delayInMs);
+  this.setState({ intervalId: intervalId });
+}
   fillArray = (cluelocation) => {
    if (cluelocation.length == 0) return [];
    var cluestatus=[]
@@ -84,7 +97,6 @@ class draftEdit extends React.Component {
     axios.delete(url+'/'+this.state.game_id,{
       data:{ signature: md5(this.state.game_id+"xiaomaomi") }
     }).then(response => {
-      this.props.getdraft(this.props.auth.user)
       })
       .catch(error => {
         console.log(error);
@@ -107,6 +119,7 @@ class draftEdit extends React.Component {
                type: 'failed',
                text: '游戏剧本已被删除!'
              });
+             this.props.getdraft(this.props.auth.user)
              this.context.router.history.push('/draftList');
           })
 
@@ -612,6 +625,9 @@ class draftEdit extends React.Component {
           </div>
           </TabPanel>
       </Tabs>
+      <ScrollToTop showUnder={160}>
+        <span>UP</span>
+      </ScrollToTop>
       </div>
     )
   }
