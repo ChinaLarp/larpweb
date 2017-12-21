@@ -10,7 +10,8 @@ import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
 import { getdraft } from '../../actions/authAction.js';
 import ScrollButton from '../../components/scrollButton.js';
-import ScrollToTop from 'react-scroll-up'
+import ScrollToTop from 'react-scroll-up';
+import btop from '../../assets/img/btop.png';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var files
@@ -442,11 +443,15 @@ scrollToTop() {
     return (
 
       	<div className="container">
-      <Tabs>
-        <TabList>
+        <div className="btn-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
+          <h4 style={{fontWeight:"bold",color:"grey"}}>剧本草稿箱操作</h4>
           <button onClick={this.handleSubmit}>保存</button>
           <button onClick={this.handleDelete}>删除</button>
           {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <button onClick={this.handlePublish}>发表</button>}
+        </div>
+        <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+      <Tabs>
+        <TabList>
           <Tab>{this.state.gameinfo.name}</Tab>
           <Tab>人物剧本</Tab>
           <Tab>游戏线索</Tab>
@@ -461,29 +466,58 @@ scrollToTop() {
             <option value="order">顺序抽取</option>
             <option value="return">返还随机</option>
           </select></div>
-          {this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={this.state.gameinfo.iconurl}/>}
-          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
-          <button type="button" onClick={this.handleGameImgUpload('icon')}>上传游戏图标</button>
-          {this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={this.state.gameinfo.coverurl}/>}
-          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
-          <button type="button" onClick={this.handleGameImgUpload('cover')}>上传游戏封面</button>
-          {this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={this.state.gameinfo.mapurl}/>}
-          <input type="file" name='sampleFile' onChange={this.onFileChange}/>
-          <button type="button" onClick={this.handleGameImgUpload('map')}>上传现场地图</button>
+
+          <h3 style={{float:"left"}}>图片上传</h3>
+          <br/>
+          <div style={{marginTop:20,marginBottom:20, border:"1px dashed"}}>
+          <table className="table table-striped tableText" style={{margin:10,marginTop:20}}>
+            <tr>          
+              <th className="imgUpload">{this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl}/>}
+              <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+              <th className="imgUploadButton">
+                <button type="button" onClick={this.handleGameImgUpload('icon')} className="small">上传游戏图标</button>
+              </th>
+          </tr>
+          <tr>
+            <th className="imgUpload">{this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl}/>}
+            <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+            <th className="imgUploadButton">
+              <button type="button" onClick={this.handleGameImgUpload('cover')} className="small">上传游戏封面</button>
+            </th>
+          </tr>
+          <tr>
+            <th className="imgUpload">{this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl}/>}
+            <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+            <th className="imgUploadButton">
+              <button type="button" onClick={this.handleGameImgUpload('map')} className="small">上传现场地图</button>
+            </th>
+          </tr> 
+          </table>
+          </div>
+
           <div>
           <h3 style={{float:"left"}}>游戏说明</h3>
           <br/>
           {this.state.instructinfo.map((instruct, idx) => (
-            <div style={{margin:10,marginTop:20}}>
+            <div style={{marginTop:20, border:"1px dashed"}}>
+            
+          <table className="table table-striped tableText" style={{margin:10}}>
+           <tr>
+            <th className="shortInput">
             <input
               type="text"
               placeholder="说明要素"
               value={instruct.type}
               onChange={this.handleInstructTypeChange(idx)}
             />
-            <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} />
+            </th>
+            <th>
             <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
-            </div>
+            </th>
+            </tr>
+            </table>
+            <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
+             </div>
           ))}
           <button type="button" onClick={this.handleAddInstruction} className="small">添加新模块</button>
           </div>
@@ -492,15 +526,23 @@ scrollToTop() {
           <h3 style={{float:"left"}}>流程控制</h3>
           <br/>
           {this.state.plotinfo.map((plot, idx) => (
-            <div style={{margin:10,marginTop:20}}>
-            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+            <div style={{marginTop:20,border:"1px dashed"}}>
+            <table className="table table-striped tableText" style={{margin:10}}>
+           <tr>
+            <th style={{width:"10%"}}>
+            <h4 >第{plot.plotid}阶段：</h4>
+            </th>
+            <th className="shortInput"  style={{float:"left",margin:0}} >
             <input
               type="text"
               placeholder="信息类型"
               value={plot.plotname}
               onChange={this.handlePlotNameChange(idx)}
             />
-            <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handlePlotContentChange(idx)}/>
+            </th>
+            </tr>
+            </table>
+            <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
             </div>
           ))}
           <button type="button" onClick={this.handleRemovePlot} className="small">减少模块</button>
@@ -533,30 +575,41 @@ scrollToTop() {
               <h3 style={{float:"left"}}>角色背景</h3><br/>
               {characterlist.characterinfo.map((characterinfo, iidx) => (
                 <div style={{margin:10,marginTop:20}}>
+                <div className="shortInput">
                 <input
                   type="text"
                   placeholder="说明要素"
                   value={characterinfo.type}
                   disabled="disabled"
                 />
+                </div>
                 <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
                 </div>
               ))}
               </div>
               <div>
+              <br/>
               <h3 style={{float:"left"}}>人物流程剧本</h3>
               <br/>
               {characterlist.characterplot.map((plot, iidx) => (
-            <div style={{margin:10,marginTop:20}}>
+            <div style={{marginTop:20,border:"1px dashed"}}>
+            <table className="table table-striped tableText" style={{margin:10}}>
+           <tr>
+            <th style={{width:"10%"}}>
             <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+            </th>
+            <th className="shortInput"  style={{float:"left",margin:0}}>
                 <input
                   type="text"
                   placeholder="信息类型"
                   value={plot.plotname}
                   onChange={this.handleCharacterPlotNameChange(idx,iidx)}
                 />
+                </th>
+                </tr>
+                </table>
 
-                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)}/>
+                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)} style={{margin:10, width:"98%"}}/>
 
 
                 </div>
@@ -587,7 +640,7 @@ scrollToTop() {
 
                   <th>序号</th>
                   <th>文字内容</th>
-                  <th>图片地址</th>
+                  <th>上传图片</th>
                   <th>删除</th>
                 </tr>
 
@@ -605,9 +658,9 @@ scrollToTop() {
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
                 <th className="clueImg">
-                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={clue.image}/>}
-                <input type="file" name='sampleFile' onChange={this.onFileChange}/>
-                <button type="submit" onClick={this.handleUpload(idx,iidx)}>上传图片</button></th>
+                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={"https://chinabackend.bestlarp.com/pic/"+clue.image}/>}
+                <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"70%",display:"inline"}}/>
+                <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>上传</button></th>
               <th className="clueDelete">
                <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
               </th>
@@ -625,9 +678,11 @@ scrollToTop() {
           </div>
           </TabPanel>
       </Tabs>
+      </div>
       <ScrollToTop showUnder={160}>
-        <span>UP</span>
+         <img src={btop} className="btopImg" />
       </ScrollToTop>
+
       </div>
     )
   }

@@ -175,7 +175,7 @@ white-space: nowrap;
 .time:hover{
 
 }
-/* NewsBlock.js starts */
+/* draftEdit.js starts */
 
 input {
   display: block;
@@ -275,6 +275,18 @@ button.small:hover {
   margin-bottom: 10px;
 }
 
+.imgUpload{
+  width: 70%;
+  margin: 10px;
+  padding-right: 20px;
+}
+.imgUploadButton{
+  width: 30%;
+  margin: 10px;
+  padding-right: 20px;
+  text-align: center;
+}
+
 .shortText{
   width: 8%;
   font-size: 16px;
@@ -283,16 +295,15 @@ button.small:hover {
   padding-right: 20px;
 }
 .longText{
-  width: 60%;
+  width: 50%;
   font-size: 16px;
   margin-left: 10px;
   padding-right: 20px;
 }
 .clueImg{
-  width: 25%;
+  width: 35%;
   font-size: 16px;
   margin-left: 10px;
-
   padding-right: 20px;
 }
 .clueDelete{
@@ -466,4 +477,39 @@ display: -webkit-box;
   background-color:black;
   color: #FFF;
   width: 4%;
+}
+
+.shortInput{
+  font-weight: bold;
+  width: 25%;
+  font-size: 18px;
+}
+
+
+.btn-group{
+  border: 1px dashed green;
+  padding:10;
+  right:0;
+  bottom:30%;
+  position: fixed;
+}
+
+.btn-group button {
+
+    display: block; /* Make the buttons appear below each other */
+    margin:10px;
+}
+
+.btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-color: #999;
+}
+
+
+.btopImg{
+  width:50px;
 }
