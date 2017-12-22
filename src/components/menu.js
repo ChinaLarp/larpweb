@@ -41,7 +41,7 @@ class Menu extends Component {
     return (
 
       <HashRouter>
-         <Navbar inverse collapseOnSelect fixedTop>
+         <Navbar inverse collapseOnSelect fixedTop className="NavBarTest">
           <Navbar.Header>
             <Navbar.Brand className="brandItem">
               <NavLink exact to="/">全民侦探社</NavLink>

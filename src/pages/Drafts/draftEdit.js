@@ -741,7 +741,7 @@ this.context.router.history.push('/draftList');
           </TabPanel>
       </Tabs>
       </div>
-      <ScrollToTop showUnder={160}>
+      <ScrollToTop showUnder={160} style={{zIndex:1}}>
          <img src={btop} className="btopImg" />
       </ScrollToTop>
 

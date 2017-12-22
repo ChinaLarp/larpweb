@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+
+}
+.NavBarTest{
+  z-index: 1;
 }
 
 body {
@@ -421,6 +425,10 @@ display: -webkit-box;
   font-family: sans-serif;
   vertical-align:bottom;
   text-align:center;
+
+   left:0px;
+   bottom:0px;
+   width:100%;
 }
 .copyright{
   color:#ffffff; font-size:14px; padding:20px;
@@ -488,10 +496,11 @@ display: -webkit-box;
 
 .btn-group{
   border: 1px dashed green;
-  padding:10;
+  padding:10px;
   right:0;
   bottom:30%;
   position: fixed;
+  margin-left: 0px;
 }
 
 .btn-group button {
