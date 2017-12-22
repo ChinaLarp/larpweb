@@ -12,6 +12,7 @@ import { getdraft } from '../../actions/authAction.js';
 import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
+import Lightbox from 'react-image-lightbox';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var files
@@ -26,7 +27,9 @@ class draftEdit extends React.Component {
       instructinfo:[],
       characterlist: [],
       cluemethod:'',
-      intervalId: 0
+      intervalId: 0,
+      isOpen: false,
+      imageurl:''
     };
   }
   scrollStep() {
@@ -50,9 +53,60 @@ scrollToTop() {
    console.log(cluestatus)
    return cluestatus;
  }
+handlePreviewImage = (idx,iidx) => (evt) => {
+ var url = this.state.clueinfo[idx].clues[iidx].image
+ console.log(url)
+ this.setState({ imageurl: url, isOpen:true });
+}
+handleExit = (evt)=>{
+this.context.router.history.push('/draftList');
+}
+ handleSaveExit = (evt) => {
+   const url = 'https://chinabackend.bestlarp.com/api/app';
+   axios.put(url+'/'+this.state.game_id,{
+   cluelocation:this.state.clueinfo,
+   mainplot:this.state.plotinfo,
+   instruction:this.state.instructinfo,
+   cluemethod:this.state.gameinfo.cluemethod,
+   mapurl:this.state.gameinfo.mapurl,
+   iconurl:this.state.gameinfo.iconurl,
+   coverurl:this.state.gameinfo.coverurl,
+   cluestatus:this.fillArray(this.state.clueinfo),
+   signature:md5(this.state.game_id+"xiaomaomi")
+ }).then(response => {
+     console.log("put game submitted" + this.state.name)
+   })
+   .catch(error => {
+     console.log(error);
+   });
+   var promises=[]
+   for (var i=0;i<this.state.characterlist.length;i++)
+       {
+       var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+           banlocation: this.state.characterlist[i].banlocation,
+           characterinfo: this.state.characterlist[i].characterinfo,
+           characterplot: this.state.characterlist[i].characterplot,
+           signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
+       }).then(response => {
+           console.log("put character submitted" + this.state.characterlist[i].name)
+         })
+         .catch(error => {
+           console.log(error);
+         });
+         promises.push(promise)
+       }
+       Promise.all(promises).then((result)=>{
+         console.log("All done")
+         this.props.addFlashMessage({
+            type: 'success',
+            text: '游戏剧本已保存!'
+          });
+          this.context.router.history.push('/draftList');
+       })
+ }
+
   handleSubmit = (evt) =>{
-        const url = 'https://chinabackend.bestlarp.com/api/app';
-    //const url = 'https://backend.bestlarp.com/api/app';
+    const url = 'https://chinabackend.bestlarp.com/api/app';
     axios.put(url+'/'+this.state.game_id,{
       cluelocation:this.state.clueinfo,
       mainplot:this.state.plotinfo,
@@ -61,40 +115,41 @@ scrollToTop() {
       mapurl:this.state.gameinfo.mapurl,
       iconurl:this.state.gameinfo.iconurl,
       coverurl:this.state.gameinfo.coverurl,
-      cluestatus:this.fillArray(this.state.clueinfo)
+      cluestatus:this.fillArray(this.state.clueinfo),
+      signature:md5(this.state.game_id+"xiaomaomi")
     }).then(response => {
-        //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
         console.log("put game submitted" + this.state.name)
-        return(<div><li>Game edited, please click next button to continue add more details.</li></div>);
       })
       .catch(error => {
         console.log(error);
       });
+      var promises=[]
       for (var i=0;i<this.state.characterlist.length;i++)
           {
-            axios.put(url+'/'+this.state.characterlist[i]._id,{
+          var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
               banlocation: this.state.characterlist[i].banlocation,
               characterinfo: this.state.characterlist[i].characterinfo,
-              characterplot: this.state.characterlist[i].characterplot
+              characterplot: this.state.characterlist[i].characterplot,
+              signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
           }).then(response => {
-              //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
               console.log("put character submitted" + this.state.characterlist[i].name)
-              //return(<div><li>Game created, please click next button to continue add more details.</li></div>);
             })
             .catch(error => {
               console.log(error);
             });
+            promises.push(promise)
           }
-
-          this.props.addFlashMessage({
-             type: 'success',
-             text: '游戏剧本已保存!'
-           });
+          Promise.all(promises).then((result)=>{
+            console.log("All done")
+            this.props.addFlashMessage({
+               type: 'success',
+               text: '游戏剧本已保存!'
+             });
+          })
 
   }
   handleDelete = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
-    //const url = 'https://backend.bestlarp.com/api/app';
     axios.delete(url+'/'+this.state.game_id,{
       data:{ signature: md5(this.state.game_id+"xiaomaomi") }
     }).then(response => {
@@ -108,11 +163,11 @@ scrollToTop() {
             var promise = axios.delete(url+'/'+this.state.characterlist[i]._id,{
               data:{ signature: md5(this.state.characterlist[i]._id+"xiaomaomi") }
           }).then(response => {
-              promises.push(promise)
             })
             .catch(error => {
               console.log(error);
             });
+                promises.push(promise)
           }
           Promise.all(promises).then((result)=>{
             console.log("All done")
@@ -447,6 +502,8 @@ scrollToTop() {
           <h4 style={{fontWeight:"bold",color:"grey"}}>剧本草稿箱操作</h4>
           <button onClick={this.handleSubmit}>保存</button>
           <button onClick={this.handleDelete}>删除</button>
+          <button onClick={this.handleSaveExit}>保存并退出</button>
+          <button onClick={this.handleExit}>退出</button>
           {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <button onClick={this.handlePublish}>发表</button>}
         </div>
         <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
@@ -471,27 +528,27 @@ scrollToTop() {
           <br/>
           <div style={{marginTop:20,marginBottom:20, border:"1px dashed"}}>
           <table className="table table-striped tableText" style={{margin:10,marginTop:20}}>
-            <tr>          
-              <th className="imgUpload">{this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl}/>}
+            <tr>
+              <th className="imgUpload">{this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={this.state.gameinfo.iconurl}/>}
               <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
               <th className="imgUploadButton">
                 <button type="button" onClick={this.handleGameImgUpload('icon')} className="small">上传游戏图标</button>
               </th>
           </tr>
           <tr>
-            <th className="imgUpload">{this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl}/>}
+            <th className="imgUpload">{this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={this.state.gameinfo.coverurl}/>}
             <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
             <th className="imgUploadButton">
               <button type="button" onClick={this.handleGameImgUpload('cover')} className="small">上传游戏封面</button>
             </th>
           </tr>
           <tr>
-            <th className="imgUpload">{this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl}/>}
+            <th className="imgUpload">{this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={this.state.gameinfo.mapurl}/>}
             <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
             <th className="imgUploadButton">
               <button type="button" onClick={this.handleGameImgUpload('map')} className="small">上传现场地图</button>
             </th>
-          </tr> 
+          </tr>
           </table>
           </div>
 
@@ -500,7 +557,7 @@ scrollToTop() {
           <br/>
           {this.state.instructinfo.map((instruct, idx) => (
             <div style={{marginTop:20, border:"1px dashed"}}>
-            
+
           <table className="table table-striped tableText" style={{margin:10}}>
            <tr>
             <th className="shortInput">
@@ -658,7 +715,14 @@ scrollToTop() {
                 onChange={this.handleclueContentChange(idx,iidx)}
               /></th>
                 <th className="clueImg">
-                {clue.image && <img src={"https://chinabackend.bestlarp.com/pic/"+clue.image} alt={"https://chinabackend.bestlarp.com/pic/"+clue.image}/>}
+                {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>预览线索图片</button>}
+                {this.state.isOpen && (
+                  <Lightbox
+                    mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
+                    onCloseRequest={() => this.setState({ isOpen: false })}
+                    discourageDownloads="true"
+                  />
+                )}
                 <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"70%",display:"inline"}}/>
                 <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>上传</button></th>
               <th className="clueDelete">
@@ -669,9 +733,7 @@ scrollToTop() {
               </table>
               </form>
               </div>
-
-
-        <button type="button" onClick={this.handleAddClues(idx)} className="small">添加新线索</button>
+              <button type="button" onClick={this.handleAddClues(idx)} className="small">添加新线索</button>
             </TabPanel>
           ))}
           </Tabs>
