@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import randomString from 'random-string';
+import md5 from 'md5'
 //import TextField from 'material-ui/TextField';
 import axios from 'axios';
 //import RaisedButton from 'material-ui/RaisedButton';
@@ -33,7 +34,8 @@ class PostEdit extends React.Component {
     axios.put(url+'/'+this.state.post_id,{
       type:this.state.postinfo.type,
       title:this.state.postinfo.title,
-      content:this.state.content
+      content:this.state.content,
+      signature:md5(this.state.post_id+"xiaomaomi")
     }).then(response => {
         //console.log('https://backend.bestlarp.com/api/web/?type=' +this.props.type + '&sort=-date'+'&limit=' +this.props.count)
         console.log("put Post submitted" + this.state.postinfo.title)

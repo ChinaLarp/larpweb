@@ -286,7 +286,7 @@ this.context.router.history.push('/draftList');
         axios.post(imageurl, data, config).then(response => {
         const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
           if (iidx !== sidx) return clue;
-          return { ...clue, image: 'https://chinabackend.bestlarp.com/pic/'+filename };
+          return { ...clue, image: filename };
         });
         const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
           if (idx !== sidx) return clueinfo;
