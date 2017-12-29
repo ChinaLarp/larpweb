@@ -26,12 +26,13 @@ class DraftCreate extends React.Component {
       characterlist: [{ description: '',sex: '女', name: '', id: 0}],
       cluelocation:[{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:0}],
       index:0, name:'', count:1 }],
-      mainplot:[{plotid: 0,plotname: "准备阶段",content: [{type: "请大家阅读已知内容。",content: ["准备阶段"]}]
-    },{plotid: 1,plotname: "集中讨论和搜证(第二阶段)",content: [{type: "集中讨论和搜证(第二阶段)",content: ["请侦探主持集中讨论和搜证"]}]
-  },{plotid: 2,plotname: "集中讨论和搜证(第三阶段)",content: [{type: "集中讨论和搜证(第三阶段)",content: ["请侦探主持集中讨论和搜证"]}]
-        },{plotid: 3,plotname: "指认凶手",content: [{type: "指认凶手",content: ["请大家指认凶手。"]}]
-      },{plotid: 4,plotname: "结算任务",content: [{type: "结算任务",content: ["请大家按人物剧本指示结算任务。"]}]
-          },{plotid: 4,plotname: "真相大白",content: [{type: "故事线",content: ["此处放真相"]}]}],
+      mainplot:[{plotid: 0,plotname: "准备阶段",content: []
+              },{plotid: 1,plotname: "自我介绍",content: []
+            },{plotid: 2,plotname: "集中讨论与搜证",content: []
+          },{plotid: 3,plotname: "指认凶手",content: []
+        },{plotid: 4,plotname: "结算任务",content: []
+      },{plotid: 5,plotname: "真相大白",content: []}],
+      plottemplate:[{type: "角色剧本",content: [""]}],
       instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}],
       characterinfo:[{type:'', content:['请输入故事内容']}],
     };
@@ -53,6 +54,12 @@ class DraftCreate extends React.Component {
     }
     console.log(cluestatus)
     return cluestatus;
+  }
+  makeMainplot = (mainplot,plottemplate) =>  {
+    const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
+      return { ...mainplot, content: plottemplate };
+    });
+    return newmainplot
   }
   handleDescriptionChange = (evt) => {
     this.setState({ description: evt.target.value });
@@ -114,7 +121,7 @@ class DraftCreate extends React.Component {
       category: this.state.category,
       characterlist: this.state.characterlist,
       cluelocation: this.state.cluelocation,
-      mainplot: this.state.mainplot,
+      mainplot: this.makeMainplot(this.state.mainplot,this.state.plottemplate),
       instruction: this.state.instruction,
       cluestatus: this.fillArray(this.state.cluelocation),
       signature: md5("xiaomaomi")
@@ -140,7 +147,7 @@ class DraftCreate extends React.Component {
             characterdescription: this.state.characterlist[i].description,
             charactersex: this.state.characterlist[i].sex,
             characterinfo:this.state.characterinfo,
-            characterplot:this.state.mainplot,
+            characterplot:this.makeMainplot(this.state.mainplot,this.state.plottemplate),
             signature: md5("xiaomaomi")
           }).then(response => {
             promises.push(promise)
@@ -204,6 +211,37 @@ class DraftCreate extends React.Component {
   handleRemoveCharacterInfoType = () => {
 
     this.setState({ characterinfo: this.state.characterinfo.filter((s, sidx) => (this.state.characterinfo.length-1) !== sidx) });
+  }
+  handleMainplotChange = (idx) => (evt) => {
+    const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
+      if (idx !== sidx) return mainplot;
+      return { ...mainplot, plotname: evt.target.value };
+    });
+
+    this.setState({ mainplot: newmainplot});
+  }
+  handleAddMainplot = () => {
+    this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",content: []}])});
+    }
+
+  handleRemoveMainplot = () => {
+
+    this.setState({ mainplot: this.state.mainplot.filter((s, sidx) => (this.state.mainplot.length-1) !== sidx) });
+  }
+  handlePlottemplateChange = (idx) => (evt) => {
+    const newplottemplate= this.state.plottemplate.map((plottemplate, sidx) => {
+      if (idx !== sidx) return plottemplate;
+      return { ...plottemplate, type: evt.target.value };
+    });
+    this.setState({ plottemplate: newplottemplate});
+  }
+  handleAddPlottemplate = () => {
+    this.setState({ plottemplate: this.state.plottemplate.concat([{type: "阶段内信息模板类型",content: [""]}])});
+    }
+
+  handleRemovePlottemplate = () => {
+
+    this.setState({ plottemplate: this.state.plottemplate.filter((s, sidx) => (this.state.plottemplate.length-1) !== sidx) });
   }
   render() {
     return (
@@ -281,11 +319,9 @@ class DraftCreate extends React.Component {
           </div>
 
 
-        <div className="btn-group btn-group-justified">
         <button type="button" onClick={this.handleAddMaleCharacter} className="small">添加男性角色</button>
         <button type="button" onClick={this.handleAddFemaleCharacter} className="small">添加女性角色</button>
         <button type="button" onClick={this.handleAddUnisexCharacter} className="small">添加无性别角色</button>
-        </div>
 
         <div className="uploadPanel">
            <h3>创建角色故事模板：</h3> <h4>模板类型总数：{this.state.cluelocation.length}</h4>
@@ -319,7 +355,71 @@ class DraftCreate extends React.Component {
 
         <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
         <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
+        <div className="uploadPanel">
+           <h3>创建游戏流程模板：</h3> <h4>剧本阶段总数：{this.state.mainplot.length}</h4>
+        </div>
+          <div className="characterlist">
+          <table className="table table-striped">
+          <tbody>
+          <tr className="tableHead">
+            <th>编号</th>
+            <th>剧本阶段类型</th>
+          </tr>
+          {this.state.mainplot.map((mainplot, idx) => (
+          <tr>
+          <th><div className="tableText">{idx+1}</div></th>
+          <th>
+          <input
+            type="text"
+            placeholder={`#${idx + 1} 阶段类型，例如：“准备阶段”，“集中讨论”,“真相大白”`}
+            value={mainplot.plotname}
+            onChange={this.handleMainplotChange(idx)}
+            required
+          />
+          </th>
+            </tr>
 
+          ))}
+            </tbody>
+          </table>
+          </div>
+
+
+        <button type="button" onClick={this.handleAddMainplot} className="small">添加阶段类型</button>
+        <button type="button" onClick={this.handleRemoveMainplot} className="small">减少阶段类型</button>
+
+        <div className="uploadPanel">
+           <h3>创建阶段内信息模板：</h3> <h4>阶段内信息模板总数：{this.state.plottemplate.length}</h4>
+        </div>
+          <div className="characterlist">
+          <table className="table table-striped">
+          <tbody>
+          <tr className="tableHead">
+            <th>编号</th>
+            <th>阶段内信息模板类型</th>
+          </tr>
+          {this.state.plottemplate.map((plottemplate, idx) => (
+          <tr>
+          <th><div className="tableText">{idx+1}</div></th>
+          <th>
+          <input
+            type="text"
+            placeholder={`#${idx + 1} 每阶段内信息模板类型，例如：“你发现的线索”，“你的剧本”`}
+            value={plottemplate.type}
+            onChange={this.handlePlottemplateChange(idx)}
+            required
+          />
+          </th>
+            </tr>
+
+          ))}
+            </tbody>
+          </table>
+          </div>
+
+
+        <button type="button" onClick={this.handleAddPlottemplate} className="small">添加阶段内信息模板类型</button>
+        <button type="button" onClick={this.handleRemovePlottemplate} className="small">减少阶段内信息模板类型</button>
 
         <div className="uploadPanel">
            <h3>当前搜证地点列表：</h3> <h4>地点总数：{this.state.cluelocation.length}</h4>

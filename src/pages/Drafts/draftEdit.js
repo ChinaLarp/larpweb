@@ -359,10 +359,14 @@ this.context.router.history.push('/draftList');
     });
     this.setState({ characterlist: newcharacterlist });
   }
-  handleCharacterPlotContentChange = (idx,iidx) => (evt) => {
+  handleCharacterPlotContentChange = (idx,iidx,iiidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.map((item, sidx) => {
+      if (iiidx !== sidx) return item;
+      return { ...item, content: evt.target.value.split('\n')};
+    });
     const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
       if (iidx !== sidx) return plot;
-      return { ...plot, content: evt.target.value.split('\n')};
+      return { ...plot, content: newtypeinfo };
     });
     const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
@@ -594,7 +598,7 @@ this.context.router.history.push('/draftList');
               type="text"
               placeholder="信息类型"
               value={plot.plotname}
-              onChange={this.handlePlotNameChange(idx)}
+              disabled="disabled"
             />
             </th>
             </tr>
@@ -665,9 +669,17 @@ this.context.router.history.push('/draftList');
                 </th>
                 </tr>
                 </table>
-
-                  <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx)} style={{margin:10, width:"98%"}}/>
-
+                {plot.content.map((item, iiidx) => (
+                <div style={{marginTop:20,border:"1px dashed"}}>
+                  <input
+                    type="text"
+                    placeholder="信息类型"
+                    value={item.type}
+                    disabled="disabled"
+                  />
+                    <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
+                </div>
+                ))}
 
                 </div>
               ))}
