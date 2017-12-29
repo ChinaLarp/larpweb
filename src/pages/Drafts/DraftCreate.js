@@ -108,6 +108,10 @@ class DraftCreate extends React.Component {
 
     this.setState({ characterinfo: newcharacterInfo});
   }
+  handleReturn = (evt) => {
+            this.context.router.history.push('/draftList');
+  }
+
   handleSubmit = (evt) => {
     this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
@@ -459,6 +463,7 @@ class DraftCreate extends React.Component {
         <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
         <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
         <button onClick={this.handleSubmit}>创建</button>
+        <button onClick={this.handleReturn}>放弃</button>
       </form>
 
       <ScrollToTop showUnder={160} style={{zIndex:1}}>
