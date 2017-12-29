@@ -32,6 +32,8 @@ class Products extends React.Component {
               <h4 className="card-title"><Link to={link}>{game.name}</Link></h4>
               <ul className="list-group list-group-flush">
               <li><span>人数：</span>{game.playernumber}</li>
+              <li><span>男性角色数：</span>{game.malenumber}</li>
+              <li><span>女性角色数：</span>{game.femalenumber}</li>
               <li><span>风格：</span>{game.category}</li>
               <li className="gameDescription"><span>介绍：</span>{game.descripion}</li>
               <li><span>游戏价格：</span>免费体验</li>

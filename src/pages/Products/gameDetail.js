@@ -68,9 +68,11 @@ export default class GameDetail extends React.Component {
               <h2 className="card-title">{this.state.gameItem.name}</h2>
               <ul className="list-group list-group-flush">
               <li><span>人数：</span>{this.state.gameItem.playernumber}</li>
+              <li><span>男性角色数：</span>{this.state.gameItem.malenumber}</li>
+              <li><span>女性角色数：</span>{this.state.gameItem.femalenumber}</li>
               <li><span>风格：</span>{this.state.gameItem.category}</li>
               <li className="gameDescriptionMore"><span>介绍：</span>{this.state.gameItem.descripion}</li>
-              <li><span>难度：</span>{this.state.gameItem.id}</li>
+              <li><span>游戏价格：</span>免费体验</li>
               </ul>
             </div>
             </div>
