@@ -415,6 +415,10 @@ display: -webkit-box;
 -webkit-line-clamp: 5;
 }
 
+.gameImg{
+  max-height: 150px;
+  max-width: 150px;
+}
 /* footer starts*/
 .footer{
   padding-top: 20px;

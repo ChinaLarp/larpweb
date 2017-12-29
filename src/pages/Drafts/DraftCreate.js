@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
 import { getdraft } from '../../actions/authAction.js';
+
+import ScrollButton from '../../components/scrollButton.js';
+import ScrollToTop from 'react-scroll-up';
+import btop from '../../assets/img/btop.png';
 //import RaisedButton from 'material-ui/RaisedButton';
 //import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -246,6 +250,7 @@ class DraftCreate extends React.Component {
   render() {
     return (
     	<div className="container">
+
       <form className="form-group" onSubmit={this.handleSubmit}>
         <input
           type="text"
@@ -453,9 +458,12 @@ class DraftCreate extends React.Component {
 
         <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
         <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
-        <button>Save</button>
-        <button>Next</button>
+        <button onClick={this.handleSubmit}>创建</button>
       </form>
+
+      <ScrollToTop showUnder={160} style={{zIndex:1}}>
+         <img src={btop} className="btopImg" />
+      </ScrollToTop>
 
       </div>
     )
