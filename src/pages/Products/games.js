@@ -26,9 +26,9 @@ class Products extends React.Component {
       var link='/gamedetails/' + game._id;
       //<Link to={link} className='gamelink'>{game.name}</Link>
         return (
-          <div className='card col-xs-12 col-sm-12 col-md-12 col-lg-4 col-xl-4'  key={index} style={{borderBottom:"1px dashed",height:200}}>
-          <img className="card-img-top gameImg" src={"https://chinabackend.bestlarp.com/pic/"+game.coverurl} alt={game.coverurl} style={{float:"left",width:"40%"}}/>
-            <div className="card-block" style={{float:"right",textAlign:"left",width:"60%"}}>
+          <div className='card col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6'  key={index} style={{borderBottom:"1px dashed",height:450}}>
+          <img className="card-img-top gameImg" src={"https://chinabackend.bestlarp.com/pic/"+game.coverurl} alt={game.coverurl} style={{float:"left",width:"50%"}}/>
+            <div className="card-block" style={{float:"right",textAlign:"left",width:"48%"}}>
               <h4 className="card-title"><Link to={link}>{game.name}</Link></h4>
               <ul className="list-group list-group-flush">
               <li><span>人数：</span>{game.playernumber}</li>
@@ -48,10 +48,13 @@ class Products extends React.Component {
 
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                   {gameList}
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <Pagination total={this.props.products.products.length}
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={12}
                 defaultCurrent={1}/>
+
+              </div>
             </div>
         </div>
       )

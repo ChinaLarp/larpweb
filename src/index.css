@@ -416,8 +416,8 @@ display: -webkit-box;
 }
 
 .gameImg{
-  max-height: 150px;
-  max-width: 150px;
+  max-height: 600px;
+  max-width: 400px;
 }
 /* footer starts*/
 .footer{
