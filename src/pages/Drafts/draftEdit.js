@@ -307,7 +307,7 @@ this.context.router.history.push('/draftList');
     this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
   }
   handleAddPlot =  ()  => {
-    this.setState({ plotinfo: this.state.plotinfo.concat([{ plotid: this.state.plotinfo.length, plotname: '',content: [{type:'',content:['']}]}]) });
+    this.setState({ plotinfo: this.state.plotinfo.concat([{ plotid: this.state.plotinfo.length, plotname: '',content: ['']}]) });
   }
   handleRemovePlot = () => {
     var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== (this.state.plotinfo.length-1));
@@ -343,7 +343,7 @@ this.context.router.history.push('/draftList');
   handlePlotContentChange = (idx) => (evt) => {
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
-      return { ...plot, content:[{type:plot.plotname,content: evt.target.value.split('\n')}]  };
+      return { ...plot, content: evt.target.value.split('\n')  };
     });
 
     this.setState({ plotinfo: newplotinfo });
@@ -603,7 +603,7 @@ this.context.router.history.push('/draftList');
             </th>
             </tr>
             </table>
-            <textarea rows="4" cols="100" name="content" value={plot.content[0].content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
+            <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
             </div>
           ))}
           <button type="button" onClick={this.handleRemovePlot} className="small">减少模块</button>
