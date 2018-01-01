@@ -37,7 +37,7 @@ class DraftCreate extends React.Component {
         },{plotid: 4,plotname: "结算任务",content: []
       },{plotid: 5,plotname: "真相大白",content: []}],
       plottemplate:[{type: "角色剧本",content: [""]}],
-      instruction: [{type: "游戏说明",content: "(此处放游戏说明)"}],
+      instruction: [{type: "(此处放游戏说明类型)",content: ["(此处放游戏说明)"]}],
       characterinfo:[{type:'', content:['请输入故事内容']}],
     };
   }

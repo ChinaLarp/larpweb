@@ -300,7 +300,7 @@ this.context.router.history.push('/draftList');
       alert(`Image saved`);
     }
   handleAddInstruction = () => {
-    this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ''}]) });
+    this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
   }
   handleRemoveInstruction = (idx) => () => {
 
@@ -327,7 +327,7 @@ this.context.router.history.push('/draftList');
   handleInstructContentChange = (idx) => (evt) => {
     const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
       if (idx !== sidx) return instruct;
-      return { ...instruct, content: evt.target.value };
+      return { ...instruct, content: evt.target.value.split('\n') };
     });
 
     this.setState({ instructinfo: newinstructinfo });
@@ -577,7 +577,7 @@ this.context.router.history.push('/draftList');
             </th>
             </tr>
             </table>
-            <textarea rows="4" cols="100" name="content" value={instruct.content} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
+            <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
              </div>
           ))}
           <button type="button" onClick={this.handleAddInstruction} className="small">添加新模块</button>
