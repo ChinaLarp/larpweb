@@ -9,6 +9,7 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-import": "^1.6.2",
     "classnames": "^2.2.5",
+    "crypto-random-string": "^1.0.0",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
     "material-ui": "^0.19.4",

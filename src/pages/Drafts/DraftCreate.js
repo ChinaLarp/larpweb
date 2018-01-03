@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 //import TextField from 'material-ui/TextField';
 import axios from 'axios';
+import cryptoRandomString  from 'crypto-random-string'
 import md5 from 'md5'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -18,7 +19,7 @@ class DraftCreate extends React.Component {
     super(props)
     this.state = {
       name:'',  //Game name
-      id:'',
+      id: cryptoRandomString(10),
       playernumber: null,
       malenumber: 0,
       femalenumber: 1,
@@ -265,9 +266,10 @@ class DraftCreate extends React.Component {
         />
         <input
           type="text"
-          placeholder="剧本编号"
+          placeholder="剧本名称"
           value={this.state.id}
-          onChange={this.handleidChange}
+          disabled="disabled"
+          required
         />
         <input
           type="text"
