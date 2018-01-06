@@ -31,12 +31,12 @@ class DraftCreate extends React.Component {
       characterlist: [{ description: '',sex: '女', name: '', id: 0}],
       cluelocation:[{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:0}],
       index:0, name:'', count:1 }],
-      mainplot:[{plotid: 0,plotname: "准备阶段",content: []
-              },{plotid: 1,plotname: "自我介绍",content: []
-            },{plotid: 2,plotname: "集中讨论与搜证",content: []
-          },{plotid: 3,plotname: "指认凶手",content: []
-        },{plotid: 4,plotname: "结算任务",content: []
-      },{plotid: 5,plotname: "真相大白",content: []}],
+      mainplot:[{plotid: 0,enableclue:0,enablevote:0,plotname: "准备阶段",content: []
+              },{plotid: 1,enableclue:0,enablevote:0,plotname: "自我介绍",content: []
+            },{plotid: 2,enableclue:1,enablevote:0,plotname: "集中讨论与搜证",content: []
+          },{plotid: 3,enableclue:0,enablevote:1,plotname: "指认凶手",content: []
+        },{plotid: 4,enableclue:0,enablevote:1,plotname: "结算任务",content: []
+      },{plotid: 5,enableclue:0,enablevote:0,plotname: "真相大白",content: []}],
       plottemplate:[{type: "角色剧本",content: [""]}],
       instruction: [{type: "(此处放游戏说明类型)",content: ["(此处放游戏说明)"]}],
       characterinfo:[{type:'', content:['请输入故事内容']}],
@@ -130,7 +130,7 @@ class DraftCreate extends React.Component {
       category: this.state.category,
       characterlist: this.state.characterlist,
       cluelocation: this.state.cluelocation,
-      mainplot: this.makeMainplot(this.state.mainplot,this.state.plottemplate),
+      mainplot: this.state.mainplot,
       instruction: this.state.instruction,
       cluestatus: this.fillArray(this.state.cluelocation),
       signature: md5("xiaomaomi")
@@ -226,11 +226,26 @@ class DraftCreate extends React.Component {
       if (idx !== sidx) return mainplot;
       return { ...mainplot, plotname: evt.target.value };
     });
+    this.setState({ mainplot: newmainplot});
+  }
+  handleMainplotClueChange = (idx) => (evt) => {
+    console.log(evt.target.value)
+    const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
+      if (idx !== sidx) return mainplot;
+      return { ...mainplot, enableclue: mainplot.enableclue==0?1:0 };
+    });
+    this.setState({ mainplot: newmainplot});
+  }
+  handleMainplotVoteChange = (idx) => (evt) => {
+    const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
+      if (idx !== sidx) return mainplot;
+      return { ...mainplot, enablevote: mainplot.enablevote==0?1:0};
+    });
 
     this.setState({ mainplot: newmainplot});
   }
   handleAddMainplot = () => {
-    this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",content: []}])});
+    this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",enableclue:0,enablevote:0,content: []}])});
     }
 
   handleRemoveMainplot = () => {
@@ -375,6 +390,8 @@ class DraftCreate extends React.Component {
           <tr className="tableHead">
             <th>编号</th>
             <th>剧本阶段类型</th>
+            <th>允许搜证</th>
+            <th>允许投票</th>
           </tr>
           {this.state.mainplot.map((mainplot, idx) => (
           <tr>
@@ -388,6 +405,16 @@ class DraftCreate extends React.Component {
             required
           />
           </th>
+          <th><input
+            name="允许搜证"
+            type="checkbox"
+            checked={mainplot.enableclue>0?"on":""}
+            onChange={this.handleMainplotClueChange(idx)} /></th>
+          <th><input
+            name="允许投票"
+            type="checkbox"
+            checked={mainplot.enablevote>0?"on":""}
+            onChange={this.handleMainplotVoteChange(idx)} /></th>
             </tr>
 
           ))}
@@ -422,7 +449,6 @@ class DraftCreate extends React.Component {
           />
           </th>
             </tr>
-
           ))}
             </tbody>
           </table>
