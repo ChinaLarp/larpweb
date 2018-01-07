@@ -590,7 +590,7 @@ this.context.router.history.push('/draftList');
             <div style={{marginTop:20,border:"1px dashed"}}>
             <table className="table table-striped tableText" style={{margin:10}}>
            <tr>
-            <th style={{width:"10%"}}>
+            <th style={{width:"40%"}}>
             <h4 >第{plot.plotid}阶段：</h4>
             </th>
             <th className="shortInput"  style={{float:"left",margin:0}} >
@@ -601,13 +601,21 @@ this.context.router.history.push('/draftList');
               disabled="disabled"
             />
             </th>
+            <th style={{width:"10%"}}>
+            {plot.enableclue>0 && <h4>允许搜证</h4>}
+            {plot.enableclue==0 && <h4>不允许搜证</h4>}
+            </th>
+            <th style={{width:"10%"}}>
+            {plot.enablevote>0 && <h4>允许投票</h4>}
+            {plot.enablevote==0 && <h4>不允许投票</h4>}
+            </th>
             </tr>
             </table>
             <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
             </div>
           ))}
-          <button type="button" onClick={this.handleRemovePlot} className="small">减少模块</button>
-          <button type="button" onClick={this.handleAddPlot} className="small">添加模块</button>
+          <button type="button" onClick={this.handleRemovePlot} disabled="disabled" className="small">减少模块</button>
+          <button type="button" onClick={this.handleAddPlot} disabled="disabled" className="small">添加模块</button>
           </div>
           </form>
         </TabPanel>
