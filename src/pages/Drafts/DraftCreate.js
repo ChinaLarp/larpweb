@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
 import { getdraft } from '../../actions/authAction.js';
-
+import  Tooltip  from'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap.css';
 import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
@@ -27,6 +28,7 @@ class DraftCreate extends React.Component {
       actionpoit: '',
       category: '',
       mapurl: '',
+      showtooltip:0,
       cluemethod:'',
       characterlist: [{ description: '',sex: '女', name: '', id: 0}],
       cluelocation:[{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:0}],
@@ -267,6 +269,7 @@ class DraftCreate extends React.Component {
 
     this.setState({ plottemplate: this.state.plottemplate.filter((s, sidx) => (this.state.plottemplate.length-1) !== sidx) });
   }
+
   render() {
     return (
     	<div className="container">
@@ -301,7 +304,9 @@ class DraftCreate extends React.Component {
           required
         />
 <div className="uploadPanel">
-       <h3>当前角色列表：</h3> <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
+   <h3>当前角色列表：
+   <Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip></h3>
+   <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
 </div>
 
           <div className="characterlist">

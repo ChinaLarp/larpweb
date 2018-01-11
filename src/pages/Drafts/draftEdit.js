@@ -340,6 +340,34 @@ this.context.router.history.push('/draftList');
 
     this.setState({ plotinfo: newplotinfo });
   }
+  handleToggleenablevote= (idx) => () => {
+    var oldenablevote=this.state.plotinfo[idx].enablevote
+    if (oldenablevote==0){
+      var newenablevote=1
+    }else{
+      var newenablevote=0
+    }
+    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      if (idx !== sidx) return plot;
+      return { ...plot, enablevote:newenablevote };
+    });
+
+    this.setState({ plotinfo: newplotinfo });
+  }
+  handleToggleenableclue= (idx) => () => {
+    var oldenableclue=this.state.plotinfo[idx].enableclue
+    if (oldenableclue==0){
+      var newenableclue=1
+    }else{
+      var newenableclue=0
+    }
+    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      if (idx !== sidx) return plot;
+      return { ...plot, enableclue:newenableclue };
+    });
+
+    this.setState({ plotinfo: newplotinfo });
+  }
   handlePlotContentChange = (idx) => (evt) => {
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
@@ -590,10 +618,10 @@ this.context.router.history.push('/draftList');
             <div style={{marginTop:20,border:"1px dashed"}}>
             <table className="table table-striped tableText" style={{margin:10}}>
            <tr>
-            <th style={{width:"40%"}}>
+            <th style={{width:"10%"}}>
             <h4 >第{plot.plotid}阶段：</h4>
             </th>
-            <th className="shortInput"  style={{float:"left",margin:0}} >
+            <th style={{width:"50%"}}>
             <input
               type="text"
               placeholder="信息类型"
@@ -601,14 +629,15 @@ this.context.router.history.push('/draftList');
               disabled="disabled"
             />
             </th>
-            <th style={{width:"10%"}}>
-            {plot.enableclue>0 && <h4>允许搜证</h4>}
-            {plot.enableclue==0 && <h4>不允许搜证</h4>}
+            <th >
+            {plot.enableclue>0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >允许搜证</button>}
+            {plot.enableclue==0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >不允许搜证</button>}
             </th>
-            <th style={{width:"10%"}}>
-            {plot.enablevote>0 && <h4>允许投票</h4>}
-            {plot.enablevote==0 && <h4>不允许投票</h4>}
+            <th >
+            {plot.enablevote>0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >允许投票</button>}
+            {plot.enablevote==0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >不允许投票</button>}
             </th>
+
             </tr>
             </table>
             <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>

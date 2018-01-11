@@ -25,8 +25,8 @@ class DraftBlock extends React.Component {
     const operations = <HashRouter><button id="createButton"><NavLink to="/DraftCreate">创建新剧本</NavLink></button></HashRouter>;
     const TabPane = Tabs.TabPane;
     let gamesList;
-    if (this.props.auth.drafts.length<-1) {
-      gamesList= <div>'Loading'</div>;
+    if (this.props.auth.drafts.length<1) {
+      gamesList= <div>'想创作属于自己的剧本吗？点击右上角“创建新剧本”'</div>;
     } else {
       gamesList = this.props.auth.drafts.map((game, index) => {
       var link='/draftEdit/' + game._id;

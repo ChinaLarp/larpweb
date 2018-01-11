@@ -79,11 +79,7 @@ export default class GameDetail extends React.Component {
               <div className="card col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{borderTop:"1px solid", textAlign:"left", padding:10}}>
                 <div className="card-block">
                   <h3 className="card-title">背景故事</h3>
-                  {
-                    this.state.plotInfo.map((plot, index)=>
-                      (<p className="card-text">{plot.content.join('\n')}</p>))
-                  }
-
+                      <p className="card-text">{this.state.plotInfo.join('\n')}</p>
                 </div>
               </div>
 
