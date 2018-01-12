@@ -36,7 +36,6 @@ class Home extends React.Component {
 
 
 	 return (
-    	<div className="container">
 
 	      <div className="row">
 		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
@@ -55,7 +54,6 @@ class Home extends React.Component {
 	  		    </Tabs>
 		     </div>
 	      </div>
-      </div>
     );
   }
 }

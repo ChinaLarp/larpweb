@@ -31,24 +31,15 @@ injectTapEventPlugin();
 class App extends Component {
 
   render() {
-    var jumbotronStyle={
-          backgroundColor:"transparent",
-          paddingTop:10,
-          paddingBottom:10,
-          marginBottom:10,
-          }
+
     return (
       <div className="App">
-        <div className="jumbotron" style={jumbotronStyle}>
-        <div className="container">
+      <Menu />
+        <div className="container content">
           <Header />
-          <Menu />
           <FlashMessagesList />
-          </div>
-        </div>
-
         <HashRouter>
-          <div className="content" >
+          <div className="" >
             <Route exact path="/" component={Home}/>
             <Route path="/13478545921/:_id" component={postEdit}/>
             <Route path="/posts" component={posts}/>
@@ -63,11 +54,8 @@ class App extends Component {
             <Route path="/gamedetails/:_id" component={GameDetail}></Route>
           </div>
         </HashRouter>
-        <div className="jumbotron" style={jumbotronStyle}>
-        <div className="container">
+      </div>
           <Footer />
-          </div>
-        </div>
       </div>
     );
   }

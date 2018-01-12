@@ -46,7 +46,6 @@ class Products extends React.Component {
 
 
     return(
-        <div className='container'>
 
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                   {gameList}
@@ -58,7 +57,6 @@ class Products extends React.Component {
 
               </div>
             </div>
-        </div>
       )
  }
 }

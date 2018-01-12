@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import wechatCode from '../assets/img/wechat_erCode.jpg';
 import appCode from '../assets/img/weixinapp.jpg';
-import TextField from 'material-ui/TextField';
 import axios from 'axios';
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class Contact extends React.Component {
   constructor(props){
@@ -44,8 +41,6 @@ class Contact extends React.Component {
 
 
     return (
-      <div>
-        <div className="container">
         <div className="row">
           <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <h3>关于我们</h3>
@@ -61,47 +56,39 @@ class Contact extends React.Component {
           <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
               <div>
                   <h3>联系我们</h3>
-                    <MuiThemeProvider>
+                    <form>
                       <div>
-                        <TextField
-                         hintText="请输入您的姓名"
-                         floatingLabelText="姓名"
-                         onChange = {(event,newValue) => this.setState({name:newValue})}
-                         className="contactInput"
-                         />
-                          <br/>
-                         <TextField
-                         hintText="请输入您的邮箱"
-                         floatingLabelText="Email"
-                         onChange = {(event,newValue) => this.setState({email:newValue})}
-                         className="contactInput"
-                         />
-                          <br/>
-                         <TextField
-                         hintText="请输入标题"
-                         floatingLabelText="标题"
-                         onChange = {(event,newValue) => this.setState({subject:newValue})}
-                         className="contactInput"
-                         />
-                          <br/>
+                      <input
+                        type="text"
+                        placeholder="请输入您的姓名"
+                        value={this.state.name}
+                        onChange={(event,newValue) => this.setState({name:newValue})}
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder="请输入您的邮箱"
+                        value={this.state.email}
+                        onChange={(event,newValue) => this.setState({email:newValue})}
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder="请输入标题"
+                        value={this.state.subject}
+                        onChange={(event,newValue) => this.setState({subject:newValue})}
+                        required
+                      />
+                      <textarea
+                      placeholder="请输入内容" rows="8" cols="100" name="content" value={this.state.message} onChange={(event,newValue) => this.setState({message:newValue})}/>
 
-                         <TextField
-                         hintText="请输入内容"
-                         multiLine="true"
-                         rows='4'
-                         rowsMax='4'
-                         onChange = {(event,newValue) => this.setState({message:newValue})}
-                         className="contactInput"
-                         />
                         <br/>
-                       <RaisedButton label="提交" onClick={(event) => this.handleClick(event)}/>
+                       <button style={{width: '40%',margin: 'auto'}} onClick={(event) => this.handleClick(event)}>提交</button>
                      </div>
-                   </MuiThemeProvider>
+                   </form>
                 </div>
             </div>
           </div>
-        </div>
-      </div>
     );
   }
 }

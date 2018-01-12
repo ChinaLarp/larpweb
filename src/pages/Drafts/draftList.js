@@ -49,7 +49,7 @@ class DraftList extends React.Component {
       </HashRouter>;
     }
     return(
-        <div className='container' style={draftListStyle}>
+        <div style={draftListStyle}>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
                 {content}
             </div>

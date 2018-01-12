@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
 import Login from './Login';
 import Register from './Register';
 import { userSignupRequest } from '../../actions/signupActions';
@@ -90,7 +88,7 @@ class Loginscreen extends Component {
         <div>
           {this.state.loginmessage}
           <div className="buttonAlignCenter">
-            <button button type="button" className="loginButton" onClick={(event) => this.handleClick(event)}>{this.state.buttonLabel}</button>
+            <button type="button" className="loginButton" onClick={(event) => this.handleClick(event)}>{this.state.buttonLabel}</button>
           </div>
 
         </div>

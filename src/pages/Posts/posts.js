@@ -26,7 +26,7 @@ class posts extends React.Component {
     const TabPane = Tabs.TabPane;
 
     return(
-        <div className='container' className="postsAlignCenter">
+        <div className="postsAlignCenter">
 
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
               <Tabs className='tabBar'>

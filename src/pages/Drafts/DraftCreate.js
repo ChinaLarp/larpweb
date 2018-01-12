@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-//import TextField from 'material-ui/TextField';
+import React from "react";
 import axios from 'axios';
 import cryptoRandomString  from 'crypto-random-string'
 import md5 from 'md5'
@@ -12,13 +11,14 @@ import 'rc-tooltip/assets/bootstrap.css';
 import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
-//import RaisedButton from 'material-ui/RaisedButton';
-//import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Stepper from 'react-stepper-horizontal'
 
 class DraftCreate extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      activeStep: 0,
+      steps:["第一步","第二部","第三部"],
       name:'',  //Game name
       id: cryptoRandomString(10),
       playernumber: null,
@@ -269,47 +269,68 @@ class DraftCreate extends React.Component {
 
     this.setState({ plottemplate: this.state.plottemplate.filter((s, sidx) => (this.state.plottemplate.length-1) !== sidx) });
   }
+  handleReset = () => {
+    this.setState({
+      activeStep: 0,
+    });
+  };
+  handleNext = () => {
+   const { activeStep } = this.state;
+   this.setState({
+     activeStep: activeStep + 1
+   });
+ };
 
-  render() {
-    return (
-    	<div className="container">
-
-      <form className="form-group" onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          placeholder="剧本名称"
-          value={this.state.name}
-          onChange={this.handleNameChange}
-          required
-        />
-        <input
-          type="text"
-          placeholder="剧本名称"
-          value={this.state.id}
-          disabled="disabled"
-          required
-        />
-        <input
-          type="text"
-          placeholder="剧本介绍"
-          value={this.state.description}
-          onChange={this.handleDescriptionChange}
-          required
-        />
-        <input
-          type="text"
-          placeholder="剧本类别"
-          value={this.state.category}
-          onChange={this.handleCategoryChange}
-          required
-        />
-<div className="uploadPanel">
-   <h3>当前角色列表：
-   <Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip></h3>
-   <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
-</div>
-
-          <div className="characterlist">
+ handleBack = () => {
+   const { activeStep } = this.state;
+   this.setState({
+     activeStep: activeStep - 1,
+   });
+ };
+ getStepContent(stepIndex) {
+  switch (stepIndex) {
+    case 0:
+      return (
+        <form className="form-group">
+          <input
+            type="text"
+            placeholder="剧本名称"
+            value={this.state.name}
+            onChange={this.handleNameChange}
+            required
+          />
+          <input
+            type="text"
+            placeholder="剧本名称"
+            value={this.state.id}
+            disabled="disabled"
+            required
+          />
+          <input
+            type="text"
+            placeholder="剧本介绍"
+            value={this.state.description}
+            onChange={this.handleDescriptionChange}
+            required
+          />
+          <input
+            type="text"
+            placeholder="剧本类别"
+            value={this.state.category}
+            onChange={this.handleCategoryChange}
+            required
+          />
+          </form>
+      )
+    case 1:
+      return (
+        <div>
+        <div className="uploadPanel">
+           <h3>当前角色列表：
+           <Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip></h3>
+           <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
+        </div>
+        <div className="characterlist">
           <table className="table table-striped">
           <tbody>
           <tr className="tableHead">
@@ -348,44 +369,14 @@ class DraftCreate extends React.Component {
             </tbody>
           </table>
           </div>
-
-
         <button type="button" onClick={this.handleAddMaleCharacter} className="small">添加男性角色</button>
         <button type="button" onClick={this.handleAddFemaleCharacter} className="small">添加女性角色</button>
         <button type="button" onClick={this.handleAddUnisexCharacter} className="small">添加无性别角色</button>
-
-        <div className="uploadPanel">
-           <h3>创建角色故事模板：</h3> <h4>模板类型总数：{this.state.cluelocation.length}</h4>
         </div>
-          <div className="characterlist">
-          <table className="table table-striped">
-          <tbody>
-          <tr className="tableHead">
-            <th>编号</th>
-            <th>角色故事模板类型</th>
-          </tr>
-          {this.state.characterinfo.map((characterinfo, idx) => (
-          <tr>
-          <th><div className="tableText">{idx+1}</div></th>
-          <th>
-          <input
-            type="text"
-            placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”,“你的目的”`}
-            value={characterinfo.type}
-            onChange={this.handleCharacterInfoTypeChange(idx)}
-            required
-          />
-          </th>
-            </tr>
-
-          ))}
-            </tbody>
-          </table>
-          </div>
-
-
-        <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
-        <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
+);
+    case 2:
+      return (
+        <div>
         <div className="uploadPanel">
            <h3>创建游戏流程模板：</h3> <h4>剧本阶段总数：{this.state.mainplot.length}</h4>
         </div>
@@ -426,94 +417,147 @@ class DraftCreate extends React.Component {
             </tbody>
           </table>
           </div>
-
-
         <button type="button" onClick={this.handleAddMainplot} className="small">添加阶段类型</button>
         <button type="button" onClick={this.handleRemoveMainplot} className="small">减少阶段类型</button>
-
+        </div>
+);
+    case 3:
+      return (
+        <div>
         <div className="uploadPanel">
-           <h3>创建阶段内信息模板：</h3> <h4>阶段内信息模板总数：{this.state.plottemplate.length}</h4>
+           <h3>创建角色故事模板：</h3> <h4>模板类型总数：{this.state.cluelocation.length}</h4>
         </div>
           <div className="characterlist">
           <table className="table table-striped">
           <tbody>
           <tr className="tableHead">
             <th>编号</th>
-            <th>阶段内信息模板类型</th>
+            <th>角色故事模板类型</th>
           </tr>
-          {this.state.plottemplate.map((plottemplate, idx) => (
+          {this.state.characterinfo.map((characterinfo, idx) => (
           <tr>
           <th><div className="tableText">{idx+1}</div></th>
           <th>
           <input
             type="text"
-            placeholder={`#${idx + 1} 每阶段内信息模板类型，例如：“你发现的线索”，“你的剧本”`}
-            value={plottemplate.type}
-            onChange={this.handlePlottemplateChange(idx)}
+            placeholder={`#${idx + 1} 模板类型，例如：“背景故事”，“当天发生的事”,“你的目的”`}
+            value={characterinfo.type}
+            onChange={this.handleCharacterInfoTypeChange(idx)}
             required
           />
           </th>
             </tr>
+
           ))}
             </tbody>
           </table>
           </div>
-
-
-        <button type="button" onClick={this.handleAddPlottemplate} className="small">添加阶段内信息模板类型</button>
-        <button type="button" onClick={this.handleRemovePlottemplate} className="small">减少阶段内信息模板类型</button>
-
-        <div className="uploadPanel">
-           <h3>当前搜证地点列表：</h3> <h4>地点总数：{this.state.cluelocation.length}</h4>
+          <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
+          <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
         </div>
-
-          <div className="characterlist">
-          <table className="table table-striped">
-          <tbody>
-          <tr className="tableHead">
-            <th>编号</th>
-            <th>搜证地点</th>
-          </tr>
-          {this.state.cluelocation.map((cluelocation, idx) => (
-          <tr>
-          <th><div className="tableText">{cluelocation.index+1}</div></th>
-          <th>
-          <input
-            type="text"
-            placeholder={`#${cluelocation.index + 1} 搜证地点`}
-            value={cluelocation.name}
-            onChange={this.handleClueLocationNameChange(idx)}
-            required
-          />
-          </th>
-            </tr>
-
-          ))}
-            </tbody>
-          </table>
+      );
+      case 4:
+        return (
+          <div>
+          <div className="uploadPanel">
+             <h3>创建阶段内信息模板：</h3> <h4>阶段内信息模板总数：{this.state.plottemplate.length}</h4>
           </div>
+            <div className="characterlist">
+            <table className="table table-striped">
+            <tbody>
+            <tr className="tableHead">
+              <th>编号</th>
+              <th>阶段内信息模板类型</th>
+            </tr>
+            {this.state.plottemplate.map((plottemplate, idx) => (
+            <tr>
+            <th><div className="tableText">{idx+1}</div></th>
+            <th>
+            <input
+              type="text"
+              placeholder={`#${idx + 1} 每阶段内信息模板类型，例如：“你发现的线索”，“你的剧本”`}
+              value={plottemplate.type}
+              onChange={this.handlePlottemplateChange(idx)}
+              required
+            />
+            </th>
+              </tr>
+            ))}
+              </tbody>
+            </table>
+            </div>
+          <button type="button" onClick={this.handleAddPlottemplate} className="small">添加阶段内信息模板类型</button>
+          <button type="button" onClick={this.handleRemovePlottemplate} className="small">减少阶段内信息模板类型</button>
+          </div>
+        );
+        case 5:
+          return (
+            <div>
+            <div className="uploadPanel">
+               <h3>当前搜证地点列表：</h3> <h4>地点总数：{this.state.cluelocation.length}</h4>
+            </div>
 
-        <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
-        <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
-        <button onClick={this.handleSubmit}>创建</button>
-        <button onClick={this.handleReturn}>放弃</button>
-      </form>
+              <div className="characterlist">
+              <table className="table table-striped">
+              <tbody>
+              <tr className="tableHead">
+                <th>编号</th>
+                <th>搜证地点</th>
+              </tr>
+              {this.state.cluelocation.map((cluelocation, idx) => (
+              <tr>
+              <th><div className="tableText">{cluelocation.index+1}</div></th>
+              <th>
+              <input
+                type="text"
+                placeholder={`#${cluelocation.index + 1} 搜证地点`}
+                value={cluelocation.name}
+                onChange={this.handleClueLocationNameChange(idx)}
+                required
+              />
+              </th>
+                </tr>
 
-      <ScrollToTop showUnder={160} style={{zIndex:1}}>
-         <img src={btop} className="btopImg" />
-      </ScrollToTop>
+              ))}
+                </tbody>
+              </table>
+              </div>
 
-      </div>
-    )
+            <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
+            <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
+            </div>
+          );
   }
 }
+  render() {
+    return (
+      <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
+      <div>
+        <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '流程信息'}, {title: '背景模板'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
+      </div>
+      <div >
+        <button style={{width: '20%',  marginRight:160, display: 'inline'}} onClick={this.handleBack}>上一步</button>
+      {this.state.activeStep==5 ?
+        (
+          <button style={{width: '20%', margin:'auto', display: 'inline'}} onClick={this.handleSubmit}>提交</button>
+      ) : (
+     <button style={{width: '20%',  margin:'auto', display: 'inline'}} onClick={this.handleNext}>下一步</button>
+   )}
+   </div>
+      <div style={{minHeight: 400,maxWidth: 900,padding: 20,margin: 'auto'}}>{this.getStepContent(this.state.activeStep)}</div>
+
+   </div>
+ )}
+}
+
 DraftCreate.contextTypes = {
   router: PropTypes.object.isRequired
 }
 DraftCreate.propTypes = {
   auth: PropTypes.object.isRequired,
   addFlashMessage: PropTypes.func.isRequired,
-  getdraft: PropTypes.func.isRequired
+  getdraft: PropTypes.func.isRequired,
+  classes: PropTypes.object
 }
 function mapStateToProps(state) {
   return {
