@@ -12,7 +12,15 @@ import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
 import Stepper from 'react-stepper-horizontal'
-
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import RaisedButton from 'material-ui/RaisedButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 class DraftCreate extends React.Component {
   constructor(props){
     super(props)
@@ -532,20 +540,50 @@ class DraftCreate extends React.Component {
   render() {
     return (
       <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
+
       <div>
         <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '流程信息'}, {title: '背景模板'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
       </div>
-      <div >
-        <button style={{width: '20%',  marginRight:160, display: 'inline'}} onClick={this.handleBack}>上一步</button>
-      {this.state.activeStep==5 ?
-        (
-          <button style={{width: '20%', margin:'auto', display: 'inline'}} onClick={this.handleSubmit}>提交</button>
-      ) : (
-     <button style={{width: '20%',  margin:'auto', display: 'inline'}} onClick={this.handleNext}>下一步</button>
-   )}
-   </div>
-      <div style={{minHeight: 400,maxWidth: 900,padding: 20,margin: 'auto'}}>{this.getStepContent(this.state.activeStep)}</div>
 
+     <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
+     <MuiThemeProvider>
+     <Toolbar style={{backgroundColor: '#cccccc'}} >
+     <ToolbarGroup firstChild={true}>
+       <DropDownMenu value={3} onChange={this.handleChange}>
+         <MenuItem value={1} primaryText="All Broadcasts" />
+         <MenuItem value={2} primaryText="All Voice" />
+         <MenuItem value={3} primaryText="All Text" />
+         <MenuItem value={4} primaryText="Complete Voice" />
+         <MenuItem value={5} primaryText="Complete Text" />
+         <MenuItem value={6} primaryText="Active Voice" />
+         <MenuItem value={7} primaryText="Active Text" />
+       </DropDownMenu>
+     </ToolbarGroup>
+     <ToolbarGroup>
+       <ToolbarTitle text="Options" />
+       <FontIcon className="muidocs-icon-custom-sort" />
+       <ToolbarSeparator />
+       <RaisedButton label="Create Broadcast" primary={true} />
+       <IconMenu
+         iconButtonElement={
+           <IconButton touch={true}>
+             <NavigationExpandMoreIcon />
+           </IconButton>
+         }
+       >
+         <MenuItem primaryText="Download" />
+         <MenuItem primaryText="More Info" />
+       </IconMenu>
+     </ToolbarGroup>
+    </Toolbar>
+    <div style={{minHeight: 400,maxWidth: 900,padding: 10,margin: 'auto'}}>{this.getStepContent(this.state.activeStep)}</div>
+    <div>
+      <RaisedButton label="上一步"   style={{ marginRight:30}} primary={true} onClick={this.handleBack}/>
+      {this.state.activeStep==5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  primary={true} onClick={this.handleSubmit}/>
+    ) : (<RaisedButton label="下一步" style={{ marginRight:30}}  primary={true}  onClick={this.handleNext}/>)}
+   </div>
+   </MuiThemeProvider>
+    </div>
    </div>
  )}
 }
