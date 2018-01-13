@@ -26,7 +26,7 @@ class DraftCreate extends React.Component {
     super(props)
     this.state = {
       activeStep: 0,
-      steps:["第一步","第二部","第三部"],
+      steptitle:["基础信息","角色信息","流程信息","背景模版","回合模版","搜证信息"],
       name:'',  //Game name
       id: randomstring.generate(7),
       playernumber: null,
@@ -295,6 +295,27 @@ class DraftCreate extends React.Component {
      activeStep: activeStep - 1,
    });
  };
+  getsubTitle(stepIndex) {
+   switch (stepIndex) {
+     case 0:
+       return (<span>不知道放什么</span>)
+     case 1:
+       return(<span> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</span>
+       )
+     case 2:
+       return(<span> 剧本阶段总数：{this.state.mainplot.length}</span>
+       )
+     case 3:
+       return(<span> 模板类型总数：{this.state.cluelocation.length}</span>
+       )
+     case 4:
+       return(<span> 阶段内信息模板总数：{this.state.plottemplate.length}</span>
+       )
+     case 5:
+       return(<span> 地点总数：{this.state.cluelocation.length}</span>
+       )
+     }
+   }
  getStepContent(stepIndex) {
   switch (stepIndex) {
     case 0:
@@ -333,11 +354,6 @@ class DraftCreate extends React.Component {
     case 1:
       return (
         <div>
-        <div className="uploadPanel">
-           <h3>当前角色列表：
-           <Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip></h3>
-           <h4> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</h4>
-        </div>
         <div className="characterlist">
           <table className="table table-striped">
           <tbody>
@@ -381,13 +397,10 @@ class DraftCreate extends React.Component {
         <button type="button" onClick={this.handleAddFemaleCharacter} className="small">添加女性角色</button>
         <button type="button" onClick={this.handleAddUnisexCharacter} className="small">添加无性别角色</button>
         </div>
-);
+      );
     case 2:
       return (
         <div>
-        <div className="uploadPanel">
-           <h3>创建游戏流程模板：</h3> <h4>剧本阶段总数：{this.state.mainplot.length}</h4>
-        </div>
           <div className="characterlist">
           <table className="table table-striped">
           <tbody>
@@ -428,13 +441,10 @@ class DraftCreate extends React.Component {
         <button type="button" onClick={this.handleAddMainplot} className="small">添加阶段类型</button>
         <button type="button" onClick={this.handleRemoveMainplot} className="small">减少阶段类型</button>
         </div>
-);
+      );
     case 3:
       return (
         <div>
-        <div className="uploadPanel">
-           <h3>创建角色故事模板：</h3> <h4>模板类型总数：{this.state.cluelocation.length}</h4>
-        </div>
           <div className="characterlist">
           <table className="table table-striped">
           <tbody>
@@ -464,12 +474,9 @@ class DraftCreate extends React.Component {
           <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
         </div>
       );
-      case 4:
+    case 4:
         return (
           <div>
-          <div className="uploadPanel">
-             <h3>创建阶段内信息模板：</h3> <h4>阶段内信息模板总数：{this.state.plottemplate.length}</h4>
-          </div>
             <div className="characterlist">
             <table className="table table-striped">
             <tbody>
@@ -498,43 +505,39 @@ class DraftCreate extends React.Component {
           <button type="button" onClick={this.handleRemovePlottemplate} className="small">减少阶段内信息模板类型</button>
           </div>
         );
-        case 5:
-          return (
-            <div>
-            <div className="uploadPanel">
-               <h3>当前搜证地点列表：</h3> <h4>地点总数：{this.state.cluelocation.length}</h4>
-            </div>
-
-              <div className="characterlist">
-              <table className="table table-striped">
-              <tbody>
-              <tr className="tableHead">
-                <th>编号</th>
-                <th>搜证地点</th>
+    case 5:
+        return (
+          <div>
+            <div className="characterlist">
+            <table className="table table-striped">
+            <tbody>
+            <tr className="tableHead">
+              <th>编号</th>
+              <th>搜证地点</th>
+            </tr>
+            {this.state.cluelocation.map((cluelocation, idx) => (
+            <tr>
+            <th><div className="tableText">{cluelocation.index+1}</div></th>
+            <th>
+            <input
+              type="text"
+              placeholder={`#${cluelocation.index + 1} 搜证地点`}
+              value={cluelocation.name}
+              onChange={this.handleClueLocationNameChange(idx)}
+              required
+            />
+            </th>
               </tr>
-              {this.state.cluelocation.map((cluelocation, idx) => (
-              <tr>
-              <th><div className="tableText">{cluelocation.index+1}</div></th>
-              <th>
-              <input
-                type="text"
-                placeholder={`#${cluelocation.index + 1} 搜证地点`}
-                value={cluelocation.name}
-                onChange={this.handleClueLocationNameChange(idx)}
-                required
-              />
-              </th>
-                </tr>
 
-              ))}
-                </tbody>
-              </table>
-              </div>
-
-            <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
-            <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
+            ))}
+              </tbody>
+            </table>
             </div>
-          );
+
+          <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
+          <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
+          </div>
+        );
   }
 }
   render() {
@@ -548,22 +551,14 @@ class DraftCreate extends React.Component {
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
      <MuiThemeProvider>
      <Toolbar style={{backgroundColor: '#cccccc'}} >
-     <ToolbarGroup firstChild={true}>
-       <DropDownMenu value={3} onChange={this.handleChange}>
-         <MenuItem value={1} primaryText="All Broadcasts" />
-         <MenuItem value={2} primaryText="All Voice" />
-         <MenuItem value={3} primaryText="All Text" />
-         <MenuItem value={4} primaryText="Complete Voice" />
-         <MenuItem value={5} primaryText="Complete Text" />
-         <MenuItem value={6} primaryText="Active Voice" />
-         <MenuItem value={7} primaryText="Active Text" />
-       </DropDownMenu>
-     </ToolbarGroup>
+     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip>
+     <ToolbarSeparator /></ToolbarGroup>
+     <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>
      <ToolbarGroup>
-       <ToolbarTitle text="Options" />
        <FontIcon className="muidocs-icon-custom-sort" />
        <ToolbarSeparator />
-       <RaisedButton label="Create Broadcast" primary={true} />
+       <RaisedButton label="添加" primary={true} />
+       <RaisedButton label="减少" primary={true} />
        <IconMenu
          iconButtonElement={
            <IconButton touch={true}>
@@ -571,8 +566,8 @@ class DraftCreate extends React.Component {
            </IconButton>
          }
        >
-         <MenuItem primaryText="Download" />
-         <MenuItem primaryText="More Info" />
+         <MenuItem primaryText="放弃" />
+         <MenuItem primaryText="保存并退出" />
        </IconMenu>
      </ToolbarGroup>
     </Toolbar>
