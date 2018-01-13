@@ -20,12 +20,16 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 class DraftCreate extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       activeStep: 0,
+      errorMessage:"请确认",
+      openDialog:false,
       steptitle:["基础信息","角色信息","流程信息","背景模版","回合模版","搜证信息"],
       name:'',  //Game name
       id: randomstring.generate(7),
@@ -98,31 +102,25 @@ class DraftCreate extends React.Component {
       if (idx !== sidx) return character;
       return { ...character, description: evt.target.value };
     });
-
     this.setState({ characterlist: newCharacter});
   }
-
   handleClueLocationNameChange = (idx) => (evt) => {
     const newClueLocation= this.state.cluelocation.map((cluelocation, sidx) => {
       if (idx !== sidx) return cluelocation;
       return { ...cluelocation, name: evt.target.value };
     });
-
     this.setState({ cluelocation: newClueLocation});
   }
-
   handleCharacterInfoTypeChange = (idx) => (evt) => {
     const newcharacterInfo= this.state.characterinfo.map((characterinfo, sidx) => {
       if (idx !== sidx) return characterinfo;
       return { ...characterinfo, type: evt.target.value };
     });
-
     this.setState({ characterinfo: newcharacterInfo});
   }
   handleReturn = (evt) => {
-            this.context.router.history.push('/draftList');
+      this.context.router.history.push('/draftList');
   }
-
   handleSubmit = (evt) => {
     this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
@@ -183,54 +181,6 @@ class DraftCreate extends React.Component {
             //  alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
   }
 
-  handleAddMaleCharacter = () => {
-    this.setState({ characterlist: this.state.characterlist.concat([{ description: '', sex: '男', name: '', id: this.state.characterlist.length}]) });
-      this.setState({ malenumber: this.state.malenumber+1 });
-      //console.log(this.state.characterlist);
-  }
-    handleAddFemaleCharacter = () => {
-      this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '女', name: '', id: this.state.characterlist.length}]) });
-        this.setState({ femalenumber: this.state.femalenumber+1 });
-      //console.log(this.state.characterlist);
-    }
-      handleAddUnisexCharacter = () => {
-        this.setState({ characterlist: this.state.characterlist.concat([{ description: '',sex: '无性别', name: '', id: this.state.characterlist.length}]) });
-      //console.log(this.state.characterlist);
-      }
-
-    //!!!Debug Required
-    handleRemoveCharacter = (idx) => () => {
-
-    //this.setState({ characterlist: this.state.characterlist.filter((s, sidx) => idx !== sidx) }).then(()=>{
-      var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx);
-      newcharacterlist = newcharacterlist.map((character, sidx) => {return { ...character, id: sidx };
-    });
-    console.log(newcharacterlist);
-    this.setState({ characterlist: newcharacterlist });//});
-
-    if(this.state.characterlist[idx].sex=='男'){
-      this.setState({ malenumber: this.state.malenumber-1 });
-    }else if(this.state.characterlist[idx].sex=='女'){
-      this.setState({ femalenumber: this.state.femalenumber-1 });
-    }
-    console.log(this.state.characterlist);
-}
-  handleAddClueLocation = () => {
-    this.setState({ cluelocation: this.state.cluelocation.concat([{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:this.state.cluelocation.length}],
-    index:this.state.cluelocation.length, name:'', count:1 }]) });
-  }
-
-  handleRemoveClueLocation = () => {
-    this.setState({ cluelocation: this.state.cluelocation.filter((s, sidx) => (this.state.cluelocation.length-1) !== sidx) });
-  }
-  handleAddCharacterInfoType = () => {
-    this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:['请输入故事内容']}])});
-    }
-
-  handleRemoveCharacterInfoType = () => {
-
-    this.setState({ characterinfo: this.state.characterinfo.filter((s, sidx) => (this.state.characterinfo.length-1) !== sidx) });
-  }
   handleMainplotChange = (idx) => (evt) => {
     const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
       if (idx !== sidx) return mainplot;
@@ -239,12 +189,18 @@ class DraftCreate extends React.Component {
     this.setState({ mainplot: newmainplot});
   }
   handleMainplotClueChange = (idx) => (evt) => {
-    console.log(evt.target.value)
     const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
       if (idx !== sidx) return mainplot;
       return { ...mainplot, enableclue: mainplot.enableclue==0?1:0 };
     });
     this.setState({ mainplot: newmainplot});
+  }
+  handleSexChange = (idx) => (evt) => {
+    const newcharacterlist= this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, sex: characterlist.sex=="男"?"女":"男" };
+    });
+    this.setState({ characterlist: newcharacterlist});
   }
   handleMainplotVoteChange = (idx) => (evt) => {
     const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
@@ -254,14 +210,6 @@ class DraftCreate extends React.Component {
 
     this.setState({ mainplot: newmainplot});
   }
-  handleAddMainplot = () => {
-    this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",enableclue:0,enablevote:0,content: []}])});
-    }
-
-  handleRemoveMainplot = () => {
-
-    this.setState({ mainplot: this.state.mainplot.filter((s, sidx) => (this.state.mainplot.length-1) !== sidx) });
-  }
   handlePlottemplateChange = (idx) => (evt) => {
     const newplottemplate= this.state.plottemplate.map((plottemplate, sidx) => {
       if (idx !== sidx) return plottemplate;
@@ -269,33 +217,136 @@ class DraftCreate extends React.Component {
     });
     this.setState({ plottemplate: newplottemplate});
   }
-  handleAddPlottemplate = () => {
-    this.setState({ plottemplate: this.state.plottemplate.concat([{type: "阶段内信息模板类型",content: [""]}])});
+  addItem = ()  =>  {
+    switch (this.state.activeStep) {
+      case 0:
+      case 1:
+          this.setState({ characterlist: this.state.characterlist.concat([{ description: '', sex: '男', name: '', id: this.state.characterlist.length}]) });
+          this.setState({ malenumber: this.state.malenumber+1 });
+      case 2:this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",enableclue:0,enablevote:0,content: []}])});
+      case 3:this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:['请输入故事内容']}])});
+      case 4:this.setState({ plottemplate: this.state.plottemplate.concat([{type: "阶段内信息模板类型",content: [""]}])});
+      case 5:
+          this.setState({ cluelocation: this.state.cluelocation.concat([{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:this.state.cluelocation.length}],
+          index:this.state.cluelocation.length, name:'', count:1 }]) });
     }
-
-  handleRemovePlottemplate = () => {
-
-    this.setState({ plottemplate: this.state.plottemplate.filter((s, sidx) => (this.state.plottemplate.length-1) !== sidx) });
   }
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
-  handleNext = () => {
-   const { activeStep } = this.state;
-   this.setState({
-     activeStep: activeStep + 1
-   });
- };
+  removeItem = (idx) => (evt) => {
+    switch (this.state.activeStep) {
+      case 0:
+        break;
+      case 1:
+        var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx).map((character, sidx) => {return { ...character, id: sidx }});
+        this.setState({ characterlist: newcharacterlist });
+        if(this.state.characterlist[idx].sex=='男'){
+          this.setState({ malenumber: this.state.malenumber-1 });
+        }else if(this.state.characterlist[idx].sex=='女'){
+          this.setState({ femalenumber: this.state.femalenumber-1 });
+        }
+        break;
+      case 2:
+        var newmainplot=this.state.mainplot.filter((s, sidx) => idx !== sidx).map((mainplot, sidx) => {return { ...mainplot, plotid: sidx }});
+        this.setState({ mainplot: newmainplot })
+        break;
+      case 3:
+        var newcharacterinfo=this.state.characterinfo.filter((s, sidx) => idx !== sidx)
+        this.setState({ characterinfo: newcharacterinfo })
+        break;
+      case 4:
+        var newplottemplate=this.state.plottemplate.filter((s, sidx) => idx !== sidx)
+        this.setState({ plottemplate: newplottemplate })
+        break;
+      case 5:
+        var newcluelocation=this.state.cluelocation.filter((s, sidx) => idx !== sidx).map((cluelocation, sidx) => {return { ...cluelocation,clues:[{content:'',passcode:'', cluenumber:0,cluelocation: sidx}], index: sidx }});
+        this.setState({ cluelocation: newcluelocation })
+        break;
+    }
+  }
+ dialogContent () {
+   return (
+     <Dialog
+        title="Dialog With Actions"
+        actions={[
+            <RaisedButton
+              label="好"
+              primary={true}
+              keyboardFocused={true}
+              onClick={()=>(this.setState({openDialog:false}))}
+            />,
+          ]}
+        modal={false}
+        open={this.state.openDialog}
+        onRequestClose={()=>(this.setState({openDialog:false}))}
+      >{this.state.errorMessage}
+      </Dialog>)
+ }
+ handleNext = () => {
+   switch (this.state.activeStep) {
+    case 0:
+      if (this.state.name==""){
+        console.log("请输入剧本名称再继续。")
+        this.setState({
+          openDialog:true,
+          errorMessage:"请输入剧本名称再继续。"
+        });
+      }else{
+        this.setState({
+          activeStep: this.state.activeStep + 1
+        });
+      }
+      break
+    case 1:
+     if (this.state.characterlist.length==0){
+       this.setState({
+         openDialog:true,
+         errorMessage:"角色数不能为零。"
+       });
+     }else if (this.state.characterlist.filter((s,idx)=>s.name=="").length!=0){
+       this.setState({
+         openDialog:true,
+         errorMessage:"角色名不能为空。"
+       });
+     }else{
+       this.setState({
+         activeStep: this.state.activeStep + 1
+       });
+     }
+     break
+    case 2:
+     if (this.state.mainplot.length==0){
+       this.setState({
+         openDialog:true,
+         errorMessage:"回合数不能为零。"
+       });
+     }else{
+       this.setState({
+         activeStep: this.state.activeStep + 1
+       });
+     }
+      break
+    case 3:
+     if (this.state.name==""){
+       console.log("请输入剧本名称再继续。")
+       this.setState({
+         openDialog:true,
+         errorMessage:"请输入剧本名称再继续。"
+       });
+     }else{
+       this.setState({
+         activeStep: this.state.activeStep + 1
+       });
+     }
+      break
+   }
 
+  };
  handleBack = () => {
    const { activeStep } = this.state;
    this.setState({
-     activeStep: activeStep - 1,
+     activeStep: ((activeStep - 1) < 0 ? 0 : activeStep-1),
    });
  };
-  getsubTitle(stepIndex) {
+ getsubTitle(stepIndex) {
    switch (stepIndex) {
      case 0:
        return (<span>不知道放什么</span>)
@@ -353,7 +404,6 @@ class DraftCreate extends React.Component {
       )
     case 1:
       return (
-        <div>
         <div className="characterlist">
           <table className="table table-striped">
           <tbody>
@@ -367,7 +417,9 @@ class DraftCreate extends React.Component {
           {this.state.characterlist.map((characterlist, idx) => (
           <tr>
           <th><div className="tableText">{characterlist.id+1}</div></th>
-          <th><div className="tableText">{characterlist.sex}</div></th>
+          <th>
+          <button type="button" onClick={this.handleSexChange(idx)} className="small">{characterlist.sex}</button>
+          </th>
           <th>
           <input
             type="text"
@@ -386,21 +438,16 @@ class DraftCreate extends React.Component {
             />
             </th>
             <th>
-            <button type="button" onClick={this.handleRemoveCharacter(idx)} className="small">-</button>
+            <button type="button" onClick={this.removeItem(idx)} className="small">-</button>
             </th>
             </tr>
-                    ))}
+            ))}
             </tbody>
           </table>
           </div>
-        <button type="button" onClick={this.handleAddMaleCharacter} className="small">添加男性角色</button>
-        <button type="button" onClick={this.handleAddFemaleCharacter} className="small">添加女性角色</button>
-        <button type="button" onClick={this.handleAddUnisexCharacter} className="small">添加无性别角色</button>
-        </div>
       );
     case 2:
       return (
-        <div>
           <div className="characterlist">
           <table className="table table-striped">
           <tbody>
@@ -409,6 +456,7 @@ class DraftCreate extends React.Component {
             <th>剧本阶段类型</th>
             <th>允许搜证</th>
             <th>允许投票</th>
+            <th>删除</th>
           </tr>
           {this.state.mainplot.map((mainplot, idx) => (
           <tr>
@@ -422,35 +470,31 @@ class DraftCreate extends React.Component {
             required
           />
           </th>
-          <th><input
-            name="允许搜证"
-            type="checkbox"
-            checked={mainplot.enableclue>0?"on":""}
-            onChange={this.handleMainplotClueChange(idx)} /></th>
-          <th><input
-            name="允许投票"
-            type="checkbox"
-            checked={mainplot.enablevote>0?"on":""}
-            onChange={this.handleMainplotVoteChange(idx)} /></th>
-            </tr>
+          <th>
+          <button type="button" onClick={this.handleMainplotClueChange(idx)} className="small">{mainplot.enableclue>0?"允许":"禁止"}</button>
+          </th>
+          <th>
+          <button type="button" onClick={this.handleMainplotVoteChange(idx)} className="small">{mainplot.enablevote>0?"允许":"禁止"}</button>
+          </th>
+          <th>
+          <button type="button" onClick={this.removeItem(idx)} className="small">-</button>
+          </th>
+          </tr>
 
           ))}
             </tbody>
           </table>
           </div>
-        <button type="button" onClick={this.handleAddMainplot} className="small">添加阶段类型</button>
-        <button type="button" onClick={this.handleRemoveMainplot} className="small">减少阶段类型</button>
-        </div>
       );
     case 3:
       return (
-        <div>
           <div className="characterlist">
           <table className="table table-striped">
           <tbody>
           <tr className="tableHead">
             <th>编号</th>
             <th>角色故事模板类型</th>
+            <th>删除</th>
           </tr>
           {this.state.characterinfo.map((characterinfo, idx) => (
           <tr>
@@ -464,25 +508,25 @@ class DraftCreate extends React.Component {
             required
           />
           </th>
+          <th>
+          <button type="button" onClick={this.removeItem(idx)} className="small">-</button>
+          </th>
             </tr>
 
           ))}
             </tbody>
           </table>
           </div>
-          <button type="button" onClick={this.handleAddCharacterInfoType} className="small">添加模板类型</button>
-          <button type="button" onClick={this.handleRemoveCharacterInfoType} className="small">减少模板类型</button>
-        </div>
       );
     case 4:
         return (
-          <div>
             <div className="characterlist">
             <table className="table table-striped">
             <tbody>
             <tr className="tableHead">
               <th>编号</th>
               <th>阶段内信息模板类型</th>
+              <th>删除</th>
             </tr>
             {this.state.plottemplate.map((plottemplate, idx) => (
             <tr>
@@ -496,24 +540,24 @@ class DraftCreate extends React.Component {
               required
             />
             </th>
+            <th>
+            <button type="button" onClick={this.removeItem(idx)} className="small">-</button>
+            </th>
               </tr>
             ))}
               </tbody>
             </table>
             </div>
-          <button type="button" onClick={this.handleAddPlottemplate} className="small">添加阶段内信息模板类型</button>
-          <button type="button" onClick={this.handleRemovePlottemplate} className="small">减少阶段内信息模板类型</button>
-          </div>
         );
     case 5:
         return (
-          <div>
             <div className="characterlist">
             <table className="table table-striped">
             <tbody>
             <tr className="tableHead">
               <th>编号</th>
               <th>搜证地点</th>
+              <th>删除</th>
             </tr>
             {this.state.cluelocation.map((cluelocation, idx) => (
             <tr>
@@ -527,23 +571,41 @@ class DraftCreate extends React.Component {
               required
             />
             </th>
+            <th>
+            <button type="button" onClick={this.removeItem(idx)} className="small">-</button>
+            </th>
               </tr>
 
             ))}
               </tbody>
             </table>
             </div>
-
-          <button type="button" onClick={this.handleAddClueLocation} className="small">添加搜证地点</button>
-          <button type="button" onClick={this.handleRemoveClueLocation} className="small">减少搜证地点</button>
-          </div>
         );
   }
 }
   render() {
     return (
-      <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
 
+     <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
+      <div>
+      <MuiThemeProvider>
+      <Dialog
+         title="Dialog With Actions"
+         actions={[
+             <RaisedButton
+               label="好"
+               primary={true}
+               keyboardFocused={true}
+               onClick={()=>(this.setState({openDialog:false}))}
+             />,
+           ]}
+         modal={false}
+         open={this.state.openDialog}
+         onRequestClose={()=>(this.setState({openDialog:false}))}
+       >{this.state.errorMessage}
+       </Dialog>
+       </MuiThemeProvider>
+       </div>
       <div>
         <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '流程信息'}, {title: '背景模板'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
       </div>
@@ -552,13 +614,12 @@ class DraftCreate extends React.Component {
      <MuiThemeProvider>
      <Toolbar style={{backgroundColor: '#cccccc'}} >
      <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip>
-     <ToolbarSeparator /></ToolbarGroup>
+     <ToolbarSeparator/></ToolbarGroup>
      <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>
      <ToolbarGroup>
        <FontIcon className="muidocs-icon-custom-sort" />
        <ToolbarSeparator />
-       <RaisedButton label="添加" primary={true} />
-       <RaisedButton label="减少" primary={true} />
+       {this.state.activeStep>0 && <RaisedButton label="添加项目" primary={true} onClick={this.addItem}/>}
        <IconMenu
          iconButtonElement={
            <IconButton touch={true}>
@@ -566,15 +627,17 @@ class DraftCreate extends React.Component {
            </IconButton>
          }
        >
-         <MenuItem primaryText="放弃" />
+         <MenuItem primaryText="放弃" onClick={this.handleReturn}/>
          <MenuItem primaryText="保存并退出" />
        </IconMenu>
      </ToolbarGroup>
     </Toolbar>
     <div style={{minHeight: 400,maxWidth: 900,padding: 10,margin: 'auto'}}>{this.getStepContent(this.state.activeStep)}</div>
     <div>
-      <RaisedButton label="上一步"   style={{ marginRight:30}} primary={true} onClick={this.handleBack}/>
-      {this.state.activeStep==5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  primary={true} onClick={this.handleSubmit}/>
+    {this.state.activeStep==0 ? (<RaisedButton label="放弃" style={{ marginRight:30}} onClick={this.handleReturn}/>
+    ) : (<RaisedButton label="上一步"   style={{ marginRight:30}} primary={true} onClick={this.handleBack}/>)}
+
+      {this.state.activeStep==5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  secondary={true} onClick={this.handleSubmit}/>
     ) : (<RaisedButton label="下一步" style={{ marginRight:30}}  primary={true}  onClick={this.handleNext}/>)}
    </div>
    </MuiThemeProvider>
