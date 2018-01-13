@@ -1,7 +1,7 @@
 import React from "react";
 import axios from 'axios';
-import cryptoRandomString  from 'crypto-random-string'
 import md5 from 'md5'
+import randomstring from 'randomstring'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
@@ -28,7 +28,7 @@ class DraftCreate extends React.Component {
       activeStep: 0,
       steps:["第一步","第二部","第三部"],
       name:'',  //Game name
-      id: cryptoRandomString(10),
+      id: randomstring.generate(7),
       playernumber: null,
       malenumber: 0,
       femalenumber: 1,
