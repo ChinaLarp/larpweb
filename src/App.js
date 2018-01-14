@@ -23,6 +23,10 @@ import Register from './pages/Login/Register.js';
 import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -34,7 +38,8 @@ class App extends Component {
 
     return (
       <div className="App">
-      <Menu />
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <Menu style={{zIndex:1}}/>
         <div className="container content">
           <Header />
           <FlashMessagesList />
@@ -45,6 +50,7 @@ class App extends Component {
             <Route path="/posts" component={posts}/>
             <Route path="/games" component={Games}/>
             <Route path="/draftList" component={draftList}/>
+            <Route path="/DraftCreate/:_id" component={DraftCreate}/>
             <Route path="/DraftCreate" component={DraftCreate}/>
             <Route path="/draftEdit/:_id" component={draftEdit}/>
             <Route path="/contact" component={Contact}/>
@@ -56,6 +62,7 @@ class App extends Component {
         </HashRouter>
       </div>
           <Footer />
+      </MuiThemeProvider>
       </div>
     );
   }

@@ -102,7 +102,7 @@ a :hover {
 
 /* NewsBlock*/
 .news-block{
-  background: #666;
+  background: #919191;
   font-size: 14px;
   border: none;
   height:295px;
@@ -176,7 +176,6 @@ white-space: nowrap;
 .time:hover{
 
 }
-/* draftEdit.js starts */
 
 input {
   display: block;
@@ -224,13 +223,13 @@ button:disabled {
   color: #333;
 }
 
- button.small {
-  display: inline-block;
-  width: auto;
-  padding: 0 20px;
-  margin: 20px;
-  background-color: #777;
-  font-size: 14px;
+button.small {
+ display: inline-block;
+ width: auto;
+ padding: 0 20px;
+ margin: 20px;
+ background-color: #777;
+ font-size: 14px;
 }
 
 button.small:hover {
@@ -336,19 +335,18 @@ button.small:hover {
         margin-bottom:0px;
         border: none;
         font-family: sans-serif;
-
 }
 
 .bodyStruc{
-  background: #666;
-  height: 300px;
-  font-size: 16px;
+  background: #919191;
+  min-height: 400px;
+  font-size: 14px;
 }
 
 #gameList {
-  margin:-60px;
+
   font-size: 18px;
-  border-color: #666;
+  border-color: #919191;
 }
 
 
@@ -377,13 +375,13 @@ button.small:hover {
 .gamelink{
   display: flex;
   justify-content:  left;
-  color:#fff;
+  color: #eee;
   width: 20%;
   margin-left: 10px;
 }
 .gamelink:hover{
   color:orange;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .gamediscription{

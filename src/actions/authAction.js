@@ -26,12 +26,13 @@ export function logout() {
 export function getdraft(user){
   var apiBaseUrl = "https://chinabackend.bestlarp.com";
   return dispatch => {
+    dispatch(setDrafts("loading"));
     if(user.id=='5a273150c55b0d1ce0d6754d'){
-      return axios.get(apiBaseUrl+'/api/app?type__in=game,draft').then(res=>{
+      return axios.get(apiBaseUrl+'/api/app?type__in=game,draft,template').then(res=>{
         dispatch(setDrafts(res.data));
       });
     }else{
-      return axios.get(apiBaseUrl+'/api/app?type=draft&author='+user.id).then(res=>{
+      return axios.get(apiBaseUrl+'/api/app?type__in=draft,template&author='+user.id).then(res=>{
         dispatch(setDrafts(res.data));
       });
   }

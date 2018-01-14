@@ -13,13 +13,20 @@ import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
 import Lightbox from 'react-image-lightbox';
-//import RaisedButton from 'material-ui/RaisedButton';
-//import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+
 var files
 class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
     this.state = {
+      openMenu:false,
       game_id:'5a1f4f287cf1d10c48fc4b36',
       gameinfo:{},
       clueinfo:[],
@@ -32,7 +39,7 @@ class draftEdit extends React.Component {
       imageurl:''
     };
   }
-  scrollStep() {
+scrollStep() {
   if (window.pageYOffset === 0) {
       clearInterval(this.state.intervalId);
   }
@@ -42,7 +49,7 @@ scrollToTop() {
   let intervalId = setInterval(this.scrollStep.bind(this), this.props.delayInMs);
   this.setState({ intervalId: intervalId });
 }
-  fillArray = (cluelocation) => {
+fillArray = (cluelocation) => {
    if (cluelocation.length == 0) return [];
    var cluestatus=[]
    for  (var i=0;i<cluelocation.length;i++) {
@@ -59,9 +66,9 @@ handlePreviewImage = (idx,iidx) => (evt) => {
  this.setState({ imageurl: url, isOpen:true });
 }
 handleExit = (evt)=>{
-this.context.router.history.push('/draftList');
+  this.context.router.history.push('/draftList');
 }
- handleSaveExit = (evt) => {
+handleSaveExit = (evt) => {
    const url = 'https://chinabackend.bestlarp.com/api/app';
    axios.put(url+'/'+this.state.game_id,{
    cluelocation:this.state.clueinfo,
@@ -103,9 +110,8 @@ this.context.router.history.push('/draftList');
           });
           this.context.router.history.push('/draftList');
        })
- }
-
-  handleSubmit = (evt) =>{
+}
+handleSubmit = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
     axios.put(url+'/'+this.state.game_id,{
       cluelocation:this.state.clueinfo,
@@ -147,8 +153,8 @@ this.context.router.history.push('/draftList');
              });
           })
 
-  }
-  handleDelete = (evt) =>{
+}
+handleDelete = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
     axios.delete(url+'/'+this.state.game_id,{
       data:{ signature: md5(this.state.game_id+"xiaomaomi") }
@@ -179,8 +185,8 @@ this.context.router.history.push('/draftList');
              this.context.router.history.push('/draftList');
           })
 
-  }
-  handlePublish = (evt) =>{
+}
+handlePublish = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/app';
     axios.post(url,{
@@ -229,8 +235,8 @@ this.context.router.history.push('/draftList');
              type: 'success',
              text: '游戏剧本已保存!'
            });
-  }
-  onFileChange(e) {
+}
+onFileChange(e) {
          files = e.target.files || e.dataTransfer.files;
          if (!files.length) {
              console.log('no files');
@@ -238,7 +244,7 @@ this.context.router.history.push('/draftList');
          console.log(files);
          console.log(files[0].name.split('.')[1])
      }
-  handleGameImgUpload = (cat) => (evt) =>{
+handleGameImgUpload = (cat) => (evt) =>{
        evt.preventDefault()
          var filename=this.state.gameinfo.id+cat+'.'+files[0].name.split('.')[1]
          console.log(cat)
@@ -272,8 +278,8 @@ this.context.router.history.push('/draftList');
            type: 'success',
            text: '图片上传成功!'
          });
-       }
-  handleUpload = (idx,iidx) => (evt) =>{
+}
+handleUpload = (idx,iidx) => (evt) =>{
     evt.preventDefault()
       var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
       console.log(filename)
@@ -502,9 +508,7 @@ this.context.router.history.push('/draftList');
   }
   componentDidMount(){
       const url = "https://chinabackend.bestlarp.com/api/app";
-      //const url = 'https://backend.bestlarp.com/api/web';
-      // in axios access data with .data
-      //console.log(this.props.match.params._id)
+
       this.setState({ game_id: this.props.match.params._id });
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
@@ -529,16 +533,18 @@ this.context.router.history.push('/draftList');
 
     return (
 
-      	<div className="container">
-        <div className="btn-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
-          <h4 style={{fontWeight:"bold",color:"grey"}}>剧本草稿箱操作</h4>
-          <button onClick={this.handleSubmit}>保存</button>
-          <button onClick={this.handleDelete}>删除</button>
-          <button onClick={this.handleSaveExit}>保存并退出</button>
-          <button onClick={this.handleExit}>退出</button>
-          {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <button onClick={this.handlePublish}>发表</button>}
-        </div>
-        <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+      	<div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
+        <AppBar style={{zIndex:0}} title="剧本编辑"
+  iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
+        <Drawer open={this.state.openMenu}>
+          <AppBar title="操作箱" iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:false})}}><NavigationClose /></IconButton>}/>
+          <MenuItem onClick={this.handleSubmit}>保存</MenuItem>
+          <MenuItem onClick={this.handleDelete}>删除</MenuItem>
+          <MenuItem onClick={this.handleSaveExit}>保存并退出</MenuItem>
+          <MenuItem onClick={this.handleExit}>退出</MenuItem>
+          {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>}
+        </Drawer>
+        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       <Tabs>
         <TabList>
           <Tab>{this.state.gameinfo.name}</Tab>

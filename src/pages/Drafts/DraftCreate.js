@@ -19,7 +19,6 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
@@ -27,6 +26,7 @@ class DraftCreate extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      template_id:"",
       activeStep: 0,
       errorMessage:"请确认",
       openDialog:false,
@@ -56,7 +56,35 @@ class DraftCreate extends React.Component {
       characterinfo:[{type:'', content:['请输入故事内容']}],
     };
   }
-
+  componentDidMount(){
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    if(this.props.match.params._id){
+    console.log(this.props.match.params._id)
+    axios.get(url+'/' +this.props.match.params._id)
+      .then(response => {
+        this.setState({
+          template_id:this.props.match.params._id,
+          name: response.data.name,
+          id: response.data.id,
+          author: response.data.author,
+          description: response.data.descripion,
+          playernumber: response.data.playernumber,
+          malenumber: response.data.malenumber,
+          femalenumber: response.data.femalenumber,
+          category: response.data.category,
+          characterlist: response.data.characterlist,
+          cluelocation: response.data.cluelocation,
+          mainplot: response.data.mainplot,
+          instruction: response.data.instruction,
+          plottemplate:response.data.characterplot,
+          characterinfo:response.data.characterinfo,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  }
   handleNameChange = (evt) => {
     this.setState({ name: evt.target.value });
   }
@@ -122,6 +150,12 @@ class DraftCreate extends React.Component {
       this.context.router.history.push('/draftList');
   }
   handleSubmit = (evt) => {
+    if (this.state.cluelocation.filter((s,idx)=>s.name=="").length!=0){
+      this.setState({
+        openDialog:true,
+        errorMessage:"搜证地点名称不能为空。"
+      });
+    }else{
     this.fillArray(this.state.cluelocation)
     //const { name, description, category, characterlist } = this.state;
     const url = 'https://chinabackend.bestlarp.com/api/app';
@@ -147,6 +181,11 @@ class DraftCreate extends React.Component {
         type: 'success',
         text: '你已成功创建剧本，现在可以点击进入编辑剧本。'
       });
+      if (this.state.template_id){
+        axios.delete(url+"/"+this.state.template_id,{
+          data:{ signature: md5(this.state.template_id+"xiaomaomi") }
+        })
+      }
       })
       .catch(error => {
         console.log(error);
@@ -178,7 +217,72 @@ class DraftCreate extends React.Component {
             this.props.getdraft(this.props.auth.user)
             this.context.router.history.push('/draftList');
           })
-            //  alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
+      }      //  alert(`Game created: ${this.state.name} with ${this.state.characterlist.length} characters`);
+  }
+  handleSave = (evt) => {
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    if (this.state.template_id){
+      axios.put(url+"/"+this.state.template_id,{
+        type: "template",
+        name: this.state.name,
+        id: this.state.id,
+        author: this.props.auth.user.id,
+        descripion: this.state.description,
+        playernumber: this.state.characterlist.length,
+        malenumber: this.state.malenumber,
+        femalenumber: this.state.femalenumber,
+        category: this.state.category,
+        characterlist: this.state.characterlist,
+        cluelocation: this.state.cluelocation,
+        mainplot: this.state.mainplot,
+        instruction: this.state.instruction,
+        characterplot:this.state.plottemplate,
+        characterinfo:this.state.characterinfo,
+        signature: md5(this.state.template_id + "xiaomaomi")
+      }).then(response => {
+        this.props.addFlashMessage({
+          type: 'success',
+          text: '你已成功。'
+        });
+          console.log("All done")
+          this.props.getdraft(this.props.auth.user)
+          this.context.router.history.push('/draftList');
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+    }else{
+    axios.post(url,{
+      type: "template",
+      name: this.state.name,
+      id: this.state.id,
+      author: this.props.auth.user.id,
+      descripion: this.state.description,
+      playernumber: this.state.characterlist.length,
+      malenumber: this.state.malenumber,
+      femalenumber: this.state.femalenumber,
+      category: this.state.category,
+      characterlist: this.state.characterlist,
+      cluelocation: this.state.cluelocation,
+      mainplot: this.state.mainplot,
+      instruction: this.state.instruction,
+      characterplot:this.state.plottemplate,
+      characterinfo:this.state.characterinfo,
+      signature: md5("xiaomaomi")
+    }).then(response => {
+      this.props.addFlashMessage({
+        type: 'success',
+        text: '你已成功。'
+      });
+        console.log("All done")
+        this.props.getdraft(this.props.auth.user)
+        this.context.router.history.push('/draftList');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   }
 
   handleMainplotChange = (idx) => (evt) => {
@@ -262,24 +366,7 @@ class DraftCreate extends React.Component {
         break;
     }
   }
- dialogContent () {
-   return (
-     <Dialog
-        title="Dialog With Actions"
-        actions={[
-            <RaisedButton
-              label="好"
-              primary={true}
-              keyboardFocused={true}
-              onClick={()=>(this.setState({openDialog:false}))}
-            />,
-          ]}
-        modal={false}
-        open={this.state.openDialog}
-        onRequestClose={()=>(this.setState({openDialog:false}))}
-      >{this.state.errorMessage}
-      </Dialog>)
- }
+
  handleNext = () => {
    switch (this.state.activeStep) {
     case 0:
@@ -318,6 +405,11 @@ class DraftCreate extends React.Component {
          openDialog:true,
          errorMessage:"回合数不能为零。"
        });
+     }else if (this.state.mainplot.filter((s,idx)=>s.plotname=="").length!=0){
+       this.setState({
+         openDialog:true,
+         errorMessage:"回合名不能为空。"
+       });
      }else{
        this.setState({
          activeStep: this.state.activeStep + 1
@@ -325,20 +417,56 @@ class DraftCreate extends React.Component {
      }
       break
     case 3:
-     if (this.state.name==""){
-       console.log("请输入剧本名称再继续。")
-       this.setState({
-         openDialog:true,
-         errorMessage:"请输入剧本名称再继续。"
-       });
-     }else{
-       this.setState({
-         activeStep: this.state.activeStep + 1
-       });
-     }
+      if (this.state.characterinfo.length==0){
+        this.setState({
+          openDialog:true,
+          errorMessage:"模版数不能为零。"
+        });
+      }else if (this.state.characterinfo.filter((s,idx)=>s.type=="").length!=0){
+        this.setState({
+          openDialog:true,
+          errorMessage:"模版名称不能为空。"
+        });
+      }else{
+        this.setState({
+          activeStep: this.state.activeStep + 1
+        });
+      }
       break
+    case 4:
+        if (this.state.plottemplate.length==0){
+          this.setState({
+            openDialog:true,
+            errorMessage:"模版数不能为零。"
+          });
+        }else if (this.state.plottemplate.filter((s,idx)=>s.type=="").length!=0){
+          this.setState({
+            openDialog:true,
+            errorMessage:"模版名称不能为空。"
+          });
+        }else{
+          this.setState({
+            activeStep: this.state.activeStep + 1
+          });
+        }
+        break
+    case 5:
+        if (this.state.cluelocation.filter((s,idx)=>s.name=="").length!=0){
+          this.setState({
+            openDialog:true,
+            errorMessage:"搜证地点名称不能为空。"
+          });
+        }else{
+          this.setState({
+            activeStep: this.state.activeStep + 1
+          });
+        }
+        break
+    default:
+      this.setState({
+        activeStep: this.state.activeStep + 1
+      });
    }
-
   };
  handleBack = () => {
    const { activeStep } = this.state;
@@ -386,20 +514,8 @@ class DraftCreate extends React.Component {
             disabled="disabled"
             required
           />
-          <input
-            type="text"
-            placeholder="剧本介绍"
-            value={this.state.description}
-            onChange={this.handleDescriptionChange}
-            required
-          />
-          <input
-            type="text"
-            placeholder="剧本类别"
-            value={this.state.category}
-            onChange={this.handleCategoryChange}
-            required
-          />
+          <textarea
+          placeholder="剧本介绍" rows="8" cols="100" name="content" value={this.state.description} onChange={this.handleDescriptionChange}/>
           </form>
       )
     case 1:
@@ -588,7 +704,6 @@ class DraftCreate extends React.Component {
 
      <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
       <div>
-      <MuiThemeProvider>
       <Dialog
          title="Dialog With Actions"
          actions={[
@@ -604,16 +719,15 @@ class DraftCreate extends React.Component {
          onRequestClose={()=>(this.setState({openDialog:false}))}
        >{this.state.errorMessage}
        </Dialog>
-       </MuiThemeProvider>
        </div>
       <div>
         <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '流程信息'}, {title: '背景模板'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
       </div>
 
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
-     <MuiThemeProvider>
+
      <Toolbar style={{backgroundColor: '#cccccc'}} >
-     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span class="glyphicon glyphicon-question-sign"></span></Tooltip>
+     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
      <ToolbarSeparator/></ToolbarGroup>
      <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>
      <ToolbarGroup>
@@ -628,7 +742,7 @@ class DraftCreate extends React.Component {
          }
        >
          <MenuItem primaryText="放弃" onClick={this.handleReturn}/>
-         <MenuItem primaryText="保存并退出" />
+         <MenuItem primaryText="保存并退出" onClick={this.handleSave}/>
        </IconMenu>
      </ToolbarGroup>
     </Toolbar>
@@ -640,7 +754,7 @@ class DraftCreate extends React.Component {
       {this.state.activeStep==5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  secondary={true} onClick={this.handleSubmit}/>
     ) : (<RaisedButton label="下一步" style={{ marginRight:30}}  primary={true}  onClick={this.handleNext}/>)}
    </div>
-   </MuiThemeProvider>
+
     </div>
    </div>
  )}

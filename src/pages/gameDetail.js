@@ -15,8 +15,8 @@ export default class GameDetail extends React.Component {
 
 
 
-  componentDidMount(){
-    const url = 'https://usbackendwjn704.larpxiaozhushou.tk/api/app';
+  componentWillMount(){
+    const url = 'https://bestlarp.com/api/app';
     //const url = 'https://backend.bestlarp.com/api/web';
     // in axios access data with .data
     console.log(this.props.match.params._id)
@@ -55,11 +55,11 @@ export default class GameDetail extends React.Component {
 
       };
 
-    
+
 
     return (
            <div className='container' style={newsStyle}>
-          
+
             <div className="card col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div className="row" >
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -82,7 +82,7 @@ export default class GameDetail extends React.Component {
                     this.state.plotInfo.map((plot, index)=>
                       (<p className="card-text">{plot.content.join('\n')}</p>))
                   }
-               
+
                 </div>
               </div>
 
@@ -102,9 +102,9 @@ export default class GameDetail extends React.Component {
                </div>
                 </div>
               </div>
-            
+
             </div>
-          
+
         </div>
     )
 
