@@ -44,7 +44,7 @@ class App extends Component {
           <Header />
           <FlashMessagesList />
         <HashRouter>
-          <div className="" >
+          <div>
             <Route exact path="/" component={Home}/>
             <Route path="/13478545921/:_id" component={postEdit}/>
             <Route path="/posts" component={posts}/>

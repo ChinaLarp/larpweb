@@ -12,9 +12,10 @@ import draftList from '../pages/Drafts/draftList.js';
 import DraftCreate from '../pages/Drafts/DraftCreate.js';
 import Loginscreen from '../pages/Login/Loginscreen.js';
 import Register from '../pages/Login/Register.js';
-import {Navbar, Nav, NavItem} from 'react-bootstrap';
+import {Navbar, Nav, NavItem, MenuItem,NavDropdown} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { login,logout } from '../actions/authAction';
 
 
 class Menu extends Component {
@@ -34,7 +35,12 @@ class Menu extends Component {
         ;
     } else {
       User_info =
-      <Nav pullRight><li className="menuItem"><NavLink to="/Loginscreen">{this.props.auth.user.username} </NavLink></li>
+      <Nav pullRight>
+      <NavDropdown  className="menuItem" title={this.props.auth.user.username} id="basic-nav-dropdown">
+          <MenuItem> 我的剧本</MenuItem>
+          <MenuItem divider />
+          <MenuItem ><div onClick={this.props.logout}>登出</div></MenuItem>
+        </NavDropdown>
     </Nav>
 ;
     }
@@ -68,7 +74,8 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
 }
 function mapStateToProps(state) {
   return {
@@ -76,4 +83,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {})(Menu);
+export default connect(mapStateToProps, {logout})(Menu);

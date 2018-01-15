@@ -5,8 +5,8 @@ import randomstring from 'randomstring'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
+import Helper from './helper.js';
 import { getdraft } from '../../actions/authAction.js';
-import  Tooltip  from'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap.css';
 import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
@@ -727,7 +727,7 @@ class DraftCreate extends React.Component {
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
 
      <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Helper activeStep={this.state.activeStep} />
      <ToolbarSeparator/></ToolbarGroup>
      <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>
      <ToolbarGroup>

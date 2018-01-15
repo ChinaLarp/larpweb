@@ -34,7 +34,7 @@ class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
     this.state = {
-      openMenu:false,
+      openMenu:true,
       game_id:'5a1f4f287cf1d10c48fc4b36',
       gameinfo:{},
       clueinfo:[],
@@ -494,10 +494,10 @@ handleUpload = (idx,iidx) => (evt) =>{
   handleClueMethodChange= (evt) => {
     this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: evt.target.value } });
   }
-  handleBanLocationChange = (idx) => (evt) => {
+  handleBanLocationChange = (idx) => (event, index, value) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
       if (idx !== sidx) return character;
-      return { ...character, banlocation: evt.target.value };
+      return { ...character, banlocation: value };
     });
 
     this.setState({ characterlist: newCharacter });
@@ -585,7 +585,7 @@ handleUpload = (idx,iidx) => (evt) =>{
             <ToolbarGroup><ToolbarTitle text="图片上传"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
             <ToolbarSeparator/></ToolbarGroup>
           </Toolbar>
-          <div style={{minHeight: 400,padding: 10,margin: 'auto',backgroundColor: '#d8d8d8'}}>
+          <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
             <div className="characterlist">
               <table className="table table-striped">
                 <tbody>
@@ -627,48 +627,40 @@ handleUpload = (idx,iidx) => (evt) =>{
               </table>
             </div>
           </div>
-          <form className="form-group" onSubmit={this.handleSubmit}>
-          <h4>搜证模式</h4>
-          <div>
-            <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
-              <option value="random">随机抽取</option>
-              <option value="order">顺序抽取</option>
-              <option value="return">返还随机</option>
-            </select>
-          </div>
-          <div>
-            <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-              <ToolbarGroup><ToolbarTitle text="游戏说明"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
-              <ToolbarSeparator/><RaisedButton label="添加项目" primary={true} onClick={this.handleAddInstruction}/></ToolbarGroup>
-            </Toolbar>
-            <div style={{minHeight: 400,padding: 10,margin: 'auto',backgroundColor: '#d8d8d8'}}>
-              {this.state.instructinfo.map((instruct, idx) => (
-                <div style={{marginTop:20, border:"1px dashed"}}>
-                <table className="table table-striped tableText" style={{margin:10}}>
-                <tr>
-                <th className="shortInput">
-                <input
-                  type="text"
-                  placeholder="说明要素"
-                  value={instruct.type}
-                  onChange={this.handleInstructTypeChange(idx)}
-                />
-                </th>
-                <th>
-                <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
-                </th>
-                </tr>
-                </table>
-                <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div>
-          <h3 style={{float:"left"}}>流程控制</h3>
-          <br/>
-          {this.state.plotinfo.map((plot, idx) => (
+            <div>
+              <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+                <ToolbarGroup><ToolbarTitle text="游戏说明"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                <ToolbarSeparator/><RaisedButton label="添加项目" primary={true} onClick={this.handleAddInstruction}/></ToolbarGroup>
+              </Toolbar>
+              <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                {this.state.instructinfo.map((instruct, idx) => (
+                  <div style={{marginTop:20, border:"1px dashed"}}>
+                  <table className="table table-striped tableText" style={{margin:10}}>
+                  <tr>
+                  <th className="shortInput">
+                  <input
+                    type="text"
+                    placeholder="说明要素"
+                    value={instruct.type}
+                    onChange={this.handleInstructTypeChange(idx)}
+                  />
+                  </th>
+                  <th>
+                  <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
+                  </th>
+                  </tr>
+                  </table>
+                  <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
+                  </div>
+                ))}
+            </div>
+          <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+            <ToolbarGroup><ToolbarTitle text="流程控制"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+            <ToolbarSeparator/></ToolbarGroup>
+          </Toolbar>
+          <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+            {this.state.plotinfo.map((plot, idx) => (
             <div style={{marginTop:20,border:"1px dashed"}}>
             <table className="table table-striped tableText" style={{margin:10}}>
            <tr>
@@ -697,10 +689,8 @@ handleUpload = (idx,iidx) => (evt) =>{
             <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
             </div>
           ))}
-          <button type="button" onClick={this.handleRemovePlot} disabled="disabled" className="small">减少模块</button>
-          <button type="button" onClick={this.handleAddPlot} disabled="disabled" className="small">添加模块</button>
           </div>
-          </form>
+          </div>
         </TabPanel>
 
         <TabPanel>
@@ -712,70 +702,71 @@ handleUpload = (idx,iidx) => (evt) =>{
             </TabList>
             {this.state.characterlist.map((characterlist, idx) => (
               <TabPanel>
-              <form className="form-group" onSubmit={this.handleSubmit}>
+                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+                <ToolbarGroup><ToolbarTitle text="角色背景"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                <ToolbarSeparator/></ToolbarGroup>
+                  <ToolbarGroup>
+                    <span>禁止搜证地点：</span>
+                    <DropDownMenu value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
+                      <MenuItem value="-1"  primaryText="无" />
+                      {this.state.clueinfo.map((cluelocation, iidx) => (
+                         <MenuItem value={iidx.toString()} primaryText={cluelocation.name}/>
+                       ))}
+                    </DropDownMenu>
+                  </ToolbarGroup>
+                </Toolbar>
+                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                  {characterlist.characterinfo.map((characterinfo, iidx) => (
+                    <div style={{margin:10,marginTop:20}}>
+                    <div className="shortInput">
+                    <input
+                      type="text"
+                      placeholder="说明要素"
+                      value={characterinfo.type}
+                      disabled="disabled"
+                    />
+                    </div>
+                    <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
+                    </div>
+                  ))}
+                </div>
+                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+                  <ToolbarGroup><ToolbarTitle text="人物流程剧本"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                  <ToolbarSeparator/></ToolbarGroup>
+                </Toolbar>
+                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                  {characterlist.characterplot.map((plot, iidx) => (
+                    <div style={{marginTop:20,border:"1px dashed"}}>
+                    <table className="table table-striped tableText" style={{margin:10}}>
+                   <tr>
+                    <th style={{width:"10%"}}>
+                    <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+                    </th>
+                    <th className="shortInput"  style={{float:"left",margin:0}}>
+                      <input
+                        type="text"
+                        placeholder="信息类型"
+                        value={plot.plotname}
+                        onChange={this.handleCharacterPlotNameChange(idx,iidx)}
+                      />
+                    </th>
+                    </tr>
+                    </table>
+                      {plot.content.map((item, iiidx) => (
+                      <div style={{marginTop:20,border:"1px dashed"}}>
+                        <input
+                          type="text"
+                          placeholder="信息类型"
+                          value={item.type}
+                          disabled="disabled"
+                        />
+                        <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
+                    </div>
+                    ))}
+                    </div>
+                  ))}
+                </div>
 
-              <div>
-              <h4>禁止搜证地点</h4>
-                <select value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
-                    <option value="-1">无</option>
-                {this.state.clueinfo.map((cluelocation, iidx) => (
-                   <option value={iidx.toString()}>{cluelocation.name}</option>
-                 ))}
-                </select>
-              </div>
-              <div>
-              <h3 style={{float:"left"}}>角色背景</h3><br/>
-              {characterlist.characterinfo.map((characterinfo, iidx) => (
-                <div style={{margin:10,marginTop:20}}>
-                <div className="shortInput">
-                <input
-                  type="text"
-                  placeholder="说明要素"
-                  value={characterinfo.type}
-                  disabled="disabled"
-                />
-                </div>
-                <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
-                </div>
-              ))}
-              </div>
-              <div>
-              <br/>
-              <h3 style={{float:"left"}}>人物流程剧本</h3>
-              <br/>
-              {characterlist.characterplot.map((plot, iidx) => (
-            <div style={{marginTop:20,border:"1px dashed"}}>
-            <table className="table table-striped tableText" style={{margin:10}}>
-           <tr>
-            <th style={{width:"10%"}}>
-            <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
-            </th>
-            <th className="shortInput"  style={{float:"left",margin:0}}>
-                <input
-                  type="text"
-                  placeholder="信息类型"
-                  value={plot.plotname}
-                  onChange={this.handleCharacterPlotNameChange(idx,iidx)}
-                />
-                </th>
-                </tr>
-                </table>
-                {plot.content.map((item, iiidx) => (
-                <div style={{marginTop:20,border:"1px dashed"}}>
-                  <input
-                    type="text"
-                    placeholder="信息类型"
-                    value={item.type}
-                    disabled="disabled"
-                  />
-                    <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
-                </div>
-                ))}
-
-                </div>
-              ))}
-              </div>
-              </form>
               </TabPanel>
             ))}
             </Tabs>
@@ -792,44 +783,51 @@ handleUpload = (idx,iidx) => (evt) =>{
           </TabList>
           {this.state.clueinfo.map((cluelocation, idx) => (
             <TabPanel>
-            <h3>线索列表</h3><h4>地点序号：{idx};</h4>
-              <div>
-              <form className="form-group" onSubmit={this.handleSubmit}>
-              <table className="table table-striped tableText">
-                <tr className="tableHead">
+              <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+              <ToolbarGroup><ToolbarTitle text="线索列表"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+              <ToolbarSeparator/></ToolbarGroup>
+                <ToolbarGroup>
+                  <span>地点序号：{idx}；线索数：{cluelocation.count}</span>
+                </ToolbarGroup>
+                <ToolbarGroup><RaisedButton label="添加线索" primary={true} onClick={this.handleAddClues(idx)}/>
+              </ToolbarGroup>
+              </Toolbar>
+              <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                <table className="table table-striped tableText">
+                  <tr className="tableHead">
 
-                  <th>序号</th>
-                  <th>文字内容</th>
-                  <th>上传图片</th>
-                  <th>删除</th>
-                </tr>
+                    <th>序号</th>
+                    <th>文字内容</th>
+                    <th>上传图片</th>
+                    <th>删除</th>
+                  </tr>
+                  {cluelocation.clues.map((clue, iidx) => (
+                    <tr>
+                      <th className="shortText"><input
+                        type="text"
+                        placeholder="序号"  disabled="disabled"
+                        value={clue.cluenumber}
+                      /></th><th className="longText">
+                    <input
+                  type="text"
+                  placeholder="文字内容"
+                  value={clue.content}
+                  onChange={this.handleclueContentChange(idx,iidx)}
+                /></th>
+                  <th>
 
-                {cluelocation.clues.map((clue, iidx) => (
-                  <tr>
-                    <th className="shortText"><input
-                      type="text"
-                      placeholder="序号"  disabled="disabled"
-                      value={clue.cluenumber}
-                    /></th><th className="longText">
-                  <input
-                type="text"
-                placeholder="文字内容"
-                value={clue.content}
-                onChange={this.handleclueContentChange(idx,iidx)}
-              /></th>
-                <th className="clueImg">
-                {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>预览线索图片</button>}
-                <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"70%",display:"inline"}}/>
-                <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>上传</button></th>
-              <th className="clueDelete">
-               <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
-              </th>
-                </tr>
-                ))}
-              </table>
-              </form>
+                  <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"50%",display:"inline"}}/>
+                  <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>上传</button>
+                  {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>预览</button>}
+
+                  </th>
+                <th className="clueDelete">
+                 <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
+                </th>
+                  </tr>
+                  ))}
+                </table>
               </div>
-              <button type="button" onClick={this.handleAddClues(idx)} className="small">添加新线索</button>
             </TabPanel>
           ))}
           </Tabs>
