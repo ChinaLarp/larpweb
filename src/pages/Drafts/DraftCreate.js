@@ -705,7 +705,7 @@ class DraftCreate extends React.Component {
      <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
       <div>
       <Dialog
-         title="Dialog With Actions"
+         title="确认信息"
          actions={[
              <RaisedButton
                label="好"
@@ -726,7 +726,7 @@ class DraftCreate extends React.Component {
 
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
 
-     <Toolbar style={{backgroundColor: '#cccccc'}} >
+     <Toolbar style={{backgroundColor: '#bcbcbc'}} >
      <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
      <ToolbarSeparator/></ToolbarGroup>
      <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>

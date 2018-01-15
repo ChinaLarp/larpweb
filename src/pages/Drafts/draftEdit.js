@@ -13,13 +13,21 @@ import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
 import Lightbox from 'react-image-lightbox';
-import Drawer from 'material-ui/Drawer';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import Drawer from 'material-ui/Drawer';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import  Tooltip  from'rc-tooltip';
 
 var files
 class draftEdit extends React.Component {
@@ -61,7 +69,21 @@ fillArray = (cluelocation) => {
    return cluestatus;
  }
 handlePreviewImage = (idx,iidx) => (evt) => {
- var url = this.state.clueinfo[idx].clues[iidx].image
+  if (idx==-1){
+    switch (iidx) {
+      case 0:
+        var url = this.state.gameinfo.iconurl
+        break;
+      case 1:
+        var url = this.state.gameinfo.coverurl
+        break;
+      case 2:
+        var url = this.state.gameinfo.mapurl
+        break;
+    }
+  }else{
+    var url = this.state.clueinfo[idx].clues[iidx].image
+  }
  console.log(url)
  this.setState({ imageurl: url, isOpen:true });
 }
@@ -532,7 +554,6 @@ handleUpload = (idx,iidx) => (evt) =>{
   render() {
 
     return (
-
       	<div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
         <AppBar style={{zIndex:0}} title="剧本编辑"
   iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
@@ -544,7 +565,14 @@ handleUpload = (idx,iidx) => (evt) =>{
           <MenuItem onClick={this.handleExit}>退出</MenuItem>
           {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>}
         </Drawer>
-        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ border:"1px solid"}}>
+        {this.state.isOpen && (
+          <Lightbox
+            mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
+            onCloseRequest={() => this.setState({ isOpen: false })}
+            discourageDownloads="true"
+          />
+        )}
       <Tabs>
         <TabList>
           <Tab>{this.state.gameinfo.name}</Tab>
@@ -553,68 +581,88 @@ handleUpload = (idx,iidx) => (evt) =>{
         </TabList>
 
         <TabPanel>
+          <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+            <ToolbarGroup><ToolbarTitle text="图片上传"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+            <ToolbarSeparator/></ToolbarGroup>
+          </Toolbar>
+          <div style={{minHeight: 400,padding: 10,margin: 'auto',backgroundColor: '#d8d8d8'}}>
+            <div className="characterlist">
+              <table className="table table-striped">
+                <tbody>
+                  <tr className="tableHead">
+                    <th>预览</th>
+                    <th>选择</th>
+                    <th>上传</th>
+                  </tr>
+                  <tr>
+                    <th >
+                    {this.state.gameinfo.iconurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,0)} >预览游戏图标</button>}
+                    {!this.state.gameinfo.iconurl && <button type="button" className="small" disabled="disabled" >暂无游戏图标</button>}
+                    </th>
+                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+                    <th className="imgUploadButton">
+                      <button type="button" onClick={this.handleGameImgUpload('icon')} className="small">上传游戏图标</button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th >
+                    {this.state.gameinfo.coverurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,1)} >预览游戏封面</button>}
+                    {!this.state.gameinfo.coverurl && <button type="button" className="small" disabled="disabled" >预览游戏封面</button>}
+                    </th>
+                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+                    <th className="imgUploadButton">
+                      <button type="button" onClick={this.handleGameImgUpload('cover')} className="small">上传游戏封面</button>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th >{this.state.gameinfo.mapurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,2)} >预览现场地图</button>}
+                    {!this.state.gameinfo.mapurl && <button type="button" className="small" disabled="disabled" >预览现场地图</button>}
+                    </th>
+                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
+                    <th className="imgUploadButton">
+                      <button type="button" onClick={this.handleGameImgUpload('map')} className="small">上传现场地图</button>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           <form className="form-group" onSubmit={this.handleSubmit}>
           <h4>搜证模式</h4>
           <div>
-          <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
-            <option value="random">随机抽取</option>
-            <option value="order">顺序抽取</option>
-            <option value="return">返还随机</option>
-          </select></div>
-
-          <h3 style={{float:"left"}}>图片上传</h3>
-          <br/>
-          <div style={{marginTop:20,marginBottom:20, border:"1px dashed"}}>
-          <table className="table table-striped tableText" style={{margin:10,marginTop:20}}>
-            <tr>
-              <th className="imgUpload">{this.state.gameinfo.iconurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl} alt={this.state.gameinfo.iconurl}/>}
-              <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
-              <th className="imgUploadButton">
-                <button type="button" onClick={this.handleGameImgUpload('icon')} className="small">上传游戏图标</button>
-              </th>
-          </tr>
-          <tr>
-            <th className="imgUpload">{this.state.gameinfo.coverurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl} alt={this.state.gameinfo.coverurl}/>}
-            <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
-            <th className="imgUploadButton">
-              <button type="button" onClick={this.handleGameImgUpload('cover')} className="small">上传游戏封面</button>
-            </th>
-          </tr>
-          <tr>
-            <th className="imgUpload">{this.state.gameinfo.mapurl && <img src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl} alt={this.state.gameinfo.mapurl}/>}
-            <input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
-            <th className="imgUploadButton">
-              <button type="button" onClick={this.handleGameImgUpload('map')} className="small">上传现场地图</button>
-            </th>
-          </tr>
-          </table>
+            <select value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange}>
+              <option value="random">随机抽取</option>
+              <option value="order">顺序抽取</option>
+              <option value="return">返还随机</option>
+            </select>
           </div>
-
           <div>
-          <h3 style={{float:"left"}}>游戏说明</h3>
-          <br/>
-          {this.state.instructinfo.map((instruct, idx) => (
-            <div style={{marginTop:20, border:"1px dashed"}}>
-
-          <table className="table table-striped tableText" style={{margin:10}}>
-           <tr>
-            <th className="shortInput">
-            <input
-              type="text"
-              placeholder="说明要素"
-              value={instruct.type}
-              onChange={this.handleInstructTypeChange(idx)}
-            />
-            </th>
-            <th>
-            <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
-            </th>
-            </tr>
-            </table>
-            <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
-             </div>
-          ))}
-          <button type="button" onClick={this.handleAddInstruction} className="small">添加新模块</button>
+            <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+              <ToolbarGroup><ToolbarTitle text="游戏说明"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+              <ToolbarSeparator/><RaisedButton label="添加项目" primary={true} onClick={this.handleAddInstruction}/></ToolbarGroup>
+            </Toolbar>
+            <div style={{minHeight: 400,padding: 10,margin: 'auto',backgroundColor: '#d8d8d8'}}>
+              {this.state.instructinfo.map((instruct, idx) => (
+                <div style={{marginTop:20, border:"1px dashed"}}>
+                <table className="table table-striped tableText" style={{margin:10}}>
+                <tr>
+                <th className="shortInput">
+                <input
+                  type="text"
+                  placeholder="说明要素"
+                  value={instruct.type}
+                  onChange={this.handleInstructTypeChange(idx)}
+                />
+                </th>
+                <th>
+                <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
+                </th>
+                </tr>
+                </table>
+                <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div>
@@ -771,13 +819,6 @@ handleUpload = (idx,iidx) => (evt) =>{
               /></th>
                 <th className="clueImg">
                 {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>预览线索图片</button>}
-                {this.state.isOpen && (
-                  <Lightbox
-                    mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
-                    onCloseRequest={() => this.setState({ isOpen: false })}
-                    discourageDownloads="true"
-                  />
-                )}
                 <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"70%",display:"inline"}}/>
                 <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:5,widht:"20%",display:"inline"}}>上传</button></th>
               <th className="clueDelete">
