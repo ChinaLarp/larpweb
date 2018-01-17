@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import RaisedButton from 'material-ui/RaisedButton';
 class Login extends Component {
 constructor(props){
   super(props);
@@ -53,8 +54,8 @@ render() {
                onChange = {(event,newValue) => this.setState({password:newValue})}
                />
              <br/>
-             <div className="buttonAlignCenter">
-              <button primary={true} className="loginButton" onClick={(event) => this.handleClick(event)}>登录</button>
+             <div style={{marginTop:30}}>
+                <RaisedButton label="登录" primary={true} onClick={(event) => this.handleClick(event)}/>
             </div>
          </div>
          </MuiThemeProvider>

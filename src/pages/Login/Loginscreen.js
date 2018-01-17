@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login,logout } from '../../actions/authAction';
 import axios from 'axios';
+import RaisedButton from 'material-ui/RaisedButton';
 class Loginscreen extends Component {
   constructor(props){
     super(props);
@@ -83,12 +84,12 @@ class Loginscreen extends Component {
   }
   render() {
     return (
-      <div className="loginscreen">
+      <div style={{ border:"1px solid",maxWidth:350, margin:'auto',padding:40}}>
         {this.state.loginscreen}
         <div>
           {this.state.loginmessage}
           <div className="buttonAlignCenter">
-            <button type="button" className="loginButton" onClick={(event) => this.handleClick(event)}>{this.state.buttonLabel}</button>
+            <RaisedButton label={this.state.buttonLabel} primary={true} onClick={(event) => this.handleClick(event)}/>
           </div>
 
         </div>

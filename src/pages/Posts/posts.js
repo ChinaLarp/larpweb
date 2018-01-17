@@ -26,9 +26,9 @@ class posts extends React.Component {
     const TabPane = Tabs.TabPane;
 
     return(
-        <div className="postsAlignCenter">
+        <div className="row"  style={{maxWidth:1000, margin:'auto'}}>
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <Tabs className='tabBar'>
                 <TabPane tab="新闻" key="1"><Postsblock  type='news' />
                 <Pagination total={this.props.posts.posts.filter((post)=>(post.type=='news')).length}

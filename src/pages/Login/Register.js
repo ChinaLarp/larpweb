@@ -4,6 +4,7 @@ import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login';
+import RaisedButton from 'material-ui/RaisedButton';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -50,7 +51,7 @@ class Register extends Component {
              />
            <br/>
            <div className="buttonAlignCenter">
-           <button primary={true} className="loginButton" onClick={(event) => this.handleClick(event)}>提交</button>
+           <RaisedButton label="提交" primary={true} onClick={(event) => this.handleClick(event)}/>
            </div>
           </div>
          </MuiThemeProvider>

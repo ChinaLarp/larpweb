@@ -62,10 +62,11 @@ a :hover {
 
 .content {
   background-color: #e5e5e5;
-  padding: 30px;
+  max-width: 1200px;
+  margin:auto;
   font-size: 16px;
   margin-top: 10px;
-  padding-bottom: 500px;
+  padding-bottom: 50px;
   font-family: sans-serif;
 }
 .content h2 {

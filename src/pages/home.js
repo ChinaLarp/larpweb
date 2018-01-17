@@ -37,7 +37,7 @@ class Home extends React.Component {
 
 	 return (
 
-	      <div className="row">
+	      <div className="row" style={{maxWidth:1000, margin:'auto'}}>
 		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 		        <Carousel autoplay >
 		           <div><img src={top1} className="aligncenter" alt="top1" /></div>

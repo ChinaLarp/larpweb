@@ -30,7 +30,7 @@ class DraftCreate extends React.Component {
       activeStep: 0,
       errorMessage:"请确认",
       openDialog:false,
-      steptitle:["基础信息","角色信息","流程信息","背景模版","回合模版","搜证信息"],
+      steptitle:["基础信息","角色信息","背景模版","流程信息","回合模版","搜证信息"],
       name:'',  //Game name
       id: randomstring.generate(7),
       playernumber: null,
@@ -323,16 +323,16 @@ class DraftCreate extends React.Component {
   }
   addItem = ()  =>  {
     switch (this.state.activeStep) {
-      case 0:
+      case 0:break;
       case 1:
           this.setState({ characterlist: this.state.characterlist.concat([{ description: '', sex: '男', name: '', id: this.state.characterlist.length}]) });
-          this.setState({ malenumber: this.state.malenumber+1 });
-      case 2:this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",enableclue:0,enablevote:0,content: []}])});
-      case 3:this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:['请输入故事内容']}])});
-      case 4:this.setState({ plottemplate: this.state.plottemplate.concat([{type: "阶段内信息模板类型",content: [""]}])});
+          this.setState({ malenumber: this.state.malenumber+1 });break;
+      case 2:this.setState({ characterinfo: this.state.characterinfo.concat([{type:'', content:['请输入故事内容']}])});break;
+      case 3:this.setState({ mainplot: this.state.mainplot.concat([{plotid: this.state.mainplot.length,plotname: "阶段类型",enableclue:0,enablevote:0,content: []}])});break;
+      case 4:this.setState({ plottemplate: this.state.plottemplate.concat([{type: "阶段内信息模板类型",content: [""]}])});break;
       case 5:
           this.setState({ cluelocation: this.state.cluelocation.concat([{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:this.state.cluelocation.length}],
-          index:this.state.cluelocation.length, name:'', count:1 }]) });
+          index:this.state.cluelocation.length, name:'', count:1 }]) });break;
     }
   }
   removeItem = (idx) => (evt) => {
@@ -348,11 +348,11 @@ class DraftCreate extends React.Component {
           this.setState({ femalenumber: this.state.femalenumber-1 });
         }
         break;
-      case 2:
+      case 3:
         var newmainplot=this.state.mainplot.filter((s, sidx) => idx !== sidx).map((mainplot, sidx) => {return { ...mainplot, plotid: sidx }});
         this.setState({ mainplot: newmainplot })
         break;
-      case 3:
+      case 2:
         var newcharacterinfo=this.state.characterinfo.filter((s, sidx) => idx !== sidx)
         this.setState({ characterinfo: newcharacterinfo })
         break;
@@ -399,7 +399,7 @@ class DraftCreate extends React.Component {
        });
      }
      break
-    case 2:
+    case 3:
      if (this.state.mainplot.length==0){
        this.setState({
          openDialog:true,
@@ -416,7 +416,7 @@ class DraftCreate extends React.Component {
        });
      }
       break
-    case 3:
+    case 2:
       if (this.state.characterinfo.length==0){
         this.setState({
           openDialog:true,
@@ -477,15 +477,15 @@ class DraftCreate extends React.Component {
  getsubTitle(stepIndex) {
    switch (stepIndex) {
      case 0:
-       return (<span>不知道放什么</span>)
+       return (<span></span>)
      case 1:
        return(<span> 男性角色：{this.state.malenumber}，女性角色：{this.state.femalenumber}，总人数：{this.state.characterlist.length}</span>
        )
-     case 2:
+     case 3:
        return(<span> 剧本阶段总数：{this.state.mainplot.length}</span>
        )
-     case 3:
-       return(<span> 模板类型总数：{this.state.cluelocation.length}</span>
+     case 2:
+       return(<span> 模板类型总数：{this.state.characterinfo.length}</span>
        )
      case 4:
        return(<span> 阶段内信息模板总数：{this.state.plottemplate.length}</span>
@@ -562,7 +562,7 @@ class DraftCreate extends React.Component {
           </table>
           </div>
       );
-    case 2:
+    case 3:
       return (
           <div className="characterlist">
           <table className="table table-striped">
@@ -602,7 +602,7 @@ class DraftCreate extends React.Component {
           </table>
           </div>
       );
-    case 3:
+    case 2:
       return (
           <div className="characterlist">
           <table className="table table-striped">
@@ -721,7 +721,7 @@ class DraftCreate extends React.Component {
        </Dialog>
        </div>
       <div>
-        <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '流程信息'}, {title: '背景模板'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
+        <Stepper steps={ [{title: '基础信息'}, {title: '角色信息'},{title: '背景模板'}, {title: '流程信息'}, {title: '回合模板'}, {title: '搜证信息'}] } activeStep={ this.state.activeStep } />
       </div>
 
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>

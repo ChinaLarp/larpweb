@@ -102,7 +102,7 @@ delete =()=> {
       <Toolbar style={{backgroundColor: '#cccccc'}} >
       <ToolbarGroup><ToolbarTitle text="我的剧本"/>
       <ToolbarSeparator/></ToolbarGroup>
-      <ToolbarGroup>不知道放什么</ToolbarGroup>
+      <ToolbarGroup></ToolbarGroup>
       <ToolbarGroup>
         <FontIcon className="muidocs-icon-custom-sort" />
         <ToolbarSeparator /><RaisedButton label="创建新剧本" primary={true} onClick={()=>
