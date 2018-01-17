@@ -56,7 +56,7 @@ class DraftCreate extends React.Component {
       characterinfo:[{type:'', content:['请输入故事内容']}],
     };
   }
-  componentDidMount(){
+  componentWillMount(){
     const url = 'https://chinabackend.bestlarp.com/api/app';
     if(this.props.match.params._id){
     console.log(this.props.match.params._id)
@@ -701,7 +701,6 @@ class DraftCreate extends React.Component {
 }
   render() {
     return (
-
      <div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
       <div>
       <Dialog
@@ -714,10 +713,10 @@ class DraftCreate extends React.Component {
                onClick={()=>(this.setState({openDialog:false}))}
              />,
            ]}
-         modal={false}
-         open={this.state.openDialog}
-         onRequestClose={()=>(this.setState({openDialog:false}))}
-       >{this.state.errorMessage}
+           modal={false}
+           open={this.state.openDialog}
+           onRequestClose={()=>(this.setState({openDialog:false}))}
+         >{this.state.errorMessage}
        </Dialog>
        </div>
       <div>

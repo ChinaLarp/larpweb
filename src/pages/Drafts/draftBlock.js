@@ -42,14 +42,14 @@ removeItem = (idx) => (evt) => {
     deleteitem_id:this.props.auth.drafts[idx]._id
   })
 }
-delete =()=> {
+delete=()=> {
   const url = 'https://chinabackend.bestlarp.com/api/app';
   axios.delete(url+'/'+this.state.deleteitem_id,{
     data:{ signature: md5(this.state.deleteitem_id+"xiaomaomi")}
   }).then((res)=>{
     this.props.getdraft(this.props.auth.user)
     this.setState({
-      openDialog:false,
+      openDialog:false
     })
   })
 }
@@ -80,7 +80,6 @@ delete =()=> {
 
     return (
       <div >
-
       <Dialog
          title="Dialog With Actions"
          actions={[
@@ -91,10 +90,10 @@ delete =()=> {
              <RaisedButton
                label="确认"
                secondary={true}
-               onClick={this.delete()}
-             />
+               onClick={this.delete}
+             />,
            ]}
-         modal={true}
+         modal={false}
          open={this.state.openDialog}
          onRequestClose={()=>(this.setState({openDialog:false}))}
        >{this.state.errorMessage}

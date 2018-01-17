@@ -51,7 +51,7 @@ class App extends Component {
             <Route path="/games" component={Games}/>
             <Route path="/draftList" component={draftList}/>
             <Route path="/DraftCreate/:_id" component={DraftCreate}/>
-            <Route path="/DraftCreate" component={DraftCreate}/>
+            <Route exact path="/DraftCreate" component={DraftCreate}/>
             <Route path="/draftEdit/:_id" component={draftEdit}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/Loginscreen" component={Loginscreen}/>
