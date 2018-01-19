@@ -35,7 +35,7 @@ class draftEdit extends React.Component {
     super(props, context)
     this.state = {
       openMenu:true,
-      game_id:'5a1f4f287cf1d10c48fc4b36',
+      game_id:'',
       gameinfo:{},
       clueinfo:[],
       plotinfo:[],
@@ -229,34 +229,20 @@ handlePublish = (evt) =>{
       mapurl:this.state.gameinfo.mapurl,
       iconurl:this.state.gameinfo.iconurl,
       coverurl:this.state.gameinfo.coverurl,
-      cluestatus:this.fillArray(this.state.clueinfo)
+      cluestatus:this.fillArray(this.state.clueinfo),
+      signature:md5("xiaomaomi")
     }).then(response => {
+      axios.delete(url+'/' +this.state.game_id,{
+          data:{ signature: md5(this.state.game_id+"xiaomaomi")}
+      }).then(response=>{
+        this.props.getdraft(this.props.auth.user)
+        this.context.router.history.push('/draftList');
+        this.props.addFlashMessage({
+           type: 'success',
+           text: '游戏剧本已发表!'
+         });
       })
-      .catch(error => {
-        console.log(error);
-      });
-      for (var i=0;i<this.state.characterlist.length;i++)
-          {axios.post(url,{
-            type:"character",
-            gamename: this.state.gameinfo.name,
-            gameid: this.state.gameinfo.id,
-            characterid: this.state.characterlist[i].characterid,
-            banlocation: this.state.characterlist[i].banlocation,
-            characterinfo: this.state.characterlist[i].characterinfo,
-            characterplot: this.state.characterlist[i].characterplot,
-            charactername: this.state.characterlist[i].name,
-            characterdescription: this.state.characterlist[i].description,
-            charactersex: this.state.characterlist[i].sex,
-          }).then(response => {
-            })
-            .catch(error => {
-              console.log(error);
-            });
-          }
-          this.props.addFlashMessage({
-             type: 'success',
-             text: '游戏剧本已保存!'
-           });
+      })
 }
 onFileChange(e) {
          files = e.target.files || e.dataTransfer.files;
@@ -538,7 +524,7 @@ handleUpload = (idx,iidx) => (evt) =>{
           this.setState({ clueinfo: response.data.cluelocation});
           this.setState({ instructinfo: response.data.instruction});
           this.setState({ plotinfo: response.data.mainplot});
-          axios.get(url+'?type=character&gamename=' +response.data.name)
+          axios.get(url+'?type=character&gameid=' +response.data.id)
             .then(response => {
             	//console.log(response.data)
               this.setState({ characterlist: response.data });

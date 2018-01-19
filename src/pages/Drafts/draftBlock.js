@@ -44,13 +44,23 @@ removeItem = (idx) => (evt) => {
 }
 delete=()=> {
   const url = 'https://chinabackend.bestlarp.com/api/app';
-  axios.delete(url+'/'+this.state.deleteitem_id,{
+  axios.get(url+'/'+this.state.deleteitem_id,{
     data:{ signature: md5(this.state.deleteitem_id+"xiaomaomi")}
   }).then((res)=>{
-    this.props.getdraft(this.props.auth.user)
-    this.setState({
-      openDialog:false
+    axios.delete(url+'/'+this.state.deleteitem_id,{
+      data:{ signature: md5(this.state.deleteitem_id+"xiaomaomi")}
+    }).then((res)=>{
+      this.props.getdraft(this.props.auth.user)
+      this.setState({
+        openDialog:false
+      })
     })
+    for  (var i=0;i<res.data.length;i++) {
+      axios.delete(url+'/'+res.data[i]._id,{
+        data:{ signature: md5(res.data[i]._id+"xiaomaomi")}
+      })
+    }
+
   })
 }
   render() {
