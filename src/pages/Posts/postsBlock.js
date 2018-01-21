@@ -2,8 +2,7 @@
  postsbloc loading posts title and publish date;
 */
 
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
 import Moment from 'moment';
 import {Card} from 'antd';
 import { Link } from 'react-router-dom';
@@ -23,14 +22,14 @@ class Postsblock extends React.Component {
   render() {
         let postsList;
         Moment.locale('en');
-    if (this.props.posts.fetched==false) {
+    if (this.props.posts.fetched===false) {
       postsList= <div>'Loading'</div>;
     } else {
       var post=this.props.posts.posts
       console.log(post)
       postsList = post.map((postsItem, index) => {
       var link='/details/' + postsItem._id;
-        if (postsItem.type==this.props.type||this.props.type=='all'){
+        if (postsItem.type===this.props.type||this.props.type==='all'){
         return (
 
               <li key={index} id='newsItem'>
@@ -38,6 +37,7 @@ class Postsblock extends React.Component {
               <span className='time'>{Moment(postsItem.date).format('YYYY-MM-DD')}</span>
               </li>
         );}
+        return null
       });
     }
 

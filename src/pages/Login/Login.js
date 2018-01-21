@@ -1,10 +1,8 @@
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import RaisedButton from 'material-ui/RaisedButton';
 class Login extends Component {
 constructor(props){
@@ -16,23 +14,17 @@ constructor(props){
   }
  }
  handleClick(event){
- var apiBaseUrl = "";
- var self = this;
- var payload={
- "email":this.state.username,
- "password":this.state.password
- }
-var result=this.props.login(this.state)
-.then(
-  (res) => {
-    this.props.addFlashMessage({
-    type: 'success',
-    text: '欢迎回来!'
-  });
-    this.context.router.history.push('/draftList');},
-  (err) => {
-    this.setState({ errors: {form:'用户名或密码错误!'}})}
-)
+  this.props.login(this.state)
+  .then(
+    (res) => {
+      this.props.addFlashMessage({
+      type: 'success',
+      text: '欢迎回来!'
+    });
+      this.context.router.history.push('/draftList');},
+    (err) => {
+      this.setState({ errors: {form:'用户名或密码错误!'}})}
+  )
  }
 render() {
     return (

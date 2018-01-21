@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import React from "react";
 import 'react-tabs/style/react-tabs.css';
 import randomString from 'random-string';
 import md5 from 'md5'
@@ -18,7 +17,7 @@ class PostEdit extends React.Component {
     };
   }
   fillArray = (cluelocation) => {
-   if (cluelocation.length == 0) return [];
+   if (cluelocation.length === 0) return [];
    var cluestatus=[]
    for  (var i=0;i<cluelocation.length;i++) {
      var a = [true];
@@ -148,10 +147,10 @@ class PostEdit extends React.Component {
                 <option value="text">文字</option>
                 <option value="image">图片</option>
               </select>
-              {post.type == "text" && <textarea rows="4" cols="100" name="content" value={post.content}  onChange={this.handlepostcontentChange(idx)}/>}
-              {post.type == "image" &&
+              {post.type === "text" && <textarea rows="4" cols="100" name="content" value={post.content}  onChange={this.handlepostcontentChange(idx)}/>}
+              {post.type === "image" &&
               <form>
-                <img src={post.content} />
+                <img src={post.content} alt={post.content}/>
                 <input type="file" name='sampleFile' onChange={this.onFileChange}/>
                 <button type="submit" onClick={this.handleUpload(idx)}>上传图片</button>
               </form>

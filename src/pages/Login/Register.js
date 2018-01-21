@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
-import Login from './Login';
 import RaisedButton from 'material-ui/RaisedButton';
 class Register extends Component {
   constructor(props){
@@ -73,8 +71,6 @@ class Register extends Component {
     if (this.isValid()) {
     var apiBaseUrl = "https://chinabackend.bestlarp.com";
     console.log("values",this.state.username,this.state.email,this.state.password);
-    //To be done:check for empty values before hitting submit
-    var self = this;
     var payload={
     "email":this.state.email,
     "password":this.state.password,

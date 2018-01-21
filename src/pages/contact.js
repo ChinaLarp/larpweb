@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import wechatCode from '../assets/img/wechat_erCode.jpg';
 import appCode from '../assets/img/weixinapp.jpg';
 import axios from 'axios';

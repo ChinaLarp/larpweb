@@ -3,21 +3,14 @@
 */
 
 
-import React, { Component } from 'react';
-import axios from 'axios';
-import Moment from 'moment';
+import React from 'react';
 import DraftBlock from './draftBlock.js';
-
-import {Tabs, Pagination} from 'antd';
 import {
-  Route,
   NavLink,
   HashRouter
 } from 'react-router-dom';
-import DraftCreate from './DraftCreate.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Loginscreen from '../Login/Loginscreen.js';
 
 class DraftList extends React.Component {
   constructor(props){
@@ -32,11 +25,6 @@ class DraftList extends React.Component {
   }
   render(){
     let content
-    var draftListStyle = {
-      alignSelf: 'stretch',
-      display: "flex",
-      justifyContent:"center"
-    };
     if (this.props.auth.isAuthenticated) {
       content= <DraftBlock/>;
     } else {

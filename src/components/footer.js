@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import FooterBg from './footer-background-city.jpg'
 import {HashRouter, NavLink} from 'react-router-dom';
-import Contact from '../pages/contact.js';
 
 class Footer extends Component{
 	render(){

@@ -1,5 +1,4 @@
 import React from 'react';
-import {Row, Col, BackTop} from 'antd';
 import axios from 'axios'
 
 export default class GameDetail extends React.Component {
@@ -40,14 +39,6 @@ export default class GameDetail extends React.Component {
   }
 
   render() {
-  	let itemList =[]
-  	var newsDetailtStyle = {
-          fontSize: 16,
-          color:"#000",
-          alignText:"center",
-          width:"100%",
-        };
-
       var newsStyle = {
         alignSelf: 'stretch',
         display: "flex",
@@ -62,7 +53,7 @@ export default class GameDetail extends React.Component {
             <div className="card col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div className="row" >
             <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            {this.state.gameItem.coverurl && <img className="card-img-top" src={require("../../assets/pic/"+this.state.gameItem.coverurl)} alt="Card image cap" style={{margin:20, width:"90%"}}/>}
+            {this.state.gameItem.coverurl && <img className="card-img-top" src={require("../../assets/pic/"+this.state.gameItem.coverurl)} alt={this.state.gameItem.coverurl} style={{margin:20, width:"90%"}}/>}
             </div>
             <div className="card-block col-xs-12 col-sm-12 col-md-4 col-lg-4" style={{textAlign:"left",margin:20}}>
               <h2 className="card-title">{this.state.gameItem.name}</h2>

@@ -1,9 +1,5 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import Moment from 'moment';
-import {Tabs, Pagination,Card} from 'antd';
-import qs from 'qs';
-import Filter from 'redux-filter';
+import React from 'react';
+import { Pagination} from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -19,7 +15,7 @@ class Products extends React.Component {
   }
   render() {
     let gameList;
-    if (this.props.products.fetched==false) {
+    if (this.props.products.fetched===false) {
       gameList= <div>'Loading'</div>;
     } else {
       gameList = this.props.products.products.map((game, index) => {

@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import {
-  Route,
   NavLink,
   HashRouter
 } from 'react-router-dom';
-import Home from '../pages/home.js';
-import posts from '../pages/Posts/posts.js';
-import Games from '../pages/Products/games.js';
-import Contact from '../pages/contact.js';
-import draftList from '../pages/Drafts/draftList.js';
-import DraftCreate from '../pages/Drafts/DraftCreate.js';
-import Loginscreen from '../pages/Login/Loginscreen.js';
-import Register from '../pages/Login/Register.js';
-import {Navbar, Nav, NavItem, MenuItem,NavDropdown} from 'react-bootstrap';
+import {Navbar, Nav, MenuItem,NavDropdown} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login,logout } from '../actions/authAction';
+import { logout } from '../actions/authAction';
 
 
 class Menu extends Component {
@@ -26,7 +17,7 @@ class Menu extends Component {
   }
   render() {
     let User_info;
-    if (this.props.auth.isAuthenticated==false) {
+    if (this.props.auth.isAuthenticated===false) {
       User_info=
       <Nav pullRight>
         <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>

@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 //import TextField from 'material-ui/TextField';
+import Helper from './helper.js';
 import md5 from 'md5'
 import randomString from 'random-string';
 import axios from 'axios';
@@ -9,25 +10,18 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../actions/flashmessages.js';
 import { getdraft } from '../../actions/authAction.js';
-import ScrollButton from '../../components/scrollButton.js';
 import ScrollToTop from 'react-scroll-up';
 import btop from '../../assets/img/btop.png';
 import Lightbox from 'react-image-lightbox';
-import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import TextField from 'material-ui/TextField';
-import Dialog from 'material-ui/Dialog';
 import Drawer from 'material-ui/Drawer';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import  Tooltip  from'rc-tooltip';
 
 var files
 class draftEdit extends React.Component {
@@ -58,7 +52,7 @@ scrollToTop() {
   this.setState({ intervalId: intervalId });
 }
 fillArray = (cluelocation) => {
-   if (cluelocation.length == 0) return [];
+   if (cluelocation.length === 0) return [];
    var cluestatus=[]
    for  (var i=0;i<cluelocation.length;i++) {
      var a = [true];
@@ -69,22 +63,23 @@ fillArray = (cluelocation) => {
    return cluestatus;
  }
 handlePreviewImage = (idx,iidx) => (evt) => {
-  if (idx==-1){
+  var url =""
+  if (idx===-1){
     switch (iidx) {
       case 0:
-        var url = this.state.gameinfo.iconurl
+        url = this.state.gameinfo.iconurl
         break;
       case 1:
-        var url = this.state.gameinfo.coverurl
+        url = this.state.gameinfo.coverurl
         break;
       case 2:
-        var url = this.state.gameinfo.mapurl
+        url = this.state.gameinfo.mapurl
         break;
+      default:
     }
   }else{
-    var url = this.state.clueinfo[idx].clues[iidx].image
+    url = this.state.clueinfo[idx].clues[iidx].image
   }
- console.log(url)
  this.setState({ imageurl: url, isOpen:true });
 }
 handleExit = (evt)=>{
@@ -356,7 +351,7 @@ handleUpload = (idx,iidx) => (evt) =>{
   }
   handleToggleenablevote= (idx) => () => {
     var oldenablevote=this.state.plotinfo[idx].enablevote
-    if (oldenablevote==0){
+    if (oldenablevote===0){
       var newenablevote=1
     }else{
       var newenablevote=0
@@ -370,7 +365,7 @@ handleUpload = (idx,iidx) => (evt) =>{
   }
   handleToggleenableclue= (idx) => () => {
     var oldenableclue=this.state.plotinfo[idx].enableclue
-    if (oldenableclue==0){
+    if (oldenableclue===0){
       var newenableclue=1
     }else{
       var newenableclue=0
@@ -477,8 +472,8 @@ handleUpload = (idx,iidx) => (evt) =>{
 
     this.setState({ clueinfo: newcluelist });
   }
-  handleClueMethodChange= (evt) => {
-    this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: evt.target.value } });
+  handleClueMethodChange=()=> (event, index, value) => {
+    this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: value } });
   }
   handleBanLocationChange = (idx) => (event, index, value) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
@@ -549,7 +544,7 @@ handleUpload = (idx,iidx) => (evt) =>{
           <MenuItem onClick={this.handleDelete}>删除</MenuItem>
           <MenuItem onClick={this.handleSaveExit}>保存并退出</MenuItem>
           <MenuItem onClick={this.handleExit}>退出</MenuItem>
-          {this.props.auth.user.id=="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>}
+          {this.props.auth.user.id==="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>}
         </Drawer>
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ border:"1px solid"}}>
         {this.state.isOpen && (
@@ -568,8 +563,16 @@ handleUpload = (idx,iidx) => (evt) =>{
 
         <TabPanel>
           <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-            <ToolbarGroup><ToolbarTitle text="图片上传"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+            <ToolbarGroup><ToolbarTitle text="基本信息"/>
             <ToolbarSeparator/></ToolbarGroup>
+            <ToolbarGroup>
+              <span>搜证方式：</span>
+              <DropDownMenu value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange()}>
+                   <MenuItem value="random" primaryText="随机不返还"/>
+                   <MenuItem value="order" primaryText="顺次不返还"/>
+                   <MenuItem value="return" primaryText="随机返还"/>
+              </DropDownMenu>
+            </ToolbarGroup>
           </Toolbar>
           <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
             <div className="characterlist">
@@ -577,6 +580,7 @@ handleUpload = (idx,iidx) => (evt) =>{
                 <tbody>
                   <tr className="tableHead">
                     <th>预览</th>
+                    <th>帮助</th>
                     <th>选择</th>
                     <th>上传</th>
                   </tr>
@@ -584,6 +588,8 @@ handleUpload = (idx,iidx) => (evt) =>{
                     <th >
                     {this.state.gameinfo.iconurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,0)} >预览游戏图标</button>}
                     {!this.state.gameinfo.iconurl && <button type="button" className="small" disabled="disabled" >暂无游戏图标</button>}
+                    </th><th>
+                    <Helper step={7} />
                     </th>
                     <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
@@ -594,6 +600,8 @@ handleUpload = (idx,iidx) => (evt) =>{
                     <th >
                     {this.state.gameinfo.coverurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,1)} >预览游戏封面</button>}
                     {!this.state.gameinfo.coverurl && <button type="button" className="small" disabled="disabled" >预览游戏封面</button>}
+                    </th><th>
+                    <Helper step={8} />
                     </th>
                     <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
@@ -603,6 +611,8 @@ handleUpload = (idx,iidx) => (evt) =>{
                   <tr>
                     <th >{this.state.gameinfo.mapurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,2)} >预览现场地图</button>}
                     {!this.state.gameinfo.mapurl && <button type="button" className="small" disabled="disabled" >预览现场地图</button>}
+                    </th><th>
+                    <Helper step={9} />
                     </th>
                     <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
@@ -616,7 +626,8 @@ handleUpload = (idx,iidx) => (evt) =>{
 
             <div>
               <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                <ToolbarGroup><ToolbarTitle text="游戏说明"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                <ToolbarGroup><ToolbarTitle text="游戏说明"/>
+                <Helper step={6} />
                 <ToolbarSeparator/><RaisedButton label="添加项目" primary={true} onClick={this.handleAddInstruction}/></ToolbarGroup>
               </Toolbar>
               <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
@@ -642,7 +653,8 @@ handleUpload = (idx,iidx) => (evt) =>{
                 ))}
             </div>
           <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-            <ToolbarGroup><ToolbarTitle text="流程控制"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+            <ToolbarGroup><ToolbarTitle text="流程控制"/>
+            <Helper step={3} />
             <ToolbarSeparator/></ToolbarGroup>
           </Toolbar>
           <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
@@ -663,11 +675,11 @@ handleUpload = (idx,iidx) => (evt) =>{
             </th>
             <th >
             {plot.enableclue>0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >允许搜证</button>}
-            {plot.enableclue==0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >不允许搜证</button>}
+            {plot.enableclue===0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >不允许搜证</button>}
             </th>
             <th >
             {plot.enablevote>0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >允许投票</button>}
-            {plot.enablevote==0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >不允许投票</button>}
+            {plot.enablevote===0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >不允许投票</button>}
             </th>
 
             </tr>
@@ -689,7 +701,8 @@ handleUpload = (idx,iidx) => (evt) =>{
             {this.state.characterlist.map((characterlist, idx) => (
               <TabPanel>
                 <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                <ToolbarGroup><ToolbarTitle text="角色背景"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                <ToolbarGroup><ToolbarTitle text="角色背景"/>
+                <Helper step={2} />
                 <ToolbarSeparator/></ToolbarGroup>
                   <ToolbarGroup>
                     <span>禁止搜证地点：</span>
@@ -717,7 +730,8 @@ handleUpload = (idx,iidx) => (evt) =>{
                   ))}
                 </div>
                 <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                  <ToolbarGroup><ToolbarTitle text="人物流程剧本"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+                  <ToolbarGroup><ToolbarTitle text="人物流程剧本"/>
+                  <Helper step={4} />
                   <ToolbarSeparator/></ToolbarGroup>
                 </Toolbar>
                 <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
@@ -770,7 +784,8 @@ handleUpload = (idx,iidx) => (evt) =>{
           {this.state.clueinfo.map((cluelocation, idx) => (
             <TabPanel>
               <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-              <ToolbarGroup><ToolbarTitle text="线索列表"/><Tooltip placement="right" trigger="click" overlay={<span>这里放帮助</span>}><span className="glyphicon glyphicon-question-sign"></span></Tooltip>
+              <ToolbarGroup><ToolbarTitle text="线索列表"/>
+              <Helper step={5} />
               <ToolbarSeparator/></ToolbarGroup>
                 <ToolbarGroup>
                   <span>地点序号：{idx}；线索数：{cluelocation.count}</span>
@@ -822,7 +837,7 @@ handleUpload = (idx,iidx) => (evt) =>{
       </Tabs>
       </div>
       <ScrollToTop showUnder={160} style={{zIndex:1}}>
-         <img src={btop} className="btopImg" />
+         <img src={btop} className="btopImg" alt={btop}/>
       </ScrollToTop>
 
       </div>

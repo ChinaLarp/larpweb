@@ -1,5 +1,4 @@
 import React from 'react';
-import {Row, Col, BackTop} from 'antd';
 import axios from 'axios'
 
 export default class postsDetail extends React.Component {
@@ -42,29 +41,26 @@ export default class postsDetail extends React.Component {
     } else {
       itemList = this.state.postsItem.content.map((item, index) => {
       	if (item.type==="text"){
-			return (
-			<li key={index}>
-               <br/>
-               <p style={{fontSize:18,textAlign:"left",textIndent:"2em"}}>{item.content }</p>
-               
-            </li>
-        )
-
+    			return (
+    			     <li key={index}>
+                 <br/>
+                 <p style={{fontSize:18,textAlign:"left",textIndent:"2em"}}>{item.content }</p>
+              </li>
+            )
       	}else if (item.type==="image"){
       		return (
-			<li key={index}>
-              <img src={item.content} style={{width:"60%"}}/>
-            </li>
-        )
+        			<li key={index}>
+                <img src={item.content} style={{width:"60%"}} alt={item.content}/>
+              </li>
+            )
       	}
-
-      });
+        return null
+            });
     }
 
 
     return (
-           <div className='container' className="postsAlignCenter">
-
+           <div className="container postsAlignCenter">
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-10">
             <h3>{this.state.postsItem.title}</h3>
             <ul className="postsDetailt">{itemList}</ul>

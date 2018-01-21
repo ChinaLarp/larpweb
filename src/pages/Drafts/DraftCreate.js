@@ -8,18 +8,13 @@ import { addFlashMessage } from '../../actions/flashmessages.js';
 import Helper from './helper.js';
 import { getdraft } from '../../actions/authAction.js';
 import 'rc-tooltip/assets/bootstrap.css';
-import ScrollButton from '../../components/scrollButton.js';
-import ScrollToTop from 'react-scroll-up';
-import btop from '../../assets/img/btop.png';
 import Stepper from 'react-stepper-horizontal'
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 class DraftCreate extends React.Component {
@@ -92,7 +87,7 @@ class DraftCreate extends React.Component {
     this.setState({ id: evt.target.value });
   }
   fillArray = (cluelocation) =>  {
-    if (this.state.cluelocation.length == 0) return [];
+    if (this.state.cluelocation.length === 0) return [];
     var cluestatus=[]
     for  (var i=0;i<this.state.cluelocation.length;i++) {
       var a = [true];
@@ -150,7 +145,7 @@ class DraftCreate extends React.Component {
       this.context.router.history.push('/draftList');
   }
   handleSubmit = (evt) => {
-    if (this.state.cluelocation.filter((s,idx)=>s.name=="").length!=0){
+    if (this.state.cluelocation.filter((s,idx)=>s.name==="").length!==0){
       this.setState({
         openDialog:true,
         errorMessage:"搜证地点名称不能为空。"
@@ -295,21 +290,21 @@ class DraftCreate extends React.Component {
   handleMainplotClueChange = (idx) => (evt) => {
     const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
       if (idx !== sidx) return mainplot;
-      return { ...mainplot, enableclue: mainplot.enableclue==0?1:0 };
+      return { ...mainplot, enableclue: mainplot.enableclue===0?1:0 };
     });
     this.setState({ mainplot: newmainplot});
   }
   handleSexChange = (idx) => (evt) => {
     const newcharacterlist= this.state.characterlist.map((characterlist, sidx) => {
       if (idx !== sidx) return characterlist;
-      return { ...characterlist, sex: characterlist.sex=="男"?"女":"男" };
+      return { ...characterlist, sex: characterlist.sex==="男"?"女":"男" };
     });
     this.setState({ characterlist: newcharacterlist});
   }
   handleMainplotVoteChange = (idx) => (evt) => {
     const newmainplot= this.state.mainplot.map((mainplot, sidx) => {
       if (idx !== sidx) return mainplot;
-      return { ...mainplot, enablevote: mainplot.enablevote==0?1:0};
+      return { ...mainplot, enablevote: mainplot.enablevote===0?1:0};
     });
 
     this.setState({ mainplot: newmainplot});
@@ -333,6 +328,7 @@ class DraftCreate extends React.Component {
       case 5:
           this.setState({ cluelocation: this.state.cluelocation.concat([{clues:[{content:'',passcode:'', cluenumber:0,cluelocation:this.state.cluelocation.length}],
           index:this.state.cluelocation.length, name:'', count:1 }]) });break;
+      default:
     }
   }
   removeItem = (idx) => (evt) => {
@@ -342,9 +338,9 @@ class DraftCreate extends React.Component {
       case 1:
         var newcharacterlist=this.state.characterlist.filter((s, sidx) => idx !== sidx).map((character, sidx) => {return { ...character, id: sidx }});
         this.setState({ characterlist: newcharacterlist });
-        if(this.state.characterlist[idx].sex=='男'){
+        if(this.state.characterlist[idx].sex==='男'){
           this.setState({ malenumber: this.state.malenumber-1 });
-        }else if(this.state.characterlist[idx].sex=='女'){
+        }else if(this.state.characterlist[idx].sex==='女'){
           this.setState({ femalenumber: this.state.femalenumber-1 });
         }
         break;
@@ -364,13 +360,14 @@ class DraftCreate extends React.Component {
         var newcluelocation=this.state.cluelocation.filter((s, sidx) => idx !== sidx).map((cluelocation, sidx) => {return { ...cluelocation,clues:[{content:'',passcode:'', cluenumber:0,cluelocation: sidx}], index: sidx }});
         this.setState({ cluelocation: newcluelocation })
         break;
+        default:
     }
   }
 
  handleNext = () => {
    switch (this.state.activeStep) {
     case 0:
-      if (this.state.name==""){
+      if (this.state.name===""){
         console.log("请输入剧本名称再继续。")
         this.setState({
           openDialog:true,
@@ -383,12 +380,12 @@ class DraftCreate extends React.Component {
       }
       break
     case 1:
-     if (this.state.characterlist.length==0){
+     if (this.state.characterlist.length===0){
        this.setState({
          openDialog:true,
          errorMessage:"角色数不能为零。"
        });
-     }else if (this.state.characterlist.filter((s,idx)=>s.name=="").length!=0){
+     }else if (this.state.characterlist.filter((s,idx)=>s.name==="").length!==0){
        this.setState({
          openDialog:true,
          errorMessage:"角色名不能为空。"
@@ -400,12 +397,12 @@ class DraftCreate extends React.Component {
      }
      break
     case 3:
-     if (this.state.mainplot.length==0){
+     if (this.state.mainplot.length===0){
        this.setState({
          openDialog:true,
          errorMessage:"回合数不能为零。"
        });
-     }else if (this.state.mainplot.filter((s,idx)=>s.plotname=="").length!=0){
+     }else if (this.state.mainplot.filter((s,idx)=>s.plotname==="").length!==0){
        this.setState({
          openDialog:true,
          errorMessage:"回合名不能为空。"
@@ -417,12 +414,12 @@ class DraftCreate extends React.Component {
      }
       break
     case 2:
-      if (this.state.characterinfo.length==0){
+      if (this.state.characterinfo.length===0){
         this.setState({
           openDialog:true,
           errorMessage:"模版数不能为零。"
         });
-      }else if (this.state.characterinfo.filter((s,idx)=>s.type=="").length!=0){
+      }else if (this.state.characterinfo.filter((s,idx)=>s.type==="").length!==0){
         this.setState({
           openDialog:true,
           errorMessage:"模版名称不能为空。"
@@ -434,12 +431,12 @@ class DraftCreate extends React.Component {
       }
       break
     case 4:
-        if (this.state.plottemplate.length==0){
+        if (this.state.plottemplate.length===0){
           this.setState({
             openDialog:true,
             errorMessage:"模版数不能为零。"
           });
-        }else if (this.state.plottemplate.filter((s,idx)=>s.type=="").length!=0){
+        }else if (this.state.plottemplate.filter((s,idx)=>s.type==="").length!==0){
           this.setState({
             openDialog:true,
             errorMessage:"模版名称不能为空。"
@@ -451,7 +448,7 @@ class DraftCreate extends React.Component {
         }
         break
     case 5:
-        if (this.state.cluelocation.filter((s,idx)=>s.name=="").length!=0){
+        if (this.state.cluelocation.filter((s,idx)=>s.name==="").length!==0){
           this.setState({
             openDialog:true,
             errorMessage:"搜证地点名称不能为空。"
@@ -493,6 +490,7 @@ class DraftCreate extends React.Component {
      case 5:
        return(<span> 地点总数：{this.state.cluelocation.length}</span>
        )
+    default: return null
      }
    }
  getStepContent(stepIndex) {
@@ -697,6 +695,7 @@ class DraftCreate extends React.Component {
             </table>
             </div>
         );
+        default: return null
   }
 }
   render() {
@@ -726,7 +725,7 @@ class DraftCreate extends React.Component {
      <div style={{backgroundColor: '#d9d9d9', marginTop:30, paddingBottom:30}}>
 
      <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Helper activeStep={this.state.activeStep} />
+     <ToolbarGroup><ToolbarTitle text={this.state.steptitle[this.state.activeStep]}/><Helper step={this.state.activeStep} />
      <ToolbarSeparator/></ToolbarGroup>
      <ToolbarGroup>{this.getsubTitle(this.state.activeStep)}</ToolbarGroup>
      <ToolbarGroup>
@@ -747,10 +746,10 @@ class DraftCreate extends React.Component {
     </Toolbar>
     <div style={{minHeight: 400,maxWidth: 900,padding: 10,margin: 'auto'}}>{this.getStepContent(this.state.activeStep)}</div>
     <div>
-    {this.state.activeStep==0 ? (<RaisedButton label="放弃" style={{ marginRight:30}} onClick={this.handleReturn}/>
+    {this.state.activeStep===0 ? (<RaisedButton label="放弃" style={{ marginRight:30}} onClick={this.handleReturn}/>
     ) : (<RaisedButton label="上一步"   style={{ marginRight:30}} primary={true} onClick={this.handleBack}/>)}
 
-      {this.state.activeStep==5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  secondary={true} onClick={this.handleSubmit}/>
+      {this.state.activeStep===5 ? (<RaisedButton label="提交" style={{ marginRight:30}}  secondary={true} onClick={this.handleSubmit}/>
     ) : (<RaisedButton label="下一步" style={{ marginRight:30}}  primary={true}  onClick={this.handleNext}/>)}
    </div>
 

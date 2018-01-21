@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import { Row,Carousel, Tabs, Button  } from 'antd';
+import React from 'react';
+import { Carousel, Tabs } from 'antd';
 import top1 from '../assets/img/top1.png';
 import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
 //import './home.css';
 import Postsblock from './Posts/postsBlock.js';
-import posts from './Posts/posts.js';
 import {
-  Route,
   NavLink,
   HashRouter
 } from 'react-router-dom';

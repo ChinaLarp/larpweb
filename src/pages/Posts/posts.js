@@ -2,9 +2,7 @@
  postsbloc loading posts title and publish date;
 */
 
-import React, { Component } from 'react';
-import axios from 'axios';
-import Moment from 'moment';
+import React from 'react';
 import Postsblock from './postsBlock.js';
 import {Tabs, Pagination} from 'antd';
 import { connect } from 'react-redux';
@@ -31,13 +29,13 @@ class posts extends React.Component {
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <Tabs className='tabBar'>
                 <TabPane tab="新闻" key="1"><Postsblock  type='news' />
-                <Pagination total={this.props.posts.posts.filter((post)=>(post.type=='news')).length}
+                <Pagination total={this.props.posts.posts.filter((post)=>(post.type==='news')).length}
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={20}
                 defaultCurrent={1}/>
                 </TabPane>
                 <TabPane tab="活动" key="2"><Postsblock type='activity' />
-                <Pagination total={this.props.posts.posts.filter((post)=>(post.type=='activity')).length}
+                <Pagination total={this.props.posts.posts.filter((post)=>(post.type==='activity')).length}
                 showTotal={total => 'Total '+total+' items'}
                 pageSize={20}
                 defaultCurrent={1}/></TabPane>

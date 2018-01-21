@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {
   Route,
-  NavLink,
   HashRouter
 } from 'react-router-dom';
 

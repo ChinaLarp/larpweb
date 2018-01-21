@@ -1,5 +1,5 @@
 import { FETCH_POSTS } from '../actions/types';
-import isEmpty from 'lodash/isEmpty';
+//import isEmpty from 'lodash/isEmpty';
 
 const initialState = {
   fetching: false,
