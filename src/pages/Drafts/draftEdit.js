@@ -1,7 +1,6 @@
 import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-//import TextField from 'material-ui/TextField';
 import Helper from './helper.js';
 import md5 from 'md5'
 import randomString from 'random-string';
@@ -18,16 +17,24 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Drawer from 'material-ui/Drawer';
 import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-
 var files
 class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
     this.state = {
+      openDialog:false,
+      Dialogtype:"",
+      errorMessage:null,
+      actions:[],
+      insertPlotlocation:1,
+      insertPlotname:"",
+      insertCharactername:"",
       openMenu:true,
       game_id:'',
       gameinfo:{},
@@ -41,6 +48,62 @@ class draftEdit extends React.Component {
       imageurl:''
     };
   }
+confirmation = (command,idx) => (evt) => {
+  switch (command) {
+    case "AddCharacter":
+      this.setState({
+        openDialog:true,
+        Dialogtype:"AddCharacter",
+        actions:[
+            <RaisedButton
+              label="取消"
+              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+            />,
+            <RaisedButton
+              label="确认"
+              secondary={true}
+              onClick={this.handleAddCharacter}
+            />]
+      })
+      break;
+    case "AddPlot":
+      this.setState({
+        openDialog:true,
+        Dialogtype:"AddPlot",
+        actions:[
+            <RaisedButton
+              label="取消"
+              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+            />,
+            <RaisedButton
+              label="确认"
+              secondary={true}
+              onClick={this.handleAddPlot}
+            />]
+      })
+      break;
+    case "deletePlot":
+      this.setState({
+        openDialog:true,
+        Dialogtype:"deletePlot",
+        errorMessage:(
+          <p>确定要删除此阶段吗？点击确认将同时移除所有角色的该阶段剧本。</p>
+        ),
+        actions:[
+            <RaisedButton
+              label="取消"
+              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+            />,
+            <RaisedButton
+              label="确认"
+              secondary={true}
+              onClick={this.handleRemovePlot(idx)}
+            />]
+      })
+      break;
+    default:
+  }
+}
 scrollStep() {
   if (window.pageYOffset === 0) {
       clearInterval(this.state.intervalId);
@@ -306,50 +369,82 @@ handleUpload = (idx,iidx) => (evt) =>{
         .catch(error => {
           console.log(error);
         });
-      alert(`Image saved`);
-    }
-  handleAddInstruction = () => {
+        this.props.addFlashMessage({
+           type: 'success',
+           text: '图片上传成功!'
+         });
+}
+handleAddInstruction = () => {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
-  }
-  handleRemoveInstruction = (idx) => () => {
+}
+handleRemoveInstruction = (idx) => () => {
 
     this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
-  }
-  handleAddPlot =  ()  => {
-    this.setState({ plotinfo: this.state.plotinfo.concat([{ plotid: this.state.plotinfo.length, plotname: '',content: ['']}]) });
-  }
-  handleRemovePlot = () => {
-    var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== (this.state.plotinfo.length-1));
-    newplotinfo = newplotinfo.map((plot, sidx) => {
-    return { ...plot, plotid: sidx };
-  });
-    this.setState({ plotinfo: newplotinfo });
-  }
-  handleInstructTypeChange = (idx) => (evt) => {
+}
+handleInstructTypeChange = (idx) => (evt) => {
     const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
       if (idx !== sidx) return instruct;
       return { ...instruct, type: evt.target.value };
     });
 
     this.setState({ instructinfo: newinstructinfo });
-  }
-  handleInstructContentChange = (idx) => (evt) => {
+}
+handleInstructContentChange = (idx) => (evt) => {
     const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
       if (idx !== sidx) return instruct;
       return { ...instruct, content: evt.target.value.split('\n') };
     });
 
     this.setState({ instructinfo: newinstructinfo });
-  }
-  handlePlotNameChange = (idx) => (evt) => {
+}
+handleAddCharacter =  ()  => {
+    const newcharacterlist=this.state.characterlist.concat([{...this.state.characterlist[0],charactername:this.state.insertCharactername,characterdescription:""}]).map((plot, sidx) => {
+        return { ...plot, characterid: sidx }
+    });
+    this.setState({ characterlist:newcharacterlist, errorMessage:null,openDialog:false});
+}
+handleAddPlot =  ()  => {
+    const idx=this.state.insertPlotlocation
+    const newplotinfo=[{plotid:-1}].concat(this.state.plotinfo).map((plot, sidx) => {
+      if (idx > sidx) {
+        return this.state.plotinfo[sidx]
+      }else if (idx===sidx) {
+        return { plotid: idx, plotname: this.state.insertPlotname, enableclue:0, enablevote:0, content: ['']};
+      }else{
+        return { ...plot, plotid: plot.plotid+1 };
+      }
+    });
+    const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+      var newcharacterplot=[{plotid:-1}].concat(character.characterplot).map((plot, siidx) => {
+        if (idx > siidx) {
+          return character.characterplot[siidx]
+        }else if (idx===siidx) {
+          return { ...plot, plotid: idx, plotname: this.state.insertPlotname };
+        }else{
+          return { ...plot, plotid: plot.plotid+1 };
+        }
+      });
+      return {...character,characterplot:newcharacterplot}
+    })
+    this.setState({ characterlist:newcharacterlist, plotinfo: newplotinfo, errorMessage:null,openDialog:false});
+}
+handleRemovePlot = (idx) => () => {
+    var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== idx).map((plot, sidx) => {return { ...plot, plotid: sidx }});
+    const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+      var newcharacterplot=character.characterplot.filter((s, siidx) => siidx !== idx).map((plot, siidx) => {return { ...plot, plotid: siidx }});
+      return {...character,characterplot:newcharacterplot}
+    })
+    this.setState({characterlist:newcharacterlist, plotinfo: newplotinfo ,errorMessage:null,openDialog:false});
+}
+handlePlotNameChange = (idx) => (evt) => {
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, plotname: evt.target.value };
     });
 
     this.setState({ plotinfo: newplotinfo });
-  }
-  handleToggleenablevote= (idx) => () => {
+}
+handleToggleenablevote= (idx) => () => {
     var oldenablevote=this.state.plotinfo[idx].enablevote
     if (oldenablevote===0){
       var newenablevote=1
@@ -362,8 +457,8 @@ handleUpload = (idx,iidx) => (evt) =>{
     });
 
     this.setState({ plotinfo: newplotinfo });
-  }
-  handleToggleenableclue= (idx) => () => {
+}
+handleToggleenableclue= (idx) => () => {
     var oldenableclue=this.state.plotinfo[idx].enableclue
     if (oldenableclue===0){
       var newenableclue=1
@@ -376,16 +471,16 @@ handleUpload = (idx,iidx) => (evt) =>{
     });
 
     this.setState({ plotinfo: newplotinfo });
-  }
-  handlePlotContentChange = (idx) => (evt) => {
+}
+handlePlotContentChange = (idx) => (evt) => {
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, content: evt.target.value.split('\n')  };
     });
 
     this.setState({ plotinfo: newplotinfo });
-  }
-  handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
+}
+handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
     const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
       if (iidx !== sidx) return plot;
       return { ...plot, plotname: evt.target.value };
@@ -395,7 +490,7 @@ handleUpload = (idx,iidx) => (evt) =>{
       return { ...characterlist, characterplot: newplotinfo };
     });
     this.setState({ characterlist: newcharacterlist });
-  }
+}
   handleCharacterPlotContentChange = (idx,iidx,iiidx) => (evt) => {
     const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.map((item, sidx) => {
       if (iiidx !== sidx) return item;
@@ -411,6 +506,45 @@ handleUpload = (idx,iidx) => (evt) =>{
     });
     this.setState({ characterlist: newcharacterlist });
   }
+  handleCharacterPlotTypeChange = (idx,iidx,iiidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.map((item, sidx) => {
+      if (iiidx !== sidx) return item;
+      return { ...item, type: evt.target.value};
+    });
+    const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+      if (iidx !== sidx) return plot;
+      return { ...plot, content: newtypeinfo };
+    });
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterplot: newplotinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
+  }
+  handleRemoveCharacterPlot = (idx,iidx,iiidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.filter((plot, sidx) => iiidx !== sidx)
+    const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+      if (iidx !== sidx) return plot;
+      return { ...plot, content: newtypeinfo };
+    });
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterplot: newplotinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
+  }
+  handleAddCharacterPlot = (idx,iidx) => (evt) => {
+      const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.concat({ content: ["无内容"],type: ""})
+      const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+        if (iidx !== sidx) return plot;
+        return { ...plot, content: newtypeinfo };
+      });
+      const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+        if (idx !== sidx) return characterlist;
+        return { ...characterlist, characterplot: newplotinfo };
+      });
+      this.setState({ characterlist: newcharacterlist });
+    }
   handlecharacterinfoTypeChange = (idx,iidx) => (evt) => {
     const newcharacterinfo = this.state.characterlist[idx].characterinfo.map((characterinfo, sidx) => {
       if (iidx !== sidx) return characterinfo;
@@ -511,7 +645,6 @@ handleUpload = (idx,iidx) => (evt) =>{
   }
   componentDidMount(){
       const url = "https://chinabackend.bestlarp.com/api/app";
-
       this.setState({ game_id: this.props.match.params._id });
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
@@ -536,8 +669,37 @@ handleUpload = (idx,iidx) => (evt) =>{
 
     return (
       	<div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
-        <AppBar style={{zIndex:0}} title="剧本编辑"
-  iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
+        <div>
+          <Dialog
+             title="确认信息"
+             actions={this.state.actions}
+               modal={false}
+               open={this.state.openDialog}
+               onRequestClose={()=>(this.setState({openDialog:false}))}
+             >
+             <div>
+                {this.state.Dialogtype=="AddPlot" && <div>你想在<DropDownMenu style={{marginBottom:0}} value={this.state.insertPlotlocation} onChange={(event, index, value) => {this.setState({insertPlotlocation: value  });console.log(this.state) }}>
+                <MenuItem value={0} primaryText="最前面" />
+                 {this.state.plotinfo.map((plot,sidx)=>(<MenuItem value={sidx+1} primaryText={plot.plotname} />))}
+               </DropDownMenu>阶段后插入
+               <TextField
+                 hintText="阶段名称"
+                id="text-field-controlled"
+                 value={this.state.insertPlotname}
+                 onChange={(event) => {this.setState({insertPlotname: event.target.value  }); }}
+               /></div>}
+               {this.state.Dialogtype=="AddCharacter" && <div>
+              <TextField
+                hintText="角色名称"
+               id="text-field-controlled"
+                value={this.state.insertCharactername}
+                onChange={(event) => {this.setState({insertCharactername: event.target.value  });  }}
+              /></div>}
+               {this.state.Dialogtype=="deletePlot" && this.state.errorMessage}
+             </div>
+           </Dialog>
+         </div>
+        <AppBar style={{zIndex:0}} title="剧本编辑"  iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
         <Drawer open={this.state.openMenu}>
           <AppBar title="操作箱" iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:false})}}><NavigationClose /></IconButton>}/>
           <MenuItem onClick={this.handleSubmit}>保存</MenuItem>
@@ -564,7 +726,7 @@ handleUpload = (idx,iidx) => (evt) =>{
         <TabPanel>
           <Toolbar style={{backgroundColor: '#bcbcbc'}} >
             <ToolbarGroup><ToolbarTitle text="基本信息"/>
-            <ToolbarSeparator/></ToolbarGroup>
+            <ToolbarSeparator/><RaisedButton label="添加角色" primary={true} onClick={this.confirmation("AddCharacter")}/></ToolbarGroup>
             <ToolbarGroup>
               <span>搜证方式：</span>
               <DropDownMenu value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange()}>
@@ -575,6 +737,19 @@ handleUpload = (idx,iidx) => (evt) =>{
             </ToolbarGroup>
           </Toolbar>
           <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+            <table><tr><th>剧本名称：</th><th>
+              <input
+                type="text"
+                value={this.state.gameinfo.name}
+                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, name: evt.target.value}})}}
+              /></th></tr><tr><th>
+              剧本简介：</th><th>
+              <input
+                type="text"
+                value={this.state.gameinfo.descripion}
+                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
+              /></th></tr>
+            </table>
             <div className="characterlist">
               <table className="table table-striped">
                 <tbody>
@@ -655,7 +830,7 @@ handleUpload = (idx,iidx) => (evt) =>{
           <Toolbar style={{backgroundColor: '#bcbcbc'}} >
             <ToolbarGroup><ToolbarTitle text="流程控制"/>
             <Helper step={3} />
-            <ToolbarSeparator/></ToolbarGroup>
+            <ToolbarSeparator/><RaisedButton label="添加阶段" primary={true} onClick={this.confirmation("AddPlot")}/></ToolbarGroup>
           </Toolbar>
           <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
             {this.state.plotinfo.map((plot, idx) => (
@@ -680,6 +855,9 @@ handleUpload = (idx,iidx) => (evt) =>{
             <th >
             {plot.enablevote>0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >允许投票</button>}
             {plot.enablevote===0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >不允许投票</button>}
+            </th>
+            <th >
+            <button type="button" onClick={this.confirmation("deletePlot",idx)} className="small" >删除</button>
             </th>
 
             </tr>
@@ -747,19 +925,21 @@ handleUpload = (idx,iidx) => (evt) =>{
                         type="text"
                         placeholder="信息类型"
                         value={plot.plotname}
-                        onChange={this.handleCharacterPlotNameChange(idx,iidx)}
+                        disabled="disabled"
                       />
                     </th>
+                    <th><button type="button" onClick={this.handleAddCharacterPlot(idx,iidx)} className="small">添加</button></th>
                     </tr>
                     </table>
                       {plot.content.map((item, iiidx) => (
                       <div style={{marginTop:20,border:"1px dashed"}}>
-                        <input
+                        <table style={{margin:10,width:"90%"}}><tr><th style={{width:"40%"}}><input
                           type="text"
                           placeholder="信息类型"
                           value={item.type}
-                          disabled="disabled"
-                        />
+                          onChange={this.handleCharacterPlotTypeChange(idx,iidx,iiidx)}
+                        /></th><th>
+                        <button type="button" onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)} className="small">删除</button></th></tr></table>
                         <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
                     </div>
                     ))}
