@@ -848,7 +848,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
                 {this.state.instructinfo.map((instruct, idx) => (
                   <div style={{marginTop:20, border:"1px dashed"}}>
-                  <table className="table table-striped tableText" style={{margin:10}}><tbody>
+                  <table className="table table-striped tableText" style={{margin:10}}>
                   <tr>
                   <th className="shortInput">
                   <input
@@ -862,7 +862,6 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                   <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
                   </th>
                   </tr>
-                  </tbody>
                   </table>
                   <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
                   </div>
