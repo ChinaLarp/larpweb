@@ -2,7 +2,9 @@ import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Helper from './helper.js';
+import Upload from 'rc-upload';
 import md5 from 'md5'
+import Toggle from 'material-ui/Toggle';
 import randomString from 'random-string';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -16,6 +18,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Drawer from 'material-ui/Drawer';
+import CircularProgress from 'material-ui/CircularProgress';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -23,10 +26,56 @@ import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import Dropzone from 'react-dropzone'
 var files
 class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
+    this.iconuploaderProps = {
+      onStart: (file) => {
+        var filename=this.state.gameinfo.id+'icon.'+file.name.split('.')[1]
+        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+        let data = new FormData();
+          data.append('image', file, filename);
+          const config = {
+              headers: { 'content-type': 'multipart/form-data' }
+          }
+          this.setState({loadingimg:"icon"})
+          axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: filename },loadingimg:""})})
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    };
+    this.coveruploaderProps = {
+      onStart: (file) => {
+        console.log('onStart', file.name);
+        var filename=this.state.gameinfo.id+'cover.'+file.name.split('.')[1]
+        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+        let data = new FormData();
+          data.append('image', file, filename);
+          const config = {
+              headers: { 'content-type': 'multipart/form-data' }
+          }
+          this.setState({loadingimg:"cover"})
+          axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: filename },loadingimg:""})})
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    };
+    this.mapuploaderProps = {
+      onStart: (file) => {
+        console.log('onStart', file.name);
+        var filename=this.state.gameinfo.id+'map.'+file.name.split('.')[1]
+        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+        let data = new FormData();
+        data.append('image', file, filename);
+        const config = {headers: { 'content-type': 'multipart/form-data' }}
+        this.setState({loadingimg:"map"})
+        axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: filename },loadingimg:""});})
+      }
+    };
     this.state = {
       openDialog:false,
       Dialogtype:"",
@@ -153,6 +202,9 @@ handleSaveExit = (evt) => {
    axios.put(url+'/'+this.state.game_id,{
    cluelocation:this.state.clueinfo,
    mainplot:this.state.plotinfo,
+   name:this.state.gameinfo.name,
+   descripion:this.state.gameinfo.descripion,
+   detailDescription:this.state.gameinfo.detailDescription,
    instruction:this.state.instructinfo,
    cluemethod:this.state.gameinfo.cluemethod,
    mapurl:this.state.gameinfo.mapurl,
@@ -170,7 +222,11 @@ handleSaveExit = (evt) => {
    for (var i=0;i<this.state.characterlist.length;i++)
        {
        var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+           gamename:this.state.gameinfo.name,
            banlocation: this.state.characterlist[i].banlocation,
+           charactername: this.state.characterlist[i].charactername,
+           characterdescription: this.state.characterlist[i].characterdescription,
+           charactersex: this.state.characterlist[i].charactersex,
            characterinfo: this.state.characterlist[i].characterinfo,
            characterplot: this.state.characterlist[i].characterplot,
            signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
@@ -191,11 +247,14 @@ handleSaveExit = (evt) => {
           this.context.router.history.push('/draftList');
        })
 }
-handleSubmit = (evt) =>{
+handleSave = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
     axios.put(url+'/'+this.state.game_id,{
       cluelocation:this.state.clueinfo,
       mainplot:this.state.plotinfo,
+      name:this.state.gameinfo.name,
+      descripion:this.state.gameinfo.descripion,
+      detailDescription:this.state.gameinfo.detailDescription,
       instruction:this.state.instructinfo,
       cluemethod:this.state.gameinfo.cluemethod,
       mapurl:this.state.gameinfo.mapurl,
@@ -213,8 +272,12 @@ handleSubmit = (evt) =>{
       for (var i=0;i<this.state.characterlist.length;i++)
           {
           var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+              gamename:this.state.gameinfo.name,
               banlocation: this.state.characterlist[i].banlocation,
               characterinfo: this.state.characterlist[i].characterinfo,
+              charactername: this.state.characterlist[i].charactername,
+              characterdescription: this.state.characterlist[i].characterdescription,
+              charactersex: this.state.characterlist[i].charactersex,
               characterplot: this.state.characterlist[i].characterplot,
               signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
           }).then(response => {
@@ -301,6 +364,27 @@ handlePublish = (evt) =>{
          });
       })
       })
+}
+onDrop= (idx,iidx) => (files) => {
+  var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
+  console.log(filename)
+  const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+  let data = new FormData();
+    data.append('image', files[0], filename);
+    const config = {
+        headers: { 'content-type': 'multipart/form-data' }
+    }
+    axios.post(imageurl, data, config).then(response => {
+    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+      if (iidx !== sidx) return clue;
+      return { ...clue, image: filename };
+    });
+    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, clues: newclueinfo };
+    });
+    this.setState({ clueinfo: newcluelist });
+    })
 }
 onFileChange(e) {
          files = e.target.files || e.dataTransfer.files;
@@ -444,13 +528,8 @@ handlePlotNameChange = (idx) => (evt) => {
 
     this.setState({ plotinfo: newplotinfo });
 }
-handleToggleenablevote= (idx) => () => {
-    var oldenablevote=this.state.plotinfo[idx].enablevote
-    if (oldenablevote===0){
-      var newenablevote=1
-    }else{
-      var newenablevote=0
-    }
+handleToggleenablevote= (idx) => (event, isInputChecked ) => {
+    var newenablevote=isInputChecked?1:0
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, enablevote:newenablevote };
@@ -458,13 +537,8 @@ handleToggleenablevote= (idx) => () => {
 
     this.setState({ plotinfo: newplotinfo });
 }
-handleToggleenableclue= (idx) => () => {
-    var oldenableclue=this.state.plotinfo[idx].enableclue
-    if (oldenableclue===0){
-      var newenableclue=1
-    }else{
-      var newenableclue=0
-    }
+handleToggleenableclue= (idx) => (event, isInputChecked ) => {
+    var newenableclue=isInputChecked?1:0
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, enableclue:newenableclue };
@@ -643,15 +717,13 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
 
     this.setState({ clueinfo: newcluelist });
   }
-  componentDidMount(){
+  componentWillMount(){
       const url = "https://chinabackend.bestlarp.com/api/app";
       this.setState({ game_id: this.props.match.params._id });
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
-          this.setState({ gameinfo: response.data});
-          this.setState({ clueinfo: response.data.cluelocation});
-          this.setState({ instructinfo: response.data.instruction});
-          this.setState({ plotinfo: response.data.mainplot});
+          console.log(response.data.detailDescription)
+          this.setState({ gameinfo: response.data, clueinfo: response.data.cluelocation, instructinfo: response.data.instruction, plotinfo: response.data.mainplot});
           axios.get(url+'?type=character&gameid=' +response.data.id)
             .then(response => {
             	//console.log(response.data)
@@ -702,7 +774,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
         <AppBar style={{zIndex:0}} title="剧本编辑"  iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
         <Drawer open={this.state.openMenu}>
           <AppBar title="操作箱" iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:false})}}><NavigationClose /></IconButton>}/>
-          <MenuItem onClick={this.handleSubmit}>保存</MenuItem>
+          <MenuItem onClick={this.handleSave}>保存</MenuItem>
           <MenuItem onClick={this.handleDelete}>删除</MenuItem>
           <MenuItem onClick={this.handleSaveExit}>保存并退出</MenuItem>
           <MenuItem onClick={this.handleExit}>退出</MenuItem>
@@ -737,18 +809,22 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </ToolbarGroup>
           </Toolbar>
           <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-            <table><tr><th>剧本名称：</th><th>
+            <table style={{width: "90%", margin:"auto"}}>
+            <tr><th style={{minWidth: 130}}>剧本名称：</th><th>
               <input
                 type="text"
                 value={this.state.gameinfo.name}
                 onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, name: evt.target.value}})}}
-              /></th></tr><tr><th>
-              剧本简介：</th><th>
+              /></th></tr>
+              <tr><th>剧本简介：</th><th>
               <input
                 type="text"
                 value={this.state.gameinfo.descripion}
                 onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
               /></th></tr>
+              <tr><th>详细介绍:</th>
+              <th><textarea rows="3" cols="100" name="content" value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""} onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}} style={{margin:10, width:"98%"}}/>
+              </th></tr>
             </table>
             <div className="characterlist">
               <table className="table table-striped">
@@ -756,7 +832,6 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                   <tr className="tableHead">
                     <th>预览</th>
                     <th>帮助</th>
-                    <th>选择</th>
                     <th>上传</th>
                   </tr>
                   <tr>
@@ -766,32 +841,32 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                     </th><th>
                     <Helper step={7} />
                     </th>
-                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
-                      <button type="button" onClick={this.handleGameImgUpload('icon')} className="small">上传游戏图标</button>
+                      {this.state.loadingimg!=="icon"&&<Upload {...this.iconuploaderProps}><button type="button" className="small">上传游戏图标</button></Upload>}
+                      {this.state.loadingimg==="icon"&&<CircularProgress size={40} thickness={8} />}
                     </th>
                   </tr>
                   <tr>
                     <th >
                     {this.state.gameinfo.coverurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,1)} >预览游戏封面</button>}
-                    {!this.state.gameinfo.coverurl && <button type="button" className="small" disabled="disabled" >预览游戏封面</button>}
+                    {!this.state.gameinfo.coverurl && <button type="button" className="small" disabled="disabled" >暂无游戏封面</button>}
                     </th><th>
                     <Helper step={8} />
                     </th>
-                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
-                      <button type="button" onClick={this.handleGameImgUpload('cover')} className="small">上传游戏封面</button>
+                      {this.state.loadingimg!=="cover"&&<Upload {...this.coveruploaderProps}><button type="button" className="small">上传游戏封面</button></Upload>}
+                      {this.state.loadingimg==="cover"&&<CircularProgress size={40} thickness={8} />}
                     </th>
                   </tr>
                   <tr>
                     <th >{this.state.gameinfo.mapurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,2)} >预览现场地图</button>}
-                    {!this.state.gameinfo.mapurl && <button type="button" className="small" disabled="disabled" >预览现场地图</button>}
+                    {!this.state.gameinfo.mapurl && <button type="button" className="small" disabled="disabled" >暂无现场地图</button>}
                     </th><th>
                     <Helper step={9} />
                     </th>
-                    <th><input type="file" name='sampleFile' onChange={this.onFileChange}/></th>
                     <th className="imgUploadButton">
-                      <button type="button" onClick={this.handleGameImgUpload('map')} className="small">上传现场地图</button>
+                      {this.state.loadingimg!=="map"&&<Upload {...this.mapuploaderProps}><button type="button" className="small">上传现场地图</button></Upload>}
+                      {this.state.loadingimg==="map"&&<CircularProgress size={40} thickness={8} />}
                     </th>
                   </tr>
                 </tbody>
@@ -808,7 +883,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
                 {this.state.instructinfo.map((instruct, idx) => (
                   <div style={{marginTop:20, border:"1px dashed"}}>
-                  <table className="table table-striped tableText" style={{margin:10}}>
+                  <table className="table table-striped tableText" style={{margin:10}}><tbody>
                   <tr>
                   <th className="shortInput">
                   <input
@@ -822,6 +897,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                   <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
                   </th>
                   </tr>
+                  </tbody>
                   </table>
                   <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
                   </div>
@@ -840,7 +916,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             <th style={{width:"10%"}}>
             <h4 >第{plot.plotid}阶段：</h4>
             </th>
-            <th style={{width:"50%"}}>
+            <th style={{width:"30%"}}>
             <input
               type="text"
               placeholder="信息类型"
@@ -849,12 +925,22 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             />
             </th>
             <th >
-            {plot.enableclue>0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >允许搜证</button>}
-            {plot.enableclue===0 && <button type="button" onClick={this.handleToggleenableclue(idx)} className="small" >不允许搜证</button>}
+            <div style={{ margin:"auto",maxWidth:100}}>
+            <Toggle
+              label="搜证:"
+              toggled={plot.enableclue>0}
+              onToggle={this.handleToggleenableclue(idx)}
+            />
+            </div>
             </th>
             <th >
-            {plot.enablevote>0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >允许投票</button>}
-            {plot.enablevote===0 && <button type="button" onClick={this.handleToggleenablevote(idx)} className="small" >不允许投票</button>}
+            <div style={{ margin:"auto",maxWidth:100}}>
+            <Toggle
+              label="投票:"
+              toggled={plot.enablevote>0}
+              onToggle={this.handleToggleenablevote(idx)}
+            />
+            </div>
             </th>
             <th >
             <button type="button" onClick={this.confirmation("deletePlot",idx)} className="small" >删除</button>
@@ -879,9 +965,9 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             {this.state.characterlist.map((characterlist, idx) => (
               <TabPanel>
                 <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                <ToolbarGroup><ToolbarTitle text="角色背景"/>
-                <Helper step={2} />
-                <ToolbarSeparator/></ToolbarGroup>
+                  <ToolbarGroup><ToolbarTitle text="基础信息"/>
+                  <Helper step={2} />
+                  <ToolbarSeparator/></ToolbarGroup>
                   <ToolbarGroup>
                     <span>禁止搜证地点：</span>
                     <DropDownMenu value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
@@ -891,6 +977,46 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                        ))}
                     </DropDownMenu>
                   </ToolbarGroup>
+                </Toolbar>
+                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                  <table style={{width: "90%", margin:"auto"}}>
+                  <tr><th style={{minWidth: 130}}>角色名称：</th><th>
+                    <input
+                      type="text"
+                      value={characterlist.charactername}
+                      onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+                        if (idx !== sidx) return characterlist;
+                        return { ...characterlist, charactername: evt.target.value };
+                      })}
+                    )}}
+                    /></th></tr>
+                    <tr><th>角色简介：</th><th>
+                    <input
+                      type="text"
+                      value={characterlist.characterdescription}
+                      onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+                        if (idx !== sidx) return characterlist;
+                        return { ...characterlist, characterdescription: evt.target.value };
+                      })}
+                    )}}
+                    /></th></tr>
+                    <tr><th>性别:</th>
+                    <th>
+                    <DropDownMenu value={characterlist.charactersex} onChange={(event, index, value)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+                      if (idx !== sidx) return characterlist;
+                      return { ...characterlist, charactersex: value };
+                    })}
+                  )}}>
+                      <MenuItem value="男"  primaryText="男" />
+                      <MenuItem value="女"  primaryText="女" />
+                    </DropDownMenu>
+                    </th></tr>
+                  </table>
+                </div>
+                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
+                <ToolbarGroup><ToolbarTitle text="角色背景"/>
+                <Helper step={2} />
+                <ToolbarSeparator/></ToolbarGroup>
                 </Toolbar>
                 <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
                   {characterlist.characterinfo.map((characterinfo, iidx) => (
@@ -918,9 +1044,9 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                     <table className="table table-striped tableText" style={{margin:10}}>
                    <tr>
                     <th style={{width:"10%"}}>
-                    <h4 style={{float:"left"}}>第{plot.plotid}阶段</h4>
+                    <h4>第{plot.plotid}阶段</h4>
                     </th>
-                    <th className="shortInput"  style={{float:"left",margin:0}}>
+                    <th>
                       <input
                         type="text"
                         placeholder="信息类型"
@@ -928,7 +1054,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                         disabled="disabled"
                       />
                     </th>
-                    <th><button type="button" onClick={this.handleAddCharacterPlot(idx,iidx)} className="small">添加</button></th>
+                    <th><button type="button" style={{backgroundColor: '#4286f4'}} onClick={this.handleAddCharacterPlot(idx,iidx)} className="small">添加模块</button></th>
                     </tr>
                     </table>
                       {plot.content.map((item, iiidx) => (
@@ -939,7 +1065,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                           value={item.type}
                           onChange={this.handleCharacterPlotTypeChange(idx,iidx,iiidx)}
                         /></th><th>
-                        <button type="button" onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)} className="small">删除</button></th></tr></table>
+                        <button type="button" onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)} className="small">删除此模块</button></th></tr></table>
                         <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
                     </div>
                     ))}
@@ -980,6 +1106,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                     <th>序号</th>
                     <th>文字内容</th>
                     <th>上传图片</th>
+                      <th></th>
                     <th>删除</th>
                   </tr>
                   {cluelocation.clues.map((clue, iidx) => (
@@ -996,9 +1123,10 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                   onChange={this.handleclueContentChange(idx,iidx)}
                 /></th>
                   <th>
-
-                  <input type="file" name='sampleFile' onChange={this.onFileChange} style={{width:"50%",display:"inline"}}/>
-                  <button type="button" className="small" onClick={this.handleUpload(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>上传</button>
+                  <Dropzone accept="image/jpeg, image/png" style={{backgroundColor:"#ededed", border:"1px dashed", maxWidth:150}} onDrop={this.onDrop(idx,iidx)}>
+                              <p>请将上传的图片拖到框内</p>
+                  </Dropzone></th>
+                    <th>
                   {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>预览</button>}
 
                   </th>
