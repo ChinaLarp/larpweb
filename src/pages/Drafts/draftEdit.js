@@ -386,14 +386,7 @@ onDrop= (idx,iidx) => (files) => {
     this.setState({ clueinfo: newcluelist });
     })
 }
-onFileChange(e) {
-         files = e.target.files || e.dataTransfer.files;
-         if (!files.length) {
-             console.log('no files');
-         }
-         console.log(files);
-         console.log(files[0].name.split('.')[1])
-     }
+
 handleGameImgUpload = (cat) => (evt) =>{
        evt.preventDefault()
          var filename=this.state.gameinfo.id+cat+'.'+files[0].name.split('.')[1]
@@ -429,35 +422,7 @@ handleGameImgUpload = (cat) => (evt) =>{
            text: '图片上传成功!'
          });
 }
-handleUpload = (idx,iidx) => (evt) =>{
-    evt.preventDefault()
-      var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
-      console.log(filename)
-      const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-      let data = new FormData();
-        data.append('image', files.item(0), filename);
-        const config = {
-            headers: { 'content-type': 'multipart/form-data' }
-        }
-        axios.post(imageurl, data, config).then(response => {
-        const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
-          if (iidx !== sidx) return clue;
-          return { ...clue, image: filename };
-        });
-        const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
-          if (idx !== sidx) return clueinfo;
-          return { ...clueinfo, clues: newclueinfo };
-        });
-        this.setState({ clueinfo: newcluelist });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-        this.props.addFlashMessage({
-           type: 'success',
-           text: '图片上传成功!'
-         });
-}
+
 handleAddInstruction = () => {
     this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
 }
