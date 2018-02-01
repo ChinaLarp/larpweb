@@ -205,6 +205,9 @@ handleSaveExit = (evt) => {
    name:this.state.gameinfo.name,
    descripion:this.state.gameinfo.descripion,
    detailDescription:this.state.gameinfo.detailDescription,
+   malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+   femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
+   category:this.state.gameinfo.category,
    instruction:this.state.instructinfo,
    cluemethod:this.state.gameinfo.cluemethod,
    mapurl:this.state.gameinfo.mapurl,
@@ -255,6 +258,9 @@ handleSave = (evt) =>{
       name:this.state.gameinfo.name,
       descripion:this.state.gameinfo.descripion,
       detailDescription:this.state.gameinfo.detailDescription,
+      malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+      femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
+      category:this.state.gameinfo.category,
       instruction:this.state.instructinfo,
       cluemethod:this.state.gameinfo.cluemethod,
       mapurl:this.state.gameinfo.mapurl,
@@ -263,7 +269,7 @@ handleSave = (evt) =>{
       cluestatus:this.fillArray(this.state.clueinfo),
       signature:md5(this.state.game_id+"xiaomaomi")
     }).then(response => {
-        console.log("put game submitted" + this.state.name)
+        console.log("put game submitted")
       })
       .catch(error => {
         console.log(error);
@@ -338,9 +344,10 @@ handlePublish = (evt) =>{
       id: this.state.gameinfo.id,
       author: this.state.gameinfo.author,
       descripion: this.state.gameinfo.descripion,
+      detailDescription:this.state.gameinfo.detailDescription,
       playernumber: this.state.gameinfo.playernumber,
-      malenumber: this.state.gameinfo.malenumber,
-      femalenumber: this.state.gameinfo.femalenumber,
+      malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+      femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
       category: this.state.gameinfo.category,
       characterlist: this.state.gameinfo.characterlist,
       cluelocation:this.state.clueinfo,
@@ -786,6 +793,12 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                 type="text"
                 value={this.state.gameinfo.descripion}
                 onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
+              /></th></tr>
+              <tr><th>剧本类别：</th><th>
+              <input
+                type="text"
+                value={this.state.gameinfo.category}
+                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, category: evt.target.value}})}}
               /></th></tr>
               <tr><th>详细介绍:</th>
               <th><textarea rows="3" cols="100" name="content" value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""} onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}} style={{margin:10, width:"98%"}}/>
