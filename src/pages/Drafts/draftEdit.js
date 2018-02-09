@@ -337,7 +337,6 @@ handleDelete = (evt) =>{
 }
 handlePublish = (evt) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
-    //const url = 'https://backend.bestlarp.com/api/app';
     axios.post(url,{
       type: "game",
       name: this.state.gameinfo.name,

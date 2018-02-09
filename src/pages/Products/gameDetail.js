@@ -81,7 +81,7 @@ export default class GameDetail extends React.Component {
                   {
                     this.state.characterList.map((character, index)=>
                       (
-                        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-3" key={index} style={{textAlign:"left",padding:10, height:140}}>
+                        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-3" key={index} style={{textAlign:"left",padding:10, minHeight:140}}>
                         <h4>{character.name}</h4>
                         <p>{character.description}</p>
                         </div>
