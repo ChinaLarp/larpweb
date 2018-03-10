@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {
-  NavLink,
+  Link,
   HashRouter
 } from 'react-router-dom';
-import {Navbar, Nav, MenuItem,NavDropdown} from 'react-bootstrap';
+import {Navbar, Nav,MenuItem,NavDropdown} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../actions/authAction';
@@ -20,8 +20,8 @@ class Menu extends Component {
     if (this.props.auth.isAuthenticated===false) {
       User_info=
       <Nav pullRight>
-        <li className="menuItem"><NavLink to="/Loginscreen">登录</NavLink></li>
-        <li className="menuItem"><NavLink to="/Register">注册</NavLink></li>
+        <MenuItem className="menuItem" href="#/Loginscreen">登录</MenuItem>
+        <MenuItem className="menuItem" href="#/Register">注册</MenuItem>
       </Nav>
         ;
     } else {
@@ -36,29 +36,26 @@ class Menu extends Component {
 ;
     }
     return (
-
-      <HashRouter>
-         <Navbar inverse collapseOnSelect fixedTop className="NavBarTest">
+         <Navbar inverse collapseOnSelect fixedTop >
           <Navbar.Header>
-            <Navbar.Brand className="brandItem">
-              <NavLink exact to="/">全民侦探社</NavLink>
+            <Navbar.Brand className="brandItem" href="#/">
+              <Link exact to="/">全民侦探社</Link>
             </Navbar.Brand>
             <Navbar.Toggle style={{float:"right", width:44, textAligh:"center"}}/>
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <li className="menuItem"><NavLink exact to="/">官网首页</NavLink></li>
-              <li className="menuItem"><NavLink to="/posts">新闻公告</NavLink></li>
-              <li className="menuItem"><NavLink to="/games">游戏介绍</NavLink></li>
-              <li className="menuItem"><NavLink to="/draftList">我要创作</NavLink></li>
-              <li className="menuItem"><NavLink to="/contact">关于我们</NavLink></li>
+              <MenuItem className="menuItem" href="#/">官网首页</MenuItem>
+              <MenuItem className="menuItem" href="#/posts">新闻公告</MenuItem>
+              <MenuItem className="menuItem" href="#/games">游戏介绍</MenuItem>
+              <MenuItem className="menuItem" href="#/draftList">我要创作</MenuItem>
+              <MenuItem className="menuItem" href="#/contact">关于我们</MenuItem>
             </Nav>
             {User_info}
           </Navbar.Collapse>
         </Navbar>
 
 
-      </HashRouter>
 
     );
   }

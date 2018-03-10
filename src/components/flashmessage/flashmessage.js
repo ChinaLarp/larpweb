@@ -12,7 +12,7 @@ class FlashMessage extends React.Component {
   }
 
   render() {
-    const { id, type, text } = this.props.message;
+    const { id, type, text, timeStamp } = this.props.message;
     return (
       <div className={classnames('alert','alert-dismissable', {
         'alert-success': type === 'success',

@@ -22,9 +22,6 @@ import Register from './pages/Login/Register.js';
 import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 
 // Needed for onTouchTap
@@ -34,35 +31,31 @@ injectTapEventPlugin();
 class App extends Component {
 
   render() {
-
     return (
+      <HashRouter>
       <div className="App">
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-      <Menu style={{zIndex:1}}/>
+        <Menu style={{zIndex:1}}/>
         <div className="container content">
           <Header />
           <FlashMessagesList />
-        <HashRouter>
-          <div>
-            <Route exact path="/" component={Home}/>
-            <Route path="/13478545921/:_id" component={postEdit}/>
-            <Route path="/posts" component={posts}/>
-            <Route path="/games" component={Games}/>
-            <Route path="/draftList" component={draftList}/>
-            <Route path="/DraftCreate/:_id" component={DraftCreate}/>
-            <Route exact path="/DraftCreate" component={DraftCreate}/>
-            <Route path="/draftEdit/:_id" component={draftEdit}/>
-            <Route path="/contact" component={Contact}/>
-            <Route path="/Loginscreen" component={Loginscreen}/>
-            <Route path="/Register" component={Register}/>
-			      <Route path="/details/:_id" component={postsDetail}></Route>
-            <Route path="/gamedetails/:_id" component={GameDetail}></Route>
-          </div>
-        </HashRouter>
+          <Route exact path="/" component={Home}/>
+          <Route path="/13478545921/:_id" component={postEdit}/>
+          <Route path="/posts" component={posts}/>
+          <Route path="/games" component={Games}/>
+          <Route path="/draftList" component={draftList}/>
+          <Route path="/DraftCreate/:_id" component={DraftCreate}/>
+          <Route exact path="/DraftCreate" component={DraftCreate}/>
+          <Route path="/draftEdit/:_id" component={draftEdit}/>
+          <Route path="/contact" component={Contact}/>
+          <Route path="/Loginscreen" component={Loginscreen}/>
+          <Route path="/Register" component={Register}/>
+		      <Route path="/details/:_id" component={postsDetail}></Route>
+          <Route path="/gamedetails/:_id" component={GameDetail}></Route>
+        </div>
+        <Footer />
       </div>
-          <Footer />
-      </MuiThemeProvider>
-      </div>
+
+    </HashRouter>
     );
   }
 }

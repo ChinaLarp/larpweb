@@ -18,11 +18,9 @@ FlashMessagesList.propTypes = {
   messages: PropTypes.array.isRequired,
   deleteFlashMessage: PropTypes.func.isRequired
 }
-
-
 function mapStateToProps(state) {
   return {
-    messages: state.flashMessages
+    messages: state.flashMessages.filter(message=> message.timeStamp>Date.now()-5000)
   }
 }
 
