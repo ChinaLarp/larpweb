@@ -3,6 +3,8 @@ import { Carousel, Tabs } from 'antd';
 import top1 from '../assets/img/top1.png';
 import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
+import axios from 'axios';
+import queryString from 'query-string'
 //import './home.css';
 import Postsblock from './Posts/postsBlock.js';
 import {
@@ -13,7 +15,23 @@ import {
 
 
 class Home extends React.Component {
-
+  constructor(props){
+    super(props);
+    this.state={
+      weixinkey:'a21a422100ca899de42b0f3cbe107bd3',
+      weixinappid:'wx53e46ac9090180ea'
+    }
+  }
+    componentWillMount(){
+    console.log(this.props.location.search)
+      const params=queryString.parse(this.props.location.search)
+      console.log(params)
+      if (params.code){
+        axios.get('https://chinabackend.bestlarp.com/webunionid?appid='+this.state.weixinappid+'&secret='+this.state.weixinkey+'&grant_type=authorization_code&code='+params.code).then(res => {
+          console.log(res)
+        });
+      }
+    }
 
 
   render() {

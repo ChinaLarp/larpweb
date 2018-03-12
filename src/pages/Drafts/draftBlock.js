@@ -14,6 +14,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
+import { Badge } from 'react-bootstrap';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 class DraftBlock extends React.Component {
   constructor(props){
@@ -95,7 +96,7 @@ delete=()=> {
        >{this.state.errorMessage}
        </Dialog>
       <Toolbar style={{backgroundColor: '#cccccc'}} >
-      <ToolbarGroup><ToolbarTitle text="我的剧本"/>
+      <ToolbarGroup><ToolbarTitle text="我的剧本"/><Badge>{this.props.auth.drafts.length}</Badge>
       <ToolbarSeparator/></ToolbarGroup>
       <ToolbarGroup></ToolbarGroup>
       <ToolbarGroup>

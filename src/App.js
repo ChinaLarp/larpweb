@@ -29,7 +29,6 @@ import GameDetail from './pages/Products/gameDetail.js';
 injectTapEventPlugin();
 
 class App extends Component {
-
   render() {
     return (
       <HashRouter>

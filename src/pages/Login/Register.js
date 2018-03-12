@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Form, FormGroup, Col,FormControl,ControlLabel  } from 'react-bootstrap';
 class Register extends Component {
   constructor(props){
     super(props);
@@ -16,44 +17,44 @@ class Register extends Component {
   }
   render() {
     return (
-      <div>
-      <h3>新用户注册</h3>
-      { this.state.errors.form && <div className="alert alert-danger">{this.state.errors.form}</div> }
-        <MuiThemeProvider>
-          <div>
-           <TextField
-             hintText="请输入您的用户名"
-             floatingLabelText="用户名"
-             onChange = {(event,newValue) => this.setState({username:newValue})}
-             />
-           <br/>
-           <TextField
-             hintText="请输入您的电子邮箱"
-             type="email"
-             floatingLabelText="电子邮箱"
-             onChange = {(event,newValue) => this.setState({email:newValue})}
-             />
-           <br/>
-           <TextField
-             type = "password"
-             hintText="请输入您的密码"
-             floatingLabelText="密码"
-             onChange = {(event,newValue) => this.setState({password:newValue})}
-             />
-           <br/>
-           <TextField
-             type = "password"
-             hintText="请再次输入您的密码"
-             floatingLabelText="再次输入密码"
-             onChange = {(event,newValue) => this.setState({passwordcomfirm:newValue})}
-             />
-           <br/>
+      <Form style={{textAlign:'left'}}>
+            <FormGroup >
+            { this.state.errors.form && <div className="alert alert-danger">{this.state.errors.form}</div> }
+              <ControlLabel>用户名</ControlLabel>
+              <FormControl
+              type="text"
+              placeholder="请输入您的用户名"
+              value={this.state.username}
+              onChange = {(event) => {this.setState({username:event.target.value})}} />
+            </FormGroup>
+
+            <FormGroup >
+              <ControlLabel>电子邮箱</ControlLabel>
+              <FormControl
+              type="email"
+              placeholder="请输入您的电子邮箱"
+              value={this.state.email}
+              onChange = {(event) => {this.setState({email:event.target.value})}} />
+            </FormGroup>
+
+            <FormGroup>
+              <ControlLabel>登陆密码</ControlLabel>
+              <FormControl type="password"
+              placeholder="请设置您的密码"
+              value={this.state.password} onChange = {(event) => {this.setState({password:event.target.value})}}/>
+            </FormGroup>
+
+            <FormGroup>
+              <ControlLabel>确认密码</ControlLabel>
+              <FormControl type="password"
+              placeholder="请再次输入您的密码"
+              value={this.state.passwordcomfirm} onChange = {(event) => {this.setState({passwordcomfirm:event.target.value})}} />
+            </FormGroup>
+
            <div className="buttonAlignCenter">
            <RaisedButton label="提交" primary={true} onClick={(event) => this.handleClick(event)}/>
            </div>
-          </div>
-         </MuiThemeProvider>
-      </div>
+          </Form>
     );
   }
   isValid() {

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Form, FormGroup, Col,FormControl,ControlLabel  } from 'react-bootstrap';
 class Login extends Component {
 constructor(props){
   super(props);
@@ -14,6 +15,7 @@ constructor(props){
   }
  }
  handleClick(event){
+   console.log(this.state)
   this.props.login(this.state)
   .then(
     (res) => {
@@ -28,30 +30,33 @@ constructor(props){
  }
 render() {
     return (
-      <div style={{color:"orange"}}>
-      <h3>用户登录</h3>
-        <MuiThemeProvider>
+        <Form horizontal>
         { this.state.errors.form && <div className="alert alert-danger">{this.state.errors.form}</div> }
-          <div>
-           <TextField
-             hintText="请输入email或用户名"
-             floatingLabelText="用户名"
-             onChange = {(event,newValue) => this.setState({email:newValue})}
-             />
-           <br/>
-             <TextField
-               type="password"
-               hintText="请输入密码"
-               floatingLabelText="密码"
-               onChange = {(event,newValue) => this.setState({password:newValue})}
-               />
-             <br/>
+          <FormGroup controlId="formHorizontalEmail">
+            <Col componentClass={ControlLabel} sm={3}>
+              用户名
+            </Col>
+            <Col sm={9}>
+              <FormControl type="email" placeholder="email或用户名"
+              value={this.state.email}
+              onChange = {(event) => {this.setState({email:event.target.value})}}/>
+            </Col>
+          </FormGroup>
+
+          <FormGroup controlId="formHorizontalPassword">
+            <Col componentClass={ControlLabel} sm={3}>
+              密码
+            </Col>
+            <Col sm={9}>
+              <FormControl type="password" placeholder="请输入密码"
+              value={this.state.password}
+              onChange = {(event) => this.setState({password:event.target.value})} />
+            </Col>
+          </FormGroup>
              <div style={{marginTop:30}}>
                 <RaisedButton label="登录" primary={true} onClick={(event) => this.handleClick(event)}/>
             </div>
-         </div>
-         </MuiThemeProvider>
-      </div>
+          </Form>
     );
   }
 }
