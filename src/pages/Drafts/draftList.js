@@ -28,13 +28,12 @@ class DraftList extends React.Component {
     if (this.props.auth.isAuthenticated) {
       content= <DraftBlock/>;
     } else {
-      content = <HashRouter>
+      content =
       <div>
       <h3>想要创作属于你的推理剧本吗?</h3>
       <br/>
       <h3>大侦探，请先<NavLink to="/Loginscreen">登录/注册</NavLink>。</h3>
-      </div>
-      </HashRouter>;
+      </div>;
     }
     return(
         <div className="row" style={{maxWidth:1000, margin:'auto'}}>

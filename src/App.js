@@ -22,6 +22,7 @@ import Register from './pages/Login/Register.js';
 import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
+import ConstrolPenal from './pages/ConstrolPenal/ConstrolPenal.js';
 
 
 // Needed for onTouchTap
@@ -42,14 +43,14 @@ class App extends Component {
           <Route path="/posts" component={posts}/>
           <Route path="/games" component={Games}/>
           <Route path="/draftList" component={draftList}/>
-          <Route path="/DraftCreate/:_id" component={DraftCreate}/>
-          <Route exact path="/DraftCreate" component={DraftCreate}/>
+          <Route path="/DraftCreate/:_id?" component={DraftCreate}/>
           <Route path="/draftEdit/:_id" component={draftEdit}/>
           <Route path="/contact" component={Contact}/>
           <Route path="/Loginscreen" component={Loginscreen}/>
           <Route path="/Register" component={Register}/>
 		      <Route path="/details/:_id" component={postsDetail}></Route>
           <Route path="/gamedetails/:_id" component={GameDetail}></Route>
+          <Route path="/ConstrolPenal" component={ConstrolPenal}></Route>
         </div>
         <Footer />
       </div>
