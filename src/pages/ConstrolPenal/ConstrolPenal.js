@@ -1,27 +1,37 @@
 import React from 'react';
 import ConstrolPenalBlock from './ConstrolPenalBlock.js';
+import OpenidPanelBlock from './OpenidPanelBlock.js';
+import Cleaningup from './Cleaningup.js';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import queryString from 'query-string'
-
 class ConstrolPenal extends React.Component {
   constructor(props){
     super(props);
   }
+  hashchange(event){
+    console.log(event.newURL.split('?')[1])
+    const params=queryString.parse(event.newURL.split('?')[1])
+    console.log(params)
+    this.setState({params:params})
+  }
   componentWillMount(){
+    window.addEventListener("hashchange",this.hashchange.bind(this));
     if (this.props.location.search){
       const params=queryString.parse(this.props.location.search)
       this.setState({params:params})
     }
-
   }
   render(){
     let content
-    var params=queryString.parse(this.props.location.search)
-    console.log(params)
     if (this.props.auth.user.id==="5a273150c55b0d1ce0d6754d") {
-      console.log(this.state.params)
-      content= <ConstrolPenalBlock params={params}/>;
+      if (this.state.params.type==="openid"){
+        content= <OpenidPanelBlock params={this.state.params}/>;
+      }else if (this.state.params.type==="cleanup"){
+        content= <Cleaningup />;
+      }else{
+        content= <ConstrolPenalBlock params={this.state.params}/>;
+      }
     } else {
       console.log("no")
       content =

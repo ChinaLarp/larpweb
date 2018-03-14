@@ -16,41 +16,72 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import { Badge, Table } from 'react-bootstrap';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import TableItem from './TableItem.js'
+import OpenidBasicInfo from './OpenidBasicInfo.js'
 import UserItem from './UserItem.js'
 import queryString from 'query-string'
-class ConstrolPenalBlock extends React.Component {
+class OpenidPanelBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       openDialog:false,
       errorMessage:"",
-      display:null
+      display:null,
+      infomation:null,
     };
+  }
+  detectanddelete(userdata, i){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    var userid=userdata[i]._id
+    axios.get(url+'?type=table&tableid='+userdata[i].tableid+'&select=_id%20tableid')
+      .then(res => {
+        if (res.data.length==0){
+          console.log("deleting"+userid+", tableid:"+userdata[i].tableid)
+          axios.delete(url+'/'+userid,{
+            data:{ signature: md5(userid+"xiaomaomi") }
+          }).then(response => {
+            console.log("deleted"+userid)
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }else{
+          //console.log(i+userid)
+        }
+        if(userdata.length>(i+1)){
+          this.detectanddelete(userdata,i+1)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  cleanupuser(){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    axios.get(url+'?type=user&select=_id%20tableid')
+      .then(res => {
+        console.log()
+        this.detectanddelete(res.data,0)
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
   getlist(params){
     const url = "https://chinabackend.bestlarp.com/api/app";
-    if (params.type=="table"){
-      console.log("gettable")
-      axios.get(url+'?type=table&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
-        .then(res => {
-          console.log(res.data.length)
-          this.setState({ tablelist: res.data, display: "table"});
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }else if (params.type=="user"){
-      console.log("getuser")
-      axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20characterid%20usernickname%20broadcast%20date')
-        .then(res => {
-          console.log(res.data.length)
-          this.setState({ tablelist: res.data, display: "user"});
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    console.log(url+'?type=openid&id='+ params.openid +'&select=_id%20id%20name%20broadcast%20date%20login%20purchase')
+    axios.get(url+'?type=openid&id='+ params.openid +'&select=_id%20id%20name%20broadcast%20date%20login%20purchase')
+      .then(res => {
+        console.log(res.data[0])
+       if (res.data.length>0){
+         this.setState({ information: res.data[0] ,display: "info"});
+       }else{
+         this.setState({ display: "nothing"});
+       }
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
   componentWillReceiveProps(nextProps){
     console.log(nextProps.params)
@@ -64,49 +95,12 @@ class ConstrolPenalBlock extends React.Component {
   }
 
   render() {
-    let tablelist;
     let content
-    if(this.state.display=="table"){
-      tablelist = this.state.tablelist.map((table, idx) => {
-        return (
-              <TableItem id={table._id} hostid={table.hostid} tableid={table.tableid} gamename={table.gamename} roundnumber={table.roundnumber} date={table.date}/>
-        );
-      });
-      content = <Table striped bordered condensed hover>
-       <thead>
-         <tr>
-           <th>#</th>
-           <th>游戏名称</th>
-           <th>创建日期</th>
-           <th>回合</th>
-           <th>人数</th>
-           <th>操作</th>
-         </tr>
-       </thead>
-       <tbody>
-           {tablelist}
-       </tbody>
-     </Table>;
-    }else if (this.state.display=="user"){
-      tablelist = this.state.tablelist.map((user, idx) => {
-        return (
-              <UserItem id={user._id} characterid={user.characterid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
-        );
-      });
-      content = <Table striped bordered condensed hover>
-       <thead>
-         <tr>
-           <th>#</th>
-           <th>创建日期</th>
-           <th>回合</th>
-           <th>操作</th>
-         </tr>
-       </thead>
-       <tbody>
-           {tablelist}
-       </tbody>
-     </Table>;
-    }else {
+    if(this.state.display==="info"){
+      content = <OpenidBasicInfo name={this.state.information.name} broadcast={this.state.information.broadcast} date={this.state.information.date} />
+    }else if (this.state.display==="nothing"){
+      content = <h1>用户不存在</h1>
+    } else  {
       content=(<CircularProgress size={80} thickness={5} />)
       console.log("loading")
     }
@@ -137,8 +131,7 @@ class ConstrolPenalBlock extends React.Component {
       <ToolbarGroup></ToolbarGroup>
       <ToolbarGroup>
         <FontIcon className="muidocs-icon-custom-sort" />
-        <ToolbarSeparator /><RaisedButton label="创建新剧本" primary={true} onClick={()=>
-        this.context.router.history.push('/DraftCreate')}/>
+        <ToolbarSeparator /><RaisedButton label="清理用户" primary={true} onClick={this.cleanupuser.bind(this)}/>
 
       </ToolbarGroup>
      </Toolbar>
@@ -147,10 +140,10 @@ class ConstrolPenalBlock extends React.Component {
     )
   }
   }
-  ConstrolPenalBlock.contextTypes = {
+  OpenidPanelBlock.contextTypes = {
   router: PropTypes.object.isRequired
   }
-  ConstrolPenalBlock.propTypes = {
+  OpenidPanelBlock.propTypes = {
   auth: PropTypes.object.isRequired,
   getdraft: PropTypes.func.isRequired,
   }
@@ -159,4 +152,4 @@ class ConstrolPenalBlock extends React.Component {
     auth: state.auth
   };
   }
-export default connect(mapStateToProps, {getdraft})(ConstrolPenalBlock);
+export default OpenidPanelBlock;
