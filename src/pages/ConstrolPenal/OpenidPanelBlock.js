@@ -5,20 +5,17 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card} from 'antd';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getdraft } from '../../actions/authAction.js';
 import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
-import { Badge, Table } from 'react-bootstrap';
+import { Badge } from 'react-bootstrap';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
-import UserItem from './UserItem.js'
-import queryString from 'query-string'
+import LoginTrack from './LoginTrack.js'
+import Tabletrack from './Tabletrack.js'
+import Usertrack from './Usertrack.js'
 class OpenidPanelBlock extends React.Component {
   constructor(props){
     super(props);
@@ -97,7 +94,12 @@ class OpenidPanelBlock extends React.Component {
   render() {
     let content
     if(this.state.display==="info"){
-      content = <OpenidBasicInfo name={this.state.information.name} broadcast={this.state.information.broadcast} date={this.state.information.date} />
+      content = <div>
+      <OpenidBasicInfo name={this.state.information.name} broadcast={this.state.information.broadcast} date={this.state.information.date} />
+      <LoginTrack login={this.state.information.login}/>
+      <Tabletrack id={this.state.information.id}/>
+      <Usertrack id={this.state.information.id}/>
+      </div>
     }else if (this.state.display==="nothing"){
       content = <h1>用户不存在</h1>
     } else  {
@@ -146,10 +148,5 @@ class OpenidPanelBlock extends React.Component {
   OpenidPanelBlock.propTypes = {
   auth: PropTypes.object.isRequired,
   getdraft: PropTypes.func.isRequired,
-  }
-  function mapStateToProps(state) {
-  return {
-    auth: state.auth
-  };
   }
 export default OpenidPanelBlock;

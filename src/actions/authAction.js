@@ -50,3 +50,24 @@ export function login(data) {
     });
   }
 }
+export function wxlogin(openid,username) {
+  console.log("called")
+  var apiBaseUrl = "https://chinabackend.bestlarp.com";
+  var data={
+    openid:openid,
+    username:username
+  }
+  return dispatch => {
+    return axios.post(apiBaseUrl+'/wxauth', data).then(res => {
+      console.log(res)
+      const token = res.data.token;
+      localStorage.setItem('jwtToken', token);
+      setAuthorizationToken(token);
+      var user=jwtDecode(token)
+      console.log(user)
+      //var modified = Object.assign({},{...user,username:username})
+      dispatch(setCurrentUser(user));
+      dispatch(getdraft(jwtDecode(localStorage.jwtToken)));
+    });
+  }
+}

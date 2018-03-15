@@ -13,7 +13,7 @@ class FlashMessage extends React.Component {
   }
 
   render() {
-    const { id, type, text, timeStamp } = this.props.message;
+    const { type, text } = this.props.message;
     return (
       <Alert bsStyle={classnames({
         'success': type === 'success',

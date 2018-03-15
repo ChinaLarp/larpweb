@@ -5,9 +5,6 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card} from 'antd';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getdraft } from '../../actions/authAction.js';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -15,7 +12,6 @@ import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import { Badge, Table } from 'react-bootstrap';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
 import UserItem from './UserItem.js'
 import queryString from 'query-string'
@@ -73,14 +69,14 @@ class Cleaningup extends React.Component {
       .then(res => {
         if (res.data.length!=0 && !res.data[0].name){
           console.log("deleting"+tableid+", hostid:"+tabledata[i].hostid)
-          axios.delete(url+'/'+tableid,{
+          /*axios.delete(url+'/'+tableid,{
             data:{ signature: md5(tableid+"xiaomaomi") }
           }).then(response => {
             console.log("deleted"+tableid)
             })
             .catch(error => {
               console.log(error);
-            });
+            });*/
         }else{
           console.log(i+":"+tableid)
         }

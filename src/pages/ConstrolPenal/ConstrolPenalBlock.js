@@ -18,6 +18,7 @@ import { Badge, Table } from 'react-bootstrap';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import TableItem from './TableItem.js'
 import UserItem from './UserItem.js'
+import OpenItem from './OpenItem.js'
 import queryString from 'query-string'
 class ConstrolPenalBlock extends React.Component {
   constructor(props){
@@ -31,6 +32,7 @@ class ConstrolPenalBlock extends React.Component {
   getlist(params){
     const url = "https://chinabackend.bestlarp.com/api/app";
     if (params.type=="table"){
+      this.setState({ display: null});
       console.log("gettable")
       axios.get(url+'?type=table&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
         .then(res => {
@@ -41,11 +43,23 @@ class ConstrolPenalBlock extends React.Component {
           console.log(error);
         });
     }else if (params.type=="user"){
+      this.setState({ display: null});
       console.log("getuser")
       axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20characterid%20usernickname%20broadcast%20date')
         .then(res => {
           console.log(res.data.length)
           this.setState({ tablelist: res.data, display: "user"});
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }else if (params.type=="openidlist"){
+      this.setState({ display: null});
+      console.log("getuser")
+      axios.get(url+'?type=openid&select=_id%20name%20broadcast%20date%20id')
+        .then(res => {
+          console.log(res.data.length)
+          this.setState({ tablelist: res.data, display: "openidlist"});
         })
         .catch(error => {
           console.log(error);
@@ -91,6 +105,25 @@ class ConstrolPenalBlock extends React.Component {
       tablelist = this.state.tablelist.map((user, idx) => {
         return (
               <UserItem id={user._id} characterid={user.characterid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
+        );
+      });
+      content = <Table striped bordered condensed hover>
+       <thead>
+         <tr>
+           <th>#</th>
+           <th>创建日期</th>
+           <th>回合</th>
+           <th>操作</th>
+         </tr>
+       </thead>
+       <tbody>
+           {tablelist}
+       </tbody>
+     </Table>;
+   }else if (this.state.display=="openidlist"){
+      tablelist = this.state.tablelist.map((user, idx) => {
+        return (
+              <OpenItem id={user._id} name={user.name} broadcast={user.broadcast} id={user.id} date={user.date}/>
         );
       });
       content = <Table striped bordered condensed hover>

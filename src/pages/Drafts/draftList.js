@@ -5,10 +5,7 @@
 
 import React from 'react';
 import DraftBlock from './draftBlock.js';
-import {
-  NavLink,
-  HashRouter
-} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 

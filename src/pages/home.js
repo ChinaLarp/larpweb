@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Carousel, Tabs } from 'antd';
 import top1 from '../assets/img/top1.png';
 import top2 from '../assets/img/top2.png';
 import top3 from '../assets/img/top3.png';
 import axios from 'axios';
 import queryString from 'query-string'
+import { wxlogin } from '../actions/authAction';
 //import './home.css';
 import Postsblock from './Posts/postsBlock.js';
 import {
@@ -28,7 +31,10 @@ class Home extends React.Component {
       console.log(params)
       if (params.code){
         axios.get('https://chinabackend.bestlarp.com/webunionid?appid='+this.state.weixinappid+'&secret='+this.state.weixinkey+'&grant_type=authorization_code&code='+params.code).then(res => {
-          console.log(res)
+          axios.get('https://chinabackend.bestlarp.com/webuserinfo?access_token='+res.data.access_token+'&openid='+res.data.openid).then(res => {
+            console.log(res.data)
+            this.props.wxlogin(res.data.openid,res.data.nickname)
+          });
         });
       }
     }
@@ -74,4 +80,13 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  wxlogin: PropTypes.func.isRequired,
+}
+function mapStateToProps(state) {
+  return {
+    auth: state.auth
+  };
+}
+
+export default connect(mapStateToProps, {  wxlogin })(Home);

@@ -30,8 +30,9 @@ class Menu extends Component {
       <Nav pullRight>
       <NavDropdown  className="menuItem" title={this.props.auth.user.username} id="basic-nav-dropdown">
           <MenuItem href="#/draftList"> 我的剧本</MenuItem>
-          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=table">用户数据</MenuItem>}
+          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=table">房间列表</MenuItem>}
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=cleanup">清理数据</MenuItem>}
+          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=openidlist">用户列表</MenuItem>}
           <MenuItem divider />
           <MenuItem ><div onClick={this.props.logout}>登出</div></MenuItem>
         </NavDropdown>
