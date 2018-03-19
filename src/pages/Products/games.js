@@ -1,17 +1,12 @@
 import React from 'react';
-import { Pagination} from 'antd';
+import { Pagination, Card, Col, Row } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import Gameitem from './gameitem.js'
 
 class Products extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-    };
-  }
-  componentDidMount(){
-
   }
   render() {
     let gameList;
@@ -20,44 +15,32 @@ class Products extends React.Component {
     } else {
       gameList = this.props.products.products.map((game, index) => {
       var link='/gamedetails/' + game._id;
-      //<Link to={link} className='gamelink'>{game.name}</Link>
         return (
-          <div className='card col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6'  key={index} style={{borderBottom:"1px dashed",height:450}}>
-          <img className="card-img-top gameImg" src={require("../../assets/pic/"+game.coverurl)} alt={game.coverurl} style={{float:"left",width:"50%"}}/>
-            <div className="card-block" style={{float:"right",textAlign:"left",width:"48%"}}>
-              <h4 className="card-title"><Link to={link}>{game.name}</Link></h4>
-              <ul className="list-group list-group-flush">
-              <li><span>人数：</span>{game.playernumber}</li>
-              <li><span>男性角色数：</span>{game.malenumber}</li>
-              <li><span>女性角色数：</span>{game.femalenumber}</li>
-              <li><span>风格：</span>{game.category}</li>
-              <li className="gameDescription"><span>介绍：</span>{game.descripion}</li>
-              <li><span>游戏价格：</span>免费体验</li>
-              </ul>
-            </div>
-          </div>
+        <Col span={8} key = {index} >
+          <Gameitem link={link} game={game} src={require("../../assets/pic/"+game.coverurl)}/>
+        </Col>
         );
       });
     }
 
 
     return(
+      <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div style={{ background: '#ECECEC', padding: '30px' }}>
+        <Row gutter={16} type="flex" justify="space-between">
+          {gameList}
+        </Row>
+      </div>
+      <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <Pagination total={this.props.products.products.length}
+          showTotal={total => 'Total '+total+' items'}
+          pageSize={12}
+          defaultCurrent={1}/>
+      </div>
+      </div>
 
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                  {gameList}
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <Pagination total={this.props.products.products.length}
-                showTotal={total => 'Total '+total+' items'}
-                pageSize={12}
-                defaultCurrent={1}/>
-
-              </div>
-            </div>
       )
  }
-}
-Products.propTypes = {
-  auth: PropTypes.object.isRequired
 }
 function mapStateToProps(state) {
   return {
