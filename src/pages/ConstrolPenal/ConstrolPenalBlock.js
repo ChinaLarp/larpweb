@@ -5,7 +5,7 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card} from 'antd';
+import {Card,Button} from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -26,18 +26,31 @@ class ConstrolPenalBlock extends React.Component {
     this.state = {
       openDialog:false,
       errorMessage:"",
-      display:null
+      display:null,
+      tablestart:0,
+      title:"加载中。。。"
     };
+  }
+  fetchtable(e){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    axios.get(url+'?type=table&skip='+this.state.tablestart+'&limit=10&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
+      .then(res => {
+        console.log(res.data.length)
+        this.setState({ tablelist: this.state.tablelist.concat(res.data),tablestart:this.state.tablestart+10});
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
   getlist(params){
     const url = "https://chinabackend.bestlarp.com/api/app";
     if (params.type=="table"){
       this.setState({ display: null});
       console.log("gettable")
-      axios.get(url+'?type=table&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
+      axios.get(url+'?type=table&limit=10&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
         .then(res => {
           console.log(res.data.length)
-          this.setState({ tablelist: res.data, display: "table"});
+          this.setState({ tablelist: res.data, display: "table",title: "房间列表", tablestart:this.state.tablestart+10});
         })
         .catch(error => {
           console.log(error);
@@ -45,10 +58,10 @@ class ConstrolPenalBlock extends React.Component {
     }else if (params.type=="user"){
       this.setState({ display: null});
       console.log("getuser")
-      axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20characterid%20usernickname%20broadcast%20date')
+      axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20tableid%20characterid%20usernickname%20broadcast%20date')
         .then(res => {
           console.log(res.data.length)
-          this.setState({ tablelist: res.data, display: "user"});
+          this.setState({ tablelist: res.data,title: "用户列表", display: "user"});
         })
         .catch(error => {
           console.log(error);
@@ -59,7 +72,7 @@ class ConstrolPenalBlock extends React.Component {
       axios.get(url+'?type=openid&select=_id%20name%20broadcast%20date%20id')
         .then(res => {
           console.log(res.data.length)
-          this.setState({ tablelist: res.data, display: "openidlist"});
+          this.setState({ tablelist: res.data,title: "玩家列表", display: "openidlist"});
         })
         .catch(error => {
           console.log(error);
@@ -104,13 +117,14 @@ class ConstrolPenalBlock extends React.Component {
     }else if (this.state.display=="user"){
       tablelist = this.state.tablelist.map((user, idx) => {
         return (
-              <UserItem id={user._id} characterid={user.characterid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
+              <UserItem id={user._id} characterid={user.characterid} tableid={user.tableid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
         );
       });
       content = <Table striped bordered condensed hover>
        <thead>
          <tr>
-           <th>#</th>
+           <th>所在房间</th>
+           <th>角色#</th>
            <th>创建日期</th>
            <th>回合</th>
            <th>操作</th>
@@ -145,38 +159,10 @@ class ConstrolPenalBlock extends React.Component {
     }
 
     return (
-      <div >
-      <Dialog
-         title="Dialog With Actions"
-         actions={[
-             <RaisedButton
-               label="取消"
-               onClick={()=>(this.setState({openDialog:false}))}
-             />,
-             <RaisedButton
-               label="确认"
-               secondary={true}
-               onClick={this.delete}
-             />,
-           ]}
-         modal={false}
-         open={this.state.openDialog}
-         onRequestClose={()=>(this.setState({openDialog:false}))}
-       >{this.state.errorMessage}
-       </Dialog>
-      <Toolbar style={{backgroundColor: '#cccccc'}} >
-      <ToolbarGroup><ToolbarTitle text="数据管理"/><Badge>{this.state.tablelist&&this.state.tablelist.length}</Badge>
-      <ToolbarSeparator/></ToolbarGroup>
-      <ToolbarGroup></ToolbarGroup>
-      <ToolbarGroup>
-        <FontIcon className="muidocs-icon-custom-sort" />
-        <ToolbarSeparator /><RaisedButton label="创建新剧本" primary={true} onClick={()=>
-        this.context.router.history.push('/DraftCreate')}/>
-
-      </ToolbarGroup>
-     </Toolbar>
-     {content}
-     </div>
+      <Card title={<div>{this.state.title}<Badge>{ this.state.tablelist ? this.state.tablelist.length:0}</Badge></div>}>
+          {content}
+      {this.state.display=="table" && <Button type="primary" onClick={this.fetchtable.bind(this)}>加载更多</Button>}
+     </Card>
     )
   }
   }

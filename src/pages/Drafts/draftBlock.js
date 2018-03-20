@@ -5,7 +5,7 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card} from 'antd';
+import {Card, Button} from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -70,6 +70,7 @@ delete=()=> {
               {game.type==="draft" && <Link to={link} className='gamelink'>编辑中</Link>}
               {game.type==="game" && <Link to={link} className='gamelink'>已发布</Link>}
               <a className='gamelink' onClick={this.removeItem(idx)}>删除</a>
+              <a className='gamelink' href="#">统计</a>
               </li>
         );
       });
@@ -101,14 +102,13 @@ delete=()=> {
       <ToolbarGroup></ToolbarGroup>
       <ToolbarGroup>
         <FontIcon className="muidocs-icon-custom-sort" />
-        <ToolbarSeparator /><RaisedButton label="创建新剧本" primary={true} onClick={()=>
-        this.context.router.history.push('/DraftCreate')}/>
+        <ToolbarSeparator /><Button href="#" onClick={()=>this.context.router.history.push('/DraftCreate')}>创建新剧本</Button>
 
       </ToolbarGroup>
      </Toolbar>
 
-       <Card className='bodyStruc'>
-       <ul id='gamesList'>{gamesList}</ul>
+       <Card className="bodyStruc">
+       <ul>{gamesList}</ul>
        </Card>
      </div>
     )

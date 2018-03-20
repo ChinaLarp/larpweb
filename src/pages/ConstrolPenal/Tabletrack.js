@@ -33,7 +33,7 @@ class LoginTrack extends React.Component {
       content = <Table striped bordered condensed hover>
        <thead>
          <tr>
-           <th>#</th>
+           <th>创建房间</th>
            <th>游戏名称</th>
            <th>创建日期</th>
            <th>回合</th>

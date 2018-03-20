@@ -5,6 +5,7 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
+import {Card} from 'antd'
 import PropTypes from 'prop-types';
 import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
@@ -108,37 +109,9 @@ class OpenidPanelBlock extends React.Component {
     }
 
     return (
-      <div >
-      <Dialog
-         title="Dialog With Actions"
-         actions={[
-             <RaisedButton
-               label="取消"
-               onClick={()=>(this.setState({openDialog:false}))}
-             />,
-             <RaisedButton
-               label="确认"
-               secondary={true}
-               onClick={this.delete}
-             />,
-           ]}
-         modal={false}
-         open={this.state.openDialog}
-         onRequestClose={()=>(this.setState({openDialog:false}))}
-       >{this.state.errorMessage}
-       </Dialog>
-      <Toolbar style={{backgroundColor: '#cccccc'}} >
-      <ToolbarGroup><ToolbarTitle text="数据管理"/><Badge>{this.state.tablelist&&this.state.tablelist.length}</Badge>
-      <ToolbarSeparator/></ToolbarGroup>
-      <ToolbarGroup></ToolbarGroup>
-      <ToolbarGroup>
-        <FontIcon className="muidocs-icon-custom-sort" />
-        <ToolbarSeparator /><RaisedButton label="清理用户" primary={true} onClick={this.cleanupuser.bind(this)}/>
-
-      </ToolbarGroup>
-     </Toolbar>
-     {content}
-     </div>
+    <Card title="用户信息">
+      {content}
+     </Card>
     )
   }
   }

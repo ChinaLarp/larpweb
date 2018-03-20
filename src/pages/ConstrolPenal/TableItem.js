@@ -3,6 +3,7 @@ import axios from 'axios';
 import md5 from 'md5'
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
+import { Button } from 'antd';
 class TableItem extends React.Component {
   constructor(props){
     super(props);
@@ -24,10 +25,10 @@ class TableItem extends React.Component {
       });
   }
   componentWillMount(){
-    const url = "https://chinabackend.bestlarp.com/api/app";
-    axios.get(url+'?type=user&tableid='+this.props.tableid+'&select=_id')
+    const url = "https://chinabackend.bestlarp.com/counttable";
+    axios.get(url+'?tableid='+this.props.tableid)
       .then(res => {
-        this.setState({length:res.data.length})
+        this.setState({length:res.data})
       })
       .catch(error => {
         console.log(error);
@@ -45,9 +46,8 @@ class TableItem extends React.Component {
       <td>{this.props.roundnumber}</td>
       <td>{this.state.length}</td>
       <td>
-      {!this.state.deleted && <RaisedButton label="删除" primary={true}  onClick={this.deleteroom.bind(this)}/>}
-      <RaisedButton label="创建者" primary={true} href={hosturl} />
-      <RaisedButton label="房间" primary={true} href={roomurl} />
+      {!this.state.deleted &&<div><Button type="primary" href={roomurl}>房间</Button>  <Button type="primary" href={hosturl}>创建者</Button>  <Button type="danger" onClick={this.deleteroom.bind(this)} href="/">移除</Button></div>}
+      {this.state.deleted &&"已被移除"}
       </td>
     </tr>
     )

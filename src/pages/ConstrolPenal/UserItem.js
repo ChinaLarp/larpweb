@@ -1,6 +1,7 @@
 import React  from 'react';
 import axios from 'axios';
-import md5 from 'md5'
+import md5 from 'md5';
+import { Button } from 'antd';
 import RaisedButton from 'material-ui/RaisedButton';
 class UserItem extends React.Component {
   constructor(props){
@@ -24,12 +25,13 @@ class UserItem extends React.Component {
     const hosturl = '/#/ConstrolPenal/?type=openid&openid=' + this.props.usernickname
     return (
       <tr>
-      <td>{this.state.deleted?"已删":this.props.characterid}</td>
+      <td>{this.state.deleted?"已删":this.props.tableid}</td>
+      <td>{this.props.characterid}</td>
       <td>{this.props.date.substring(0,10)}</td>
       <td>{this.props.broadcast}</td>
       <td>
-      {!this.state.deleted && <RaisedButton label="删除"  onClick={this.deleteroom.bind(this)}/>}
-      <RaisedButton label="用户" primary={true} href={hosturl} />
+       {!this.state.deleted &&<div><Button type="primary" href={hosturl}>用户</Button> <Button type="danger" onClick={this.deleteroom.bind(this)} href="/">移除</Button></div>}
+       {this.state.deleted &&"已被移除"}
       </td>
     </tr>
     )
