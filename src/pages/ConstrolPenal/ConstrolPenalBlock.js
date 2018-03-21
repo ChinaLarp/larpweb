@@ -27,13 +27,12 @@ class ConstrolPenalBlock extends React.Component {
       openDialog:false,
       errorMessage:"",
       display:null,
-      tablestart:0,
       title:"加载中。。。"
     };
   }
   fetchtable(e){
     const url = "https://chinabackend.bestlarp.com/api/app";
-    axios.get(url+'?type=table&skip='+this.state.tablestart+'&limit=10&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
+    axios.get(url+'?type=table&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid%20userreferences&populate=userreferences')
       .then(res => {
         console.log(res.data.length)
         this.setState({ tablelist: this.state.tablelist.concat(res.data),tablestart:this.state.tablestart+10});
@@ -47,7 +46,7 @@ class ConstrolPenalBlock extends React.Component {
     if (params.type=="table"){
       this.setState({ display: null});
       console.log("gettable")
-      axios.get(url+'?type=table&limit=10&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
+      axios.get(url+'?type=table&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid%20userreferences&populate=userreferences')
         .then(res => {
           console.log(res.data.length)
           this.setState({ tablelist: res.data, display: "table",title: "房间列表", tablestart:this.state.tablestart+10});
@@ -58,7 +57,7 @@ class ConstrolPenalBlock extends React.Component {
     }else if (params.type=="user"){
       this.setState({ display: null});
       console.log("getuser")
-      axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20tableid%20characterid%20usernickname%20broadcast%20date')
+      axios.get(url+'?type=user&tableid='+ params.tableid +'&select=_id%20tableid%20characterid%20usernickname%20broadcast%20date%20reference&populate=reference')
         .then(res => {
           console.log(res.data.length)
           this.setState({ tablelist: res.data,title: "用户列表", display: "user"});
@@ -96,7 +95,7 @@ class ConstrolPenalBlock extends React.Component {
     if(this.state.display=="table"){
       tablelist = this.state.tablelist.map((table, idx) => {
         return (
-              <TableItem id={table._id} hostid={table.hostid} tableid={table.tableid} gamename={table.gamename} roundnumber={table.roundnumber} date={table.date}/>
+              <TableItem id={table._id} hostid={table.hostid} tableid={table.tableid} gamename={table.gamename} userreferences={table.userreferences} roundnumber={table.roundnumber} date={table.date}/>
         );
       });
       content = <Table striped bordered condensed hover>
@@ -117,13 +116,14 @@ class ConstrolPenalBlock extends React.Component {
     }else if (this.state.display=="user"){
       tablelist = this.state.tablelist.map((user, idx) => {
         return (
-              <UserItem id={user._id} characterid={user.characterid} tableid={user.tableid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
+              <UserItem id={user._id} characterid={user.characterid} reference={user.reference} tableid={user.tableid} usernickname={user.usernickname} broadcast={user.broadcast} date={user.date}/>
         );
       });
       content = <Table striped bordered condensed hover>
        <thead>
          <tr>
            <th>所在房间</th>
+           <th>用户</th>
            <th>角色#</th>
            <th>创建日期</th>
            <th>回合</th>

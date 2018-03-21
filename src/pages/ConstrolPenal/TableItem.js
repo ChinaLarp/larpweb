@@ -8,7 +8,6 @@ class TableItem extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      length: "...",
       deleted:false
     }
   }
@@ -17,22 +16,21 @@ class TableItem extends React.Component {
     axios.delete(url+'/'+this.props.id,{
       data:{ signature: md5(this.props.id+"xiaomaomi") }
     }).then(response => {
-      console.log("deleted")
+      console.log("deleted table "+ this.props.id )
       this.setState({deleted:true})
       })
       .catch(error => {
         console.log(error);
       });
-  }
-  componentWillMount(){
-    const url = "https://chinabackend.bestlarp.com/counttable";
-    axios.get(url+'?tableid='+this.props.tableid)
-      .then(res => {
-        this.setState({length:res.data})
+      this.props.userreferences.map(user=>{
+        axios.delete(url+'/'+user._id,{
+          data:{ signature: md5(user._id+"xiaomaomi") }
+        }).then(response => {
+          console.log("deleted user " + user._id)
+        }).catch(error => {
+            console.log(error);
+          });
       })
-      .catch(error => {
-        console.log(error);
-      });
   }
   render() {
     const hosturl = '/#/ConstrolPenal/?type=openid&openid=' + this.props.hostid
@@ -44,9 +42,9 @@ class TableItem extends React.Component {
       <td>{this.props.gamename}</td>
       <td>{this.props.date.substring(0,10)}</td>
       <td>{this.props.roundnumber}</td>
-      <td>{this.state.length}</td>
+      <td>{this.props.userreferences.length}</td>
       <td>
-      {!this.state.deleted &&<div><Button type="primary" href={roomurl}>房间</Button>  <Button type="primary" href={hosturl}>创建者</Button>  <Button type="danger" onClick={this.deleteroom.bind(this)} href="/">移除</Button></div>}
+      {!this.state.deleted &&<span><Button type="primary" href={roomurl}>房间</Button>  <Button type="primary" href={hosturl}>创建者</Button>  <Button type="danger" onClick={this.deleteroom.bind(this)} href="javascript:void(0)">移除</Button></span>}
       {this.state.deleted &&"已被移除"}
       </td>
     </tr>

@@ -9,9 +9,9 @@ import PropTypes from 'prop-types';
 import { getdraft } from '../../actions/authAction.js';
 import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import { Badge, Table } from 'react-bootstrap';
+import { Button } from 'antd';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
 import UserItem from './UserItem.js'
 import queryString from 'query-string'
@@ -69,14 +69,14 @@ class Cleaningup extends React.Component {
       .then(res => {
         if (res.data.length!=0 && !res.data[0].name){
           console.log("deleting"+tableid+", hostid:"+tabledata[i].hostid)
-          /*axios.delete(url+'/'+tableid,{
+          axios.delete(url+'/'+tableid,{
             data:{ signature: md5(tableid+"xiaomaomi") }
           }).then(response => {
             console.log("deleted"+tableid)
             })
             .catch(error => {
               console.log(error);
-            });*/
+            });
         }else{
           console.log(i+":"+tableid)
         }
@@ -99,11 +99,85 @@ class Cleaningup extends React.Component {
         console.log(error);
       });
   }
+  createreferences(tabledata, i){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    var tableid=tabledata[i]._id
+    axios.get(url+'?type=user&tableid='+tabledata[i].tableid+'&select=_id')
+      .then(res => {
+        if (res.data.length!=0){
+          var userreferencesres = res.data.map(user=>user['_id'])
+          console.log({ userreferences:userreferencesres, signature: md5(tableid+"xiaomaomi"), tableid: tableid })
+          axios.put(url+'/'+tableid,{userreferences:res.data, signature: md5(tableid+"xiaomaomi")}).then(response => {
+            console.log("done"+tableid)
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }else{
+          console.log(i+":"+tableid)
+        }
+        if(tabledata.length>(i+1)){
+          this.createreferences(tabledata,i+1)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  tableuserreferences(){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    axios.get(url+'?type=table&select=_id%20tableid')
+      .then(res => {
+        console.log()
+        this.createreferences(res.data,0)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  createuserreference(userdata, i){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    var userid=userdata[i]._id
+    axios.get(url+'?type=openid&id='+userdata[i].usernickname+'&select=_id')
+      .then(res => {
+        if (res.data.length!=0){
+          console.log({ reference:res.data[0]._id, signature: md5(userid+"xiaomaomi"), userid: userid })
+          axios.put(url+'/'+userid,{reference:res.data[0]._id, signature: md5(userid+"xiaomaomi")
+          }).then(response => {
+            console.log("done"+userid)
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }else{
+          console.log(i+":"+userid)
+        }
+        if(userdata.length>(i+1)){
+          this.createuserreference(userdata,i+1)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  userreference(){
+    const url = "https://chinabackend.bestlarp.com/api/app";
+    axios.get(url+'?type=user&select=_id%20usernickname')
+      .then(res => {
+        console.log()
+        this.createuserreference(res.data,0)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
   render() {
     return (
       <div >
-      <RaisedButton label="清理用户" primary={true} onClick={this.cleanupuser.bind(this)}/>
-      <RaisedButton label="清理远古房间" primary={true} onClick={this.cleanuptable.bind(this)}/>
+      <Button type="primary" style={{width:200}} onClick={this.cleanupuser.bind(this)}>清理无房间用户</Button><br/>
+      <Button type="primary" style={{width:200}} onClick={this.cleanuptable.bind(this)}>清理远古房间</Button><br/>
+      <Button type="primary" style={{width:200}} onClick={this.tableuserreferences.bind(this)}>创建房间userreferences</Button><br/>
+      <Button type="primary" style={{width:200}} onClick={this.userreference.bind(this)}>创建用户reference</Button><br/>
      </div>
     )
   }

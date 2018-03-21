@@ -12,7 +12,7 @@ class LoginTrack extends React.Component {
   }
  componentWillMount(){
    const url = "https://chinabackend.bestlarp.com/api/app";
-   axios.get(url+'?type=table&hostid='+this.props.id+'&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid')
+   axios.get(url+'?type=table&hostid='+this.props.id+'&select=_id%20tableid%20gamename%20roundnumber%20date%20hostid%20userreferences&populate=userreferences')
      .then(res => {
        console.log(res.data.length)
        this.setState({ tablelist: res.data, display: "table"});
@@ -27,7 +27,7 @@ class LoginTrack extends React.Component {
     if(this.state.display=="table"){
       tablelist = this.state.tablelist.map((table, idx) => {
         return (
-              <TableItem id={table._id} hostid={table.hostid} tableid={table.tableid} gamename={table.gamename} roundnumber={table.roundnumber} date={table.date}/>
+              <TableItem id={table._id} hostid={table.hostid} tableid={table.tableid} userreferences={table.userreferences} gamename={table.gamename} roundnumber={table.roundnumber} date={table.date}/>
         );
       });
       content = <Table striped bordered condensed hover>

@@ -16,6 +16,7 @@ import Games from './pages/Products/games.js';
 import Contact from './pages/contact.js';
 import draftList from './pages/Drafts/draftList.js';
 import draftEdit from './pages/Drafts/draftEdit.js';
+import draftSummary from './pages/Drafts/draftSummary.js';
 import DraftCreate from './pages/Drafts/DraftCreate.js';
 import Loginscreen from './pages/Login/Loginscreen';
 import Register from './pages/Login/Register.js';
@@ -45,6 +46,7 @@ class App extends Component {
           <Route path="/draftList" component={draftList}/>
           <Route path="/DraftCreate/:_id?" component={DraftCreate}/>
           <Route path="/draftEdit/:_id" component={draftEdit}/>
+          <Route path="/draftSummary/:_id" component={draftSummary}/>
           <Route path="/contact" component={Contact}/>
           <Route path="/Loginscreen" component={Loginscreen}/>
           <Route path="/Register" component={Register}/>

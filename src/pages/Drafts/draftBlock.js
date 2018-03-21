@@ -62,6 +62,7 @@ delete=()=> {
     } else {
       gamesList = this.props.auth.drafts.map((game, idx) => {
       var link=(game.type==="template" ?'/DraftCreate/' + game._id:'/draftEdit/' + game._id)
+      var summary='/draftSummary/' + game._id
         return (
               <li key={idx} id='games'>
               <Link to={link} className='gamelink'>{game.name}</Link>
@@ -70,7 +71,7 @@ delete=()=> {
               {game.type==="draft" && <Link to={link} className='gamelink'>编辑中</Link>}
               {game.type==="game" && <Link to={link} className='gamelink'>已发布</Link>}
               <a className='gamelink' onClick={this.removeItem(idx)}>删除</a>
-              <a className='gamelink' href="#">统计</a>
+              <a className='gamelink' href={summary}>统计</a>
               </li>
         );
       });

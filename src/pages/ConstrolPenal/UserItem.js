@@ -26,6 +26,7 @@ class UserItem extends React.Component {
     return (
       <tr>
       <td>{this.state.deleted?"已删":this.props.tableid}</td>
+      {this.props.reference && <td>this.props.reference.name.split(';')[0]</td>}
       <td>{this.props.characterid}</td>
       <td>{this.props.date.substring(0,10)}</td>
       <td>{this.props.broadcast}</td>
