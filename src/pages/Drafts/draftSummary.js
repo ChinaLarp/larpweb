@@ -3,6 +3,7 @@ import DraftBlock from './draftBlock.js';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import GameStates from './gameStats';
 
 class draftSummary extends React.Component {
   constructor(props){
@@ -18,14 +19,9 @@ class draftSummary extends React.Component {
   render(){
     let content
     if (this.props.auth.isAuthenticated) {
-      content= <div>sucess</div>;
+      content= <GameStates gameid={this.props.match.params._id} />;
     } else {
-      content =
-      <div>
-      <h3>想要创作属于你的推理剧本吗?</h3>
-      <br/>
-      <h3>大侦探，请先<NavLink to="/Loginscreen">登录/注册</NavLink>。</h3>
-      </div>;
+      content = <div>请先登录</div>;
     }
     return(
         <div className="row" style={{maxWidth:1000, margin:'auto'}}>

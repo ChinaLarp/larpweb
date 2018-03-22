@@ -62,7 +62,7 @@ delete=()=> {
     } else {
       gamesList = this.props.auth.drafts.map((game, idx) => {
       var link=(game.type==="template" ?'/DraftCreate/' + game._id:'/draftEdit/' + game._id)
-      var summary='/draftSummary/' + game._id
+      var summary='#/draftSummary/' + game._id
         return (
               <li key={idx} id='games'>
               <Link to={link} className='gamelink'>{game.name}</Link>

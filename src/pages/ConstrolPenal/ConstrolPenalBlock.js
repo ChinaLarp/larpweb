@@ -88,7 +88,19 @@ class ConstrolPenalBlock extends React.Component {
       var { params }= this.props
       this.getlist(params)
   }
-
+  onSort(event, sortKey){
+     /*
+     assuming your data is something like
+     [
+       {accountname:'foo', negotiatedcontractvalue:'bar'},
+       {accountname:'monkey', negotiatedcontractvalue:'spank'},
+       {accountname:'chicken', negotiatedcontractvalue:'dance'},
+     ]
+     */
+     const tablelist = this.state.tablelist;
+     tablelist.sort((a,b) => a[sortKey].localeCompare(b[sortKey]))
+     this.setState({tablelist})
+   }
   render() {
     let tablelist;
     let content
@@ -101,9 +113,9 @@ class ConstrolPenalBlock extends React.Component {
       content = <Table striped bordered condensed hover>
        <thead>
          <tr>
-           <th>#</th>
-           <th>游戏名称</th>
-           <th>创建日期</th>
+           <th onClick={e => this.onSort(e, 'tableid')}>#</th>
+           <th onClick={e => this.onSort(e, 'gamename')}>游戏名称</th>
+           <th onClick={e => this.onSort(e, 'date')}>创建日期</th>
            <th>回合</th>
            <th>人数</th>
            <th>操作</th>
@@ -122,10 +134,10 @@ class ConstrolPenalBlock extends React.Component {
       content = <Table striped bordered condensed hover>
        <thead>
          <tr>
-           <th>所在房间</th>
-           <th>用户</th>
+           <th  onClick={e => this.onSort(e, 'tableid')} >所在房间</th>
+           <th >用户</th>
            <th>角色#</th>
-           <th>创建日期</th>
+           <th onClick={e => this.onSort(e, 'date')} >创建日期</th>
            <th>回合</th>
            <th>操作</th>
          </tr>
@@ -144,7 +156,7 @@ class ConstrolPenalBlock extends React.Component {
        <thead>
          <tr>
            <th>#</th>
-           <th>创建日期</th>
+           <th onClick={e => this.onSort(e, 'date')} >创建日期</th>
            <th>回合</th>
            <th>操作</th>
          </tr>
@@ -161,7 +173,6 @@ class ConstrolPenalBlock extends React.Component {
     return (
       <Card title={<div>{this.state.title}<Badge>{ this.state.tablelist ? this.state.tablelist.length:0}</Badge></div>}>
           {content}
-      {this.state.display=="table" && <Button type="primary" onClick={this.fetchtable.bind(this)}>加载更多</Button>}
      </Card>
     )
   }
