@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../actions/authAction';
 
-
 class Menu extends Component {
   constructor(props){
     super(props)
@@ -21,14 +20,14 @@ class Menu extends Component {
     if (auth.isAuthenticated===false) {
       User_info=
       <Nav pullRight>
-        <MenuItem className="menuItem" href="#/Loginscreen">登录</MenuItem>
-        <MenuItem className="menuItem" href="#/Register">注册</MenuItem>
+        <MenuItem  href="#/Loginscreen">登录</MenuItem>
+        <MenuItem  href="#/Register">注册</MenuItem>
       </Nav>
         ;
     } else {
       User_info =
       <Nav pullRight>
-      <NavDropdown  className="menuItem" title={this.props.auth.user.username} id="basic-nav-dropdown">
+      <NavDropdown   title={this.props.auth.user.username} id="basic-nav-dropdown">
           <MenuItem href="#/draftList"> 我的剧本</MenuItem>
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=table">房间列表</MenuItem>}
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<MenuItem href="#/ConstrolPenal/?type=cleanup">清理数据</MenuItem>}
@@ -40,20 +39,18 @@ class Menu extends Component {
 ;
     }
     return (
-         <Navbar inverse collapseOnSelect fixedTop >
+         <Navbar inverse collapseOnSelect fixedTop style={{ fontSize:20, fontWeight:500 }} >
           <Navbar.Header>
-            <Navbar.Brand className="brandItem" href="#/">
-              <Link exact to="/">全民侦探社</Link>
+            <Navbar.Brand >
+              <a href="#/"><b>全民侦探社</b></a>
             </Navbar.Brand>
             <Navbar.Toggle style={{float:"right", width:44, textAligh:"center"}}/>
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <MenuItem className="menuItem" href="#/">官网首页</MenuItem>
-              <MenuItem className="menuItem" href="#/posts">新闻公告</MenuItem>
-              <MenuItem className="menuItem" href="#/games">游戏介绍</MenuItem>
-              <MenuItem className="menuItem" href="#/draftList">我要创作</MenuItem>
-              <MenuItem className="menuItem" href="#/contact">关于我们</MenuItem>
+              <MenuItem href="#/games">游戏介绍</MenuItem>
+              <MenuItem href="#/draftList">我要创作</MenuItem>
+              <MenuItem href="#/contact">关于我们</MenuItem>
             </Nav>
             {User_info}
           </Navbar.Collapse>

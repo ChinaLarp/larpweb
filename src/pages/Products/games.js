@@ -7,6 +7,18 @@ import Gameitem from './gameitem.js'
 class Products extends React.Component {
   constructor(props){
     super(props);
+    this.state={
+      currentpage:1,
+      pagesize:6,
+    }
+  }
+  inpage(page,size,index){
+    console.log(page,size,index)
+    if (page*size>index && page*size-size<=index){
+      console.log("true")
+      return true
+    }
+    return false
   }
   render() {
     let gameList;
@@ -15,6 +27,9 @@ class Products extends React.Component {
     } else {
       gameList = this.props.products.products.map((game, index) => {
       var link='/gamedetails/' + game._id;
+      if (!this.inpage(this.state.currentpage,this.state.pagesize,index)){
+        return
+      }
         return (
         <Col span={8} key = {index} >
           <Gameitem link={link} game={game} src={require("../../assets/pic/"+game.coverurl)}/>
@@ -25,19 +40,17 @@ class Products extends React.Component {
 
 
     return(
-      <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-      <div style={{ background: '#ECECEC', padding: '30px' }}>
-        <Row gutter={16} type="flex" justify="space-between">
+      <Card style={{maxWidth:1200, margin:"auto"}} title={<b>全部剧本</b>}>
+        <Row gutter={16} type="flex" justify="space-between" style={{maxWidth:1200}}>
           {gameList}
         </Row>
-      </div>
-      <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <Pagination total={this.props.products.products.length}
-          showTotal={total => 'Total '+total+' items'}
-          pageSize={12}
-          defaultCurrent={1}/>
-      </div>
-      </div>
+        <Pagination style={{paddingTop:40}}
+          total={this.props.products.products.length}
+          onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
+          onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
+          current={this.state.currentpage}
+          pageSize={this.state.pagesize}/>
+      </Card>
 
       )
  }

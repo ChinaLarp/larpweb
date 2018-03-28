@@ -5,7 +5,7 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card, Button} from 'antd';
+import {Card, Button, List,Tag, Icon, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -61,57 +61,56 @@ delete=()=> {
       gamesList= <div>'想创作属于自己的剧本吗？点击右上角“创建新剧本”'</div>;
     } else {
       gamesList = this.props.auth.drafts.map((game, idx) => {
-      var link=(game.type==="template" ?'/DraftCreate/' + game._id:'/draftEdit/' + game._id)
+      var link=(game.type==="template" ?'#/DraftCreate/' + game._id:'#/draftEdit/' + game._id)
       var summary='#/draftSummary/' + game._id
-        return (
-              <li key={idx} id='games'>
-              <Link to={link} className='gamelink'>{game.name}</Link>
-              <span className='gamediscription'>{game.descripion}</span>
-              {game.type==="template" && <Link to={link} className='gamelink'>构架中</Link>}
-              {game.type==="draft" && <Link to={link} className='gamelink'>编辑中</Link>}
-              {game.type==="game" && <Link to={link} className='gamelink'>已发布</Link>}
-              <a className='gamelink' onClick={this.removeItem(idx)}>删除</a>
-              <a className='gamelink' href={summary}>统计</a>
-              </li>
-        );
+      var status = ""
+      switch (game.type) {
+        case "template":
+            status="编辑中"
+          break;
+        case "draft":
+            status="编辑中"
+          break;
+        case "game":
+            status="已发布"
+          break;
+        default:
+      }
+        return {...game,status,link,summary}
       });
     }
-
+    const IconText = ({ type, link }) => (
+      <span>
+        <a href={link} ><Icon type={type} style={{ marginRight: 8 }} /></a>
+      </span>
+    );
     return (
-      <div >
-      <Dialog
-         title="Dialog With Actions"
-         actions={[
-             <RaisedButton
-               label="取消"
-               onClick={()=>(this.setState({openDialog:false}))}
-             />,
-             <RaisedButton
-               label="确认"
-               secondary={true}
-               onClick={this.delete}
-             />,
-           ]}
-         modal={false}
-         open={this.state.openDialog}
-         onRequestClose={()=>(this.setState({openDialog:false}))}
-       >{this.state.errorMessage}
-       </Dialog>
-      <Toolbar style={{backgroundColor: '#cccccc'}} >
-      <ToolbarGroup><ToolbarTitle text="我的剧本"/><Badge>{this.props.auth.drafts.length}</Badge>
-      <ToolbarSeparator/></ToolbarGroup>
-      <ToolbarGroup></ToolbarGroup>
-      <ToolbarGroup>
-        <FontIcon className="muidocs-icon-custom-sort" />
-        <ToolbarSeparator /><Button href="#" onClick={()=>this.context.router.history.push('/DraftCreate')}>创建新剧本</Button>
-
-      </ToolbarGroup>
-     </Toolbar>
-
-       <Card className="bodyStruc">
-       <ul>{gamesList}</ul>
-       </Card>
-     </div>
+      <Card title={<span>我的剧本<Badge>{this.props.auth.drafts.length}</Badge></span>} extra={<a style={{display:"inline"}} onClick={()=>this.context.router.history.push('/DraftCreate')}>创建新剧本</a>}>
+       {(this.props.auth.drafts.length>=1) &&
+       <List
+          loading={this.props.auth.drafts=="loading"}
+          size="large"
+          dataSource={gamesList}
+          renderItem={function(item) {
+            var url=require("../../assets/pic/Hbc81duicon.jpg")
+            try {
+              url=require("../../assets/pic/"+item.iconurl)
+            }
+            catch(err){
+            }
+            return  <List.Item
+                  actions={[<IconText link={item.link} type="edit"/>, <IconText type="like-o" />, <IconText link={item.summary} type="area-chart" />]}
+              >
+              <List.Item.Meta
+                avatar={<Avatar  shape="square" size="large"  src={url} />}
+                title={<a href={item.summary}>{item.name}<Tag style={{marginLeft:10}}>{item.status}</Tag></a>}
+                description={item.descripion}
+              />
+              </List.Item>
+            }
+            }
+          />}
+     </Card>
     )
   }
 }

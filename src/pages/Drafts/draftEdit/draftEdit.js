@@ -1,18 +1,19 @@
 import React from "react";
+import ReactDOM from 'react-dom';
+import { Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import Helper from './helper.js';
-import Upload from 'rc-upload';
+import Helper from '../helper.js';
 import md5 from 'md5'
 import Toggle from 'material-ui/Toggle';
 import randomString from 'random-string';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addFlashMessage } from '../../actions/flashmessages.js';
-import { getdraft } from '../../actions/authAction.js';
+import { addFlashMessage } from '../../../actions/flashmessages.js';
+import { getdraft } from '../../../actions/authAction.js';
 import ScrollToTop from 'react-scroll-up';
-import btop from '../../assets/img/btop.png';
+import btop from '../../../assets/img/btop.png';
 import Lightbox from 'react-image-lightbox';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
@@ -97,6 +98,31 @@ class draftEdit extends React.Component {
       imageurl:''
     };
   }
+  onuploadChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        console.log(info)
+        var name = info.file.response.split('.')[0]
+        var last = name.substring(name.length-3,name.length)
+        message.success(`${info.file.name} file uploaded successfully`);
+        switch (last) {
+          case "ver":
+            this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: info.file.response} })
+            break;
+          case "con":
+            this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: info.file.response} })
+            break;
+          case "map":
+            this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: info.file.response} })
+            break;
+          default:
+        }
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    }
 confirmation = (command,idx) => (evt) => {
   switch (command) {
     case "AddCharacter":
@@ -499,8 +525,8 @@ handlePlotNameChange = (idx) => (evt) => {
 
     this.setState({ plotinfo: newplotinfo });
 }
-handleToggleenablevote= (idx) => (event, isInputChecked ) => {
-    var newenablevote=isInputChecked?1:0
+handleToggleenablevote= (idx) => (event) => {
+    var newenablevote=event?1:0
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, enablevote:newenablevote };
@@ -508,8 +534,8 @@ handleToggleenablevote= (idx) => (event, isInputChecked ) => {
 
     this.setState({ plotinfo: newplotinfo });
 }
-handleToggleenableclue= (idx) => (event, isInputChecked ) => {
-    var newenableclue=isInputChecked?1:0
+handleToggleenableclue= (idx) => (event) => {
+    var newenableclue=event?1:0
     const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
       if (idx !== sidx) return plot;
       return { ...plot, enableclue:newenableclue };
@@ -651,9 +677,6 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
 
     this.setState({ clueinfo: newcluelist });
   }
-  handleClueMethodChange=()=> (event, index, value) => {
-    this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: value } });
-  }
   handleBanLocationChange = (idx) => (event, index, value) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
       if (idx !== sidx) return character;
@@ -711,16 +734,23 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
   render() {
 
     return (
-      	<div style={{width: '100%', maxWidth: 900, margin: 'auto'}}>
-        <div>
-          <Dialog
-             title="确认信息"
-             actions={this.state.actions}
-               modal={false}
-               open={this.state.openDialog}
-               onRequestClose={()=>(this.setState({openDialog:false}))}
-             >
-             <div>
+      <Layout id="containingDivs">
+      {this.state.isOpen && (
+        <Lightbox
+          mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
+          onCloseRequest={() => this.setState({ isOpen: false })}
+          discourageDownloads="true"
+        />
+      )}
+          <div>
+            <Dialog
+               title="确认信息"
+               actions={this.state.actions}
+                 modal={false}
+                 open={this.state.openDialog}
+                 onRequestClose={()=>(this.setState({openDialog:false}))}
+               >
+               <div>
                 {this.state.Dialogtype=="AddPlot" && <div>你想在<DropDownMenu style={{marginBottom:0}} value={this.state.insertPlotlocation} onChange={(event, index, value) => {this.setState({insertPlotlocation: value  });console.log(this.state) }}>
                 <MenuItem value={0} primaryText="最前面" />
                  {this.state.plotinfo.map((plot,sidx)=>(<MenuItem value={sidx+1} primaryText={plot.plotname} />))}
@@ -742,196 +772,195 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
              </div>
            </Dialog>
          </div>
-        <AppBar style={{zIndex:0}} title="剧本编辑"  iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:!this.state.openMenu})}}><NavigationMenu /></IconButton>}/>
-        <Drawer open={this.state.openMenu}>
-          <AppBar title="操作箱" iconElementLeft={<IconButton onClick={()=>{this.setState({openMenu:false})}}><NavigationClose /></IconButton>}/>
-          <MenuItem onClick={this.handleSave}>保存</MenuItem>
-          <MenuItem onClick={this.handleDelete}>删除</MenuItem>
-          <MenuItem onClick={this.handleSaveExit}>保存并退出</MenuItem>
-          <MenuItem onClick={this.handleExit}>退出</MenuItem>
-          {this.props.auth.user.id==="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>}
-        </Drawer>
-        <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ border:"1px solid"}}>
-        {this.state.isOpen && (
-          <Lightbox
-            mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
-            onCloseRequest={() => this.setState({ isOpen: false })}
-            discourageDownloads="true"
-          />
-        )}
+       <Layout.Sider width={300}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+         <Menu
+           mode="inline"
+           defaultSelectedKeys={['1']}
+           defaultOpenKeys={['sub1']}
+           style={{ height: '100%', borderRight: 0 }}
+           onClick={(item, key, keyPath)=>{ ReactDOM.findDOMNode(this.refs[item.key]).scrollIntoView(true);window.scrollBy(0, -60);}}
+         >
+           <Menu.ItemGroup key="basic" title={<b>{this.state.gameinfo.name}</b>}>
+             <Menu.Item key="basic">基本信息</Menu.Item>
+             <Menu.Item key="image">图片设计</Menu.Item>
+             <Menu.Item key="instruction">游戏说明</Menu.Item>
+             <Menu.Item key="plot">阶段剧情</Menu.Item>
+           </Menu.ItemGroup>
+           <Menu.ItemGroup key="sub2" title={<span><Icon type="laptop" />人物剧本</span>}>
+             <Menu.Item key="5">option5</Menu.Item>
+             <Menu.Item key="6">option6</Menu.Item>
+             <Menu.Item key="7">option7</Menu.Item>
+             <Menu.Item key="8">option8</Menu.Item>
+           </Menu.ItemGroup>
+           <Menu.ItemGroup key="sub3" title={<span><Icon type="notification" />游戏线索</span>}>
+             <Menu.Item key="9">option9</Menu.Item>
+             <Menu.Item key="10">option10</Menu.Item>
+             <Menu.Item key="11">option11</Menu.Item>
+             <Menu.Item key="12">option12</Menu.Item>
+           </Menu.ItemGroup>
+         </Menu>
+       </Layout.Sider>
+      <Layout  style={{ marginLeft: 300 }}>
+
       <Tabs>
         <TabList>
-          <Tab>{this.state.gameinfo.name}</Tab>
           <Tab>人物剧本</Tab>
           <Tab>游戏线索</Tab>
         </TabList>
 
         <TabPanel>
-          <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-            <ToolbarGroup><ToolbarTitle text="基本信息"/>
-            <ToolbarSeparator/><RaisedButton label="添加角色" primary={true} onClick={this.confirmation("AddCharacter")}/></ToolbarGroup>
-            <ToolbarGroup>
-              <span>搜证方式：</span>
-              <DropDownMenu value={this.state.gameinfo.cluemethod} onChange={this.handleClueMethodChange()}>
-                   <MenuItem value="random" primaryText="随机不返还"/>
-                   <MenuItem value="order" primaryText="顺次不返还"/>
-                   <MenuItem value="return" primaryText="随机返还"/>
-              </DropDownMenu>
-            </ToolbarGroup>
-          </Toolbar>
-          <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-            <table style={{width: "90%", margin:"auto"}}>
-            <tr><th style={{minWidth: 130}}>剧本名称：</th><th>
-              <input
-                type="text"
-                value={this.state.gameinfo.name}
-                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, name: evt.target.value}})}}
-              /></th></tr>
-              <tr><th>剧本简介：</th><th>
-              <input
-                type="text"
-                value={this.state.gameinfo.descripion}
-                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
-              /></th></tr>
-              <tr><th>剧本类别：</th><th>
-              <input
-                type="text"
-                value={this.state.gameinfo.category}
-                onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, category: evt.target.value}})}}
-              /></th></tr>
-              <tr><th>详细介绍:</th>
-              <th><textarea rows="3" cols="100" name="content" value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""} onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}} style={{margin:10, width:"98%"}}/>
-              </th></tr>
-            </table>
-            <div className="characterlist">
-              <table className="table table-striped">
-                <tbody>
-                  <tr className="tableHead">
-                    <th>预览</th>
-                    <th>帮助</th>
-                    <th>上传</th>
-                  </tr>
-                  <tr>
-                    <th >
-                    {this.state.gameinfo.iconurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,0)} >预览游戏图标</button>}
-                    {!this.state.gameinfo.iconurl && <button type="button" className="small" disabled="disabled" >暂无游戏图标</button>}
-                    </th><th>
-                    <Helper step={7} />
-                    </th>
-                    <th className="imgUploadButton">
-                      {this.state.loadingimg!=="icon"&&<Upload {...this.iconuploaderProps}><button type="button" className="small">上传游戏图标</button></Upload>}
-                      {this.state.loadingimg==="icon"&&<CircularProgress size={40} thickness={8} />}
-                    </th>
-                  </tr>
-                  <tr>
-                    <th >
-                    {this.state.gameinfo.coverurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,1)} >预览游戏封面</button>}
-                    {!this.state.gameinfo.coverurl && <button type="button" className="small" disabled="disabled" >暂无游戏封面</button>}
-                    </th><th>
-                    <Helper step={8} />
-                    </th>
-                    <th className="imgUploadButton">
-                      {this.state.loadingimg!=="cover"&&<Upload {...this.coveruploaderProps}><button type="button" className="small">上传游戏封面</button></Upload>}
-                      {this.state.loadingimg==="cover"&&<CircularProgress size={40} thickness={8} />}
-                    </th>
-                  </tr>
-                  <tr>
-                    <th >{this.state.gameinfo.mapurl && <button type="button" className="small" onClick={this.handlePreviewImage(-1,2)} >预览现场地图</button>}
-                    {!this.state.gameinfo.mapurl && <button type="button" className="small" disabled="disabled" >暂无现场地图</button>}
-                    </th><th>
-                    <Helper step={9} />
-                    </th>
-                    <th className="imgUploadButton">
-                      {this.state.loadingimg!=="map"&&<Upload {...this.mapuploaderProps}><button type="button" className="small">上传现场地图</button></Upload>}
-                      {this.state.loadingimg==="map"&&<CircularProgress size={40} thickness={8} />}
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <Card ref="basic" title={<b style={{fontSize:20, textAlign:"left"}} >基本信息</b>} style={{margin:20}}>
+            <Row type="flex" justify="space-around" align="top" gutter={16}>
+              <Col span={16} >
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本名称：</Col><Col span={16} >
+                    <Input
+                      value={this.state.gameinfo.name}
+                      onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, name: evt.target.value}})}}
+                    /></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本简介：</Col><Col span={16} >
+                    <Input
+                      value={this.state.gameinfo.descripion}
+                      onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
+                    /></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本类别：</Col><Col span={16} >
+                    <Input
+                      value={this.state.gameinfo.category}
+                      onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, category: evt.target.value}})}}
+                    /></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >搜证方式：</Col><Col span={16} >
+                  <Radio.Group onChange={(e)=>{this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: e.target.value } })}} value={this.state.gameinfo.cluemethod}>
+                    <Radio.Button value="random">随机不返还</Radio.Button>
+                    <Radio.Button value="order">顺次不返还</Radio.Button>
+                    <Radio.Button value="return">随机返还</Radio.Button>
+                  </Radio.Group>              </Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >详细介绍：</Col><Col span={16} >
+                    <Input.TextArea value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""} onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}} autosize={{ minRows: 2, maxRows: 6 }} />
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={6} >
+                <img alt="cover" style={{height:350}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime()} />
+              </Col>
+            </Row>
+          </Card>
 
-            <div>
-              <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                <ToolbarGroup><ToolbarTitle text="游戏说明"/>
-                <Helper step={6} />
-                <ToolbarSeparator/><RaisedButton label="添加项目" primary={true} onClick={this.handleAddInstruction}/></ToolbarGroup>
-              </Toolbar>
-              <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-                {this.state.instructinfo.map((instruct, idx) => (
-                  <div style={{marginTop:20, border:"1px dashed"}}>
-                  <table className="table table-striped tableText" style={{margin:10}}>
-                  <tr>
-                  <th className="shortInput">
-                  <input
-                    type="text"
-                    placeholder="说明要素"
-                    value={instruct.type}
-                    onChange={this.handleInstructTypeChange(idx)}
-                  />
-                  </th>
-                  <th>
-                  <button type="button" onClick={this.handleRemoveInstruction(idx)} className="small">删除此模块</button>
-                  </th>
-                  </tr>
-                  </table>
-                  <textarea rows="4" cols="100" name="content" value={instruct.content.join('\n')} onChange={this.handleInstructContentChange(idx)} style={{margin:10, width:"98%"}}/>
+          <Card ref="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
+            <Row gutter={16}>
+              <Col span={8}>
+                <Card title="剧本封面()">
+                  <div style={{maxWidth:"80%"}} >
+                  <img alt="剧本封面" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime()} />
                   </div>
-                ))}
-            </div>
-          <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-            <ToolbarGroup><ToolbarTitle text="流程控制"/>
-            <Helper step={3} />
-            <ToolbarSeparator/><RaisedButton label="添加阶段" primary={true} onClick={this.confirmation("AddPlot")}/></ToolbarGroup>
-          </Toolbar>
-          <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
+                  <div>
+                  <Upload
+                    onChange={this.onuploadChange.bind(this)}
+                    data={{name : this.state.gameinfo.id+"cover"}}
+                    action= 'https://chinabackend.bestlarp.com/uploadimage'
+                    >
+                    <Button>
+                      <Icon type="upload" /> 点此上传
+                    </Button>
+                  </Upload>
+                  </div>
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card title="剧本图标()">
+                  <div style={{maxWidth:"80%"}} >
+                  <img alt="剧本图标" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime()} />
+                  </div>
+                  <div>
+                  <Upload
+                    onChange={this.onuploadChange.bind(this)}
+                    data={{name : this.state.gameinfo.id+"icon"}}
+                    action= 'https://chinabackend.bestlarp.com/uploadimage'
+                    >
+                    <Button>
+                      <Icon type="upload" /> 点此上传
+                    </Button>
+                  </Upload>
+                  </div>
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card title="剧本地图()">
+                  <div style={{maxWidth:"80%"}} >
+                  <img alt="剧本地图" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime()} />
+                  </div>
+                  <div>
+                  <Upload
+                    onChange={this.onuploadChange.bind(this)}
+                    data={{name : this.state.gameinfo.id+"map"}}
+                    action= 'https://chinabackend.bestlarp.com/uploadimage'
+                    >
+                    <Button>
+                      <Icon type="upload" /> 点此上传
+                    </Button>
+                  </Upload>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+          </Card>
+
+          <Card ref="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
+            <Row gutter={16}>
+            {this.state.instructinfo.map((instruct, idx) => (
+              <Col span={12}>
+              <Card style={{margin:20}} title={<Input
+                style={{maxWidth:300}}
+                placeholder="说明标题"
+                value={instruct.type}
+                onChange={this.handleInstructTypeChange(idx)} />}
+               extra={<a onClick={this.handleRemoveInstruction(idx)}>移除</a>} >
+              <Input.TextArea value={instruct.content.length ? instruct.content.join('\n'):""} onChange={this.handleInstructContentChange(idx)}  autosize={{ minRows: 6, maxRows: 6 }} />
+              </Card>
+              </Col>
+            ))}
+            <Col span={12}>
+            <Card hoverable onClick={this.handleAddInstruction.bind(this)} style={{margin:20, textAlign:"center"}} >
+              <Icon type= 'plus' />
+              <div>添加新说明</div>
+              </Card>
+            </Col>
+            </Row>
+          </Card>
+
+          <Card ref="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
+            <Row gutter={16}>
             {this.state.plotinfo.map((plot, idx) => (
-            <div style={{marginTop:20,border:"1px dashed"}}>
-            <table className="table table-striped tableText" style={{margin:10}}>
-           <tr>
-            <th style={{width:"10%"}}>
-            <h4 >第{plot.plotid}阶段：</h4>
-            </th>
-            <th style={{width:"30%"}}>
-            <input
-              type="text"
-              placeholder="信息类型"
-              value={plot.plotname}
-              disabled="disabled"
-            />
-            </th>
-            <th >
-            <div style={{ margin:"auto",maxWidth:100}}>
-            <Toggle
-              label="搜证:"
-              toggled={plot.enableclue>0}
-              onToggle={this.handleToggleenableclue(idx)}
-            />
-            </div>
-            </th>
-            <th >
-            <div style={{ margin:"auto",maxWidth:100}}>
-            <Toggle
-              label="投票:"
-              toggled={plot.enablevote>0}
-              onToggle={this.handleToggleenablevote(idx)}
-            />
-            </div>
-            </th>
-            <th >
-            <button type="button" onClick={this.confirmation("deletePlot",idx)} className="small" >删除</button>
-            </th>
+              <Col span={12}>
+              <Card style={{margin:20}} title={"第"+plot.plotid+"阶段："+plot.plotname}
+               extra={<a onClick={this.confirmation("deletePlot",idx)}>移除</a>} >
+               <b>剧情概要：</b>
+              <Input.TextArea value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)}  autosize={{ minRows: 8, maxRows: 8 }} />
+              <div style={{marginTop:10}}><b>在此阶段开启搜证功能：</b>
+              <Switch
+              checked={plot.enableclue>0}
+              onChange={this.handleToggleenableclue(idx)}
+              checkedChildren="可搜证"
+              unCheckedChildren="不可搜证"
+              />
+              </div>
+              <div style={{marginTop:10}}><b>在此阶段开启投票功能：</b>
+              <Switch
+              checked={plot.enablevote>0}
+              onChange={this.handleToggleenablevote(idx)}
+              checkedChildren="开启投票"
+              unCheckedChildren="关闭投票"
+              /></div>
+              </Card>
+              </Col>
+            ))}
+            <Col span={12}>
+            <Card hoverable onClick={this.confirmation("AddPlot")} style={{margin:20, textAlign:"center"}} >
+              <Icon type= 'plus' />
+              <div>添加阶段</div>
+              </Card>
+            </Col>
+            </Row>
+          </Card>
 
-            </tr>
-            </table>
-            <textarea rows="4" cols="100" name="content" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)} style={{margin:10, width:"98%"}}/>
-            </div>
-          ))}
-          </div>
-          </div>
-        </TabPanel>
-
-        <TabPanel>
             <Tabs>
             <TabList>
             {this.state.characterlist.map((characterlist, idx) => (
@@ -1119,12 +1148,12 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
           </div>
           </TabPanel>
       </Tabs>
-      </div>
+      </Layout>
       <ScrollToTop showUnder={160} style={{zIndex:1}}>
          <img src={btop} className="btopImg" alt={btop}/>
       </ScrollToTop>
 
-      </div>
+      </Layout>
     )
   }
 }

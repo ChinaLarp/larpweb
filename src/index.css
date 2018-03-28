@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  font-family: "Microsoft YaHei";
 
 }
 .NavBarTest{
@@ -7,42 +7,22 @@
 }
 
 body {
-
   padding: 20px;
   margin: 0;
 }
 
 h1, h2,h3,h4,h5, p, ul, li,{
-  font-family: sans-serif;
+  ;
 }
 
-.logo{
+logo{
   width:80%;
   margin-top: 20px;
   margin-bottom: 0px;
+  background-color: red;
 }
 
-/* Menu starts */
 
-.brandItem{
-  display: inline;
-  list-style-type: none;
-  margin: 0;
-  font-size: 20px;
-  font-weight:bold;
-  text-align: center;
-  background-color: #111;
-  color:#FFF;
-  font-family: sans-serif;
-}
-
-.menuItem {
-  display: inline;
-  list-style-type: none;
-  margin: 0;
-  font-size: 18px;
-  font-family: sans-serif;
-}
 
 .header li a {
   color: #FFF;
@@ -51,23 +31,11 @@ h1, h2,h3,h4,h5, p, ul, li,{
   padding: 20px;
   display: inline-block;
 }
-a :link {
-  color: #607D8B;
-}
-a :hover {
-  color: #039be5;
-  background-color: #CFD8DC;
-}
 /* content page */
 
 .content {
-  background-color: #e5e5e5;
-  max-width: 1200px;
-  margin:auto;
-  font-size: 16px;
-  margin-top: 10px;
-  padding-bottom: 50px;
-  font-family: sans-serif;
+  margin-top: 50px;
+  min-height: 1000px;
 }
 .content h2 {
   padding: 0;
@@ -112,7 +80,7 @@ a :hover {
 #editLink{
   color: #fff;
   font-size: 14px;
-  font-family: sans-serif;
+  ;
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -132,7 +100,7 @@ a :hover {
   margin:0px;
   padding: 10px 10px 10px 0px;
   border-bottom: 1px dashed #ccc;
-  font-family: sans-serif;
+  ;
   display: flex;
   justify-content:left;
   align-self: stretch;
@@ -156,7 +124,7 @@ a :hover {
   margin-left: 10px;
   justify-content:  left;
   color:#fff;
-  font-family: sans-serif;
+  ;
     width: 70%;
     overflow: hidden;
 text-overflow: ellipsis;
@@ -170,7 +138,7 @@ white-space: nowrap;
 .time{
   color: #eee;
   float: right;
-  font-family: sans-serif;
+  ;
   width: 20%;
 
 }
@@ -335,14 +303,9 @@ button.small:hover {
         margin-top:10px;
         margin-bottom:0px;
         border: none;
-        font-family: sans-serif;
+        ;
 }
 
-.bodyStruc{
-  background: #919191;
-  min-height: 400px;
-  font-size: 14px;
-}
 
 #gameList {
 
@@ -417,22 +380,16 @@ display: -webkit-box;
 }
 /* footer starts*/
 .footer{
-  padding-top: 20px;
-  background-image: url('./components/footer-background-city.jpg');
+  padding-top: 10px;
+  background-color: gray;
   background-size: 100%;
   background-position: top center;
   font-size:14px;
-  font-family: sans-serif;
   vertical-align:bottom;
   text-align:center;
-
    left:0px;
    bottom:0px;
    width:100%;
-}
-.copyright{
-  color:#ffffff; font-size:14px; padding:20px;
-  font-family: sans-serif;
 }
 
 /* footer ends*/

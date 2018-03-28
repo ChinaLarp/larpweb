@@ -8,14 +8,14 @@ import {
 //compnents
 import Header from './components/header.js'
 import Footer from './components/footer.js'
-import Menu from './components/menu.js'
+import NavigationMenu from './components/menu.js'
 import Home from './pages/home.js';
 import postEdit from './pages/PostEdit/postEdit.js';
 import posts from './pages/Posts/posts.js';
 import Games from './pages/Products/games.js';
 import Contact from './pages/contact.js';
 import draftList from './pages/Drafts/draftList.js';
-import draftEdit from './pages/Drafts/draftEdit.js';
+import draftEdit from './pages/Drafts/draftEdit/draftEdit.js';
 import draftSummary from './pages/Drafts/draftSummary.js';
 import DraftCreate from './pages/Drafts/DraftCreate.js';
 import Loginscreen from './pages/Login/Loginscreen';
@@ -35,9 +35,8 @@ class App extends Component {
     return (
       <HashRouter>
       <div className="App">
-        <Menu style={{zIndex:1}}/>
-        <div className="container content">
-          <Header />
+        <NavigationMenu style={{zIndex:1}}/>
+        <div className="content ">
           <FlashMessagesList />
           <Route exact path="/" component={Home}/>
           <Route path="/13478545921/:_id" component={postEdit}/>
