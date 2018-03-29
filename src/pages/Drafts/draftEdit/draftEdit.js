@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
+//import { Tab, Tabs, TabList, TabPane } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
 import md5 from 'md5'
@@ -32,51 +32,6 @@ var files
 class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
-    this.iconuploaderProps = {
-      onStart: (file) => {
-        var filename=this.state.gameinfo.id+'icon.'+file.name.split('.')[1]
-        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-        let data = new FormData();
-          data.append('image', file, filename);
-          const config = {
-              headers: { 'content-type': 'multipart/form-data' }
-          }
-          this.setState({loadingimg:"icon"})
-          axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: filename },loadingimg:""})})
-          .catch(error => {
-            console.log(error);
-          });
-      }
-    };
-    this.coveruploaderProps = {
-      onStart: (file) => {
-        console.log('onStart', file.name);
-        var filename=this.state.gameinfo.id+'cover.'+file.name.split('.')[1]
-        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-        let data = new FormData();
-          data.append('image', file, filename);
-          const config = {
-              headers: { 'content-type': 'multipart/form-data' }
-          }
-          this.setState({loadingimg:"cover"})
-          axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: filename },loadingimg:""})})
-          .catch(error => {
-            console.log(error);
-          });
-      }
-    };
-    this.mapuploaderProps = {
-      onStart: (file) => {
-        console.log('onStart', file.name);
-        var filename=this.state.gameinfo.id+'map.'+file.name.split('.')[1]
-        const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-        let data = new FormData();
-        data.append('image', file, filename);
-        const config = {headers: { 'content-type': 'multipart/form-data' }}
-        this.setState({loadingimg:"map"})
-        axios.post(imageurl, data, config).then(response => {this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: filename },loadingimg:""});})
-      }
-    };
     this.state = {
       openDialog:false,
       Dialogtype:"",
@@ -677,10 +632,10 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
 
     this.setState({ clueinfo: newcluelist });
   }
-  handleBanLocationChange = (idx) => (event, index, value) => {
+  handleBanLocationChange = (idx) => (event) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
       if (idx !== sidx) return character;
-      return { ...character, banlocation: value };
+      return { ...character, banlocation: event.target.value };
     });
 
     this.setState({ characterlist: newCharacter });
@@ -802,13 +757,6 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
        </Layout.Sider>
       <Layout  style={{ marginLeft: 300 }}>
 
-      <Tabs>
-        <TabList>
-          <Tab>人物剧本</Tab>
-          <Tab>游戏线索</Tab>
-        </TabList>
-
-        <TabPanel>
           <Card ref="basic" title={<b style={{fontSize:20, textAlign:"left"}} >基本信息</b>} style={{margin:20}}>
             <Row type="flex" justify="space-around" align="top" gutter={16}>
               <Col span={16} >
@@ -961,193 +909,108 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Row>
           </Card>
 
-            <Tabs>
-            <TabList>
+          <Card ref="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>}  style={{margin:20}}>
+            <Tabs tabPosition="right">
             {this.state.characterlist.map((characterlist, idx) => (
-              <Tab>{characterlist.charactername}</Tab>
-            ))}
-            </TabList>
-            {this.state.characterlist.map((characterlist, idx) => (
-              <TabPanel>
-                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                  <ToolbarGroup><ToolbarTitle text="基础信息"/>
-                  <Helper step={2} />
-                  <ToolbarSeparator/></ToolbarGroup>
-                  <ToolbarGroup>
-                    <span>禁止搜证地点：</span>
-                    <DropDownMenu value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
-                      <MenuItem value="-1"  primaryText="无" />
-                      {this.state.clueinfo.map((cluelocation, iidx) => (
-                         <MenuItem value={iidx.toString()} primaryText={cluelocation.name}/>
-                       ))}
-                    </DropDownMenu>
-                  </ToolbarGroup>
-                </Toolbar>
-                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-                  <table style={{width: "90%", margin:"auto"}}>
-                  <tr><th style={{minWidth: 130}}>角色名称：</th><th>
-                    <input
-                      type="text"
-                      value={characterlist.charactername}
-                      onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
-                        if (idx !== sidx) return characterlist;
-                        return { ...characterlist, charactername: evt.target.value };
-                      })}
-                    )}}
-                    /></th></tr>
-                    <tr><th>角色简介：</th><th>
-                    <input
-                      type="text"
-                      value={characterlist.characterdescription}
-                      onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
-                        if (idx !== sidx) return characterlist;
-                        return { ...characterlist, characterdescription: evt.target.value };
-                      })}
-                    )}}
-                    /></th></tr>
-                    <tr><th>性别:</th>
-                    <th>
-                    <DropDownMenu value={characterlist.charactersex} onChange={(event, index, value)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+              <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
+              <Card title={<h4>自然信息</h4>} style={{margin:10}}>
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >角色名称：</Col><Col span={16} >
+                    <Input
+                    value={characterlist.charactername}
+                    onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
                       if (idx !== sidx) return characterlist;
-                      return { ...characterlist, charactersex: value };
-                    })}
-                  )}}>
-                      <MenuItem value="男"  primaryText="男" />
-                      <MenuItem value="女"  primaryText="女" />
-                    </DropDownMenu>
-                    </th></tr>
-                  </table>
-                </div>
-                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                <ToolbarGroup><ToolbarTitle text="角色背景"/>
-                <Helper step={2} />
-                <ToolbarSeparator/></ToolbarGroup>
-                </Toolbar>
-                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-                  {characterlist.characterinfo.map((characterinfo, iidx) => (
-                    <div style={{margin:10,marginTop:20}}>
-                    <div className="shortInput">
-                    <input
-                      type="text"
-                      placeholder="说明要素"
-                      value={characterinfo.type}
-                      disabled="disabled"
-                    />
-                    </div>
-                    <textarea rows="15" cols="100" name="content" value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}/>
-                    </div>
-                  ))}
-                </div>
-                <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-                  <ToolbarGroup><ToolbarTitle text="人物流程剧本"/>
-                  <Helper step={4} />
-                  <ToolbarSeparator/></ToolbarGroup>
-                </Toolbar>
-                <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-                  {characterlist.characterplot.map((plot, iidx) => (
-                    <div style={{marginTop:20,border:"1px dashed"}}>
-                    <table className="table table-striped tableText" style={{margin:10}}>
-                   <tr>
-                    <th style={{width:"10%"}}>
-                    <h4>第{plot.plotid}阶段</h4>
-                    </th>
-                    <th>
-                      <input
-                        type="text"
-                        placeholder="信息类型"
-                        value={plot.plotname}
-                        disabled="disabled"
-                      />
-                    </th>
-                    <th><button type="button" style={{backgroundColor: '#4286f4'}} onClick={this.handleAddCharacterPlot(idx,iidx)} className="small">添加模块</button></th>
-                    </tr>
-                    </table>
-                      {plot.content.map((item, iiidx) => (
-                      <div style={{marginTop:20,border:"1px dashed"}}>
-                        <table style={{margin:10,width:"90%"}}><tr><th style={{width:"40%"}}><input
-                          type="text"
-                          placeholder="信息类型"
-                          value={item.type}
-                          onChange={this.handleCharacterPlotTypeChange(idx,iidx,iiidx)}
-                        /></th><th>
-                        <button type="button" onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)} className="small">删除此模块</button></th></tr></table>
-                        <textarea rows="4" cols="100" name="content" value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} style={{margin:10, width:"98%"}}/>
-                    </div>
-                    ))}
-                    </div>
-                  ))}
-                </div>
+                      return { ...characterlist, charactername: evt.target.value };
+                    })})}}
+                    /></Col></Row>
 
-              </TabPanel>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >性别：</Col><Col span={16} >
+                  <Radio.Group value={characterlist.charactersex} onChange={(event)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+                    if (idx !== sidx) return characterlist;
+                    return { ...characterlist, charactersex: event.target.value };
+                  })})}}>
+                    <Radio.Button value="男">男性</Radio.Button>
+                    <Radio.Button value="女">女性</Radio.Button>
+                  </Radio.Group></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >禁止搜证地点：</Col><Col span={16} >
+                  <Radio.Group value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
+                    <Radio.Button value="-1">无</Radio.Button>
+                    {this.state.clueinfo.map((cluelocation, iidx) => (
+                       <Radio.Button value={iidx.toString()}>{cluelocation.name}</Radio.Button>
+                     ))}
+                  </Radio.Group></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >角色简介：</Col><Col span={16} >
+                    <Input.TextArea autosize={{ minRows: 2, maxRows: 6 }}
+                    value={characterlist.characterdescription}
+                    onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
+                      if (idx !== sidx) return characterlist;
+                      return { ...characterlist, characterdescription: evt.target.value };
+                    })})}}
+                    /></Col></Row>
+                </Card>
+                <Card title={<h4>角色背景<Helper step={2} /></h4>} style={{margin:10}}>
+                <Row gutter={16}>
+                {characterlist.characterinfo.map((characterinfo, iidx) => (
+                  <Col span={24}>
+                  <Card title={<b>{characterinfo.type}</b>} >
+                  <Input.TextArea value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}  autosize={{ minRows: 6, maxRows: 10 }} />
+                  </Card>
+                  </Col>
+                ))}
+                </Row>
+                </Card>
+              </Tabs.TabPane>
             ))}
             </Tabs>
-        </TabPanel>
+          </Card>
 
+          <Card ref="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} extra={<Button type="button" style={{backgroundColor: '#4286f4'}} className="small">添加模块</Button>} >
+            <Tabs tabPosition="right">
 
-          <TabPanel>
-          <div>
-          <Tabs>
-          <TabList>
-          {this.state.clueinfo.map((cluelocation, idx) => (
-            <Tab>{cluelocation.name}</Tab>
-          ))}
-          </TabList>
-          {this.state.clueinfo.map((cluelocation, idx) => (
-            <TabPanel>
-              <Toolbar style={{backgroundColor: '#bcbcbc'}} >
-              <ToolbarGroup><ToolbarTitle text="线索列表"/>
-              <Helper step={5} />
-              <ToolbarSeparator/></ToolbarGroup>
-                <ToolbarGroup>
-                  <span>地点序号：{idx}；线索数：{cluelocation.count}</span>
-                </ToolbarGroup>
-                <ToolbarGroup><RaisedButton label="添加线索" primary={true} onClick={this.handleAddClues(idx)}/>
-              </ToolbarGroup>
-              </Toolbar>
-              <div style={{minHeight: 400,padding: 10,margin: 'auto',marginBottom: 50,backgroundColor: '#d8d8d8'}}>
-                <table className="table table-striped tableText">
-                  <tr className="tableHead">
-
-                    <th>序号</th>
-                    <th>文字内容</th>
-                    <th>上传图片</th>
-                      <th></th>
-                    <th>删除</th>
-                  </tr>
-                  {cluelocation.clues.map((clue, iidx) => (
-                    <tr>
-                      <th className="shortText"><input
-                        type="text"
-                        placeholder="序号"  disabled="disabled"
-                        value={clue.cluenumber}
-                      /></th><th className="longText">
-                    <input
-                  type="text"
-                  placeholder="文字内容"
-                  value={clue.content}
-                  onChange={this.handleclueContentChange(idx,iidx)}
-                /></th>
-                  <th>
-                  <Dropzone accept="image/jpeg, image/png" style={{backgroundColor:"#ededed", border:"1px dashed", maxWidth:150}} onDrop={this.onDrop(idx,iidx)}>
-                              <p>请将上传的图片拖到框内</p>
-                  </Dropzone></th>
-                    <th>
-                  {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>预览</button>}
-
-                  </th>
-                <th className="clueDelete">
-                 <button type="button" className="small" onClick={this.handleRemoveClues(idx,iidx)} id="deleteButton" style={{margin:"auto"}}>-</button>
-                </th>
-                  </tr>
+            {this.state.characterlist.map((characterlist, idx) => (
+              <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
+              <Row gutter={16}>
+              {characterlist.characterplot.map((plot, iidx) =>
+                  {return plot.content.map((item, iiidx) => (
+                  <Col span={12}>
+                    <Card title={<div><b style={{marginRight:30}}>{plot.plotname}</b><Input style={{maxWidth:200}}
+                        value={item.type}
+                        onChange={this.handleCharacterPlotTypeChange(idx,iidx,iiidx)}
+                      /></div>} extra={<a onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)}>移除</a>} >
+                        <Input.TextArea value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} autosize={{ minRows: 6, maxRows: 6 }}/>
+                    </Card>
+                  </Col>
                   ))}
-                </table>
-              </div>
-            </TabPanel>
+                )}
+                </Row>
+              </Tabs.TabPane>
+            ))}
+            </Tabs>
+          </Card>
+
+          <Card ref="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>}  style={{margin:20}}  >
+          <Tabs tabPosition="right">
+          {this.state.clueinfo.map((cluelocation, idx) => (
+            <Tabs.TabPane tab={cluelocation.name} key={idx}>
+              <Card title={<b>{cluelocation.name}<Helper step={5} /></b>} extra={<span>线索数：{cluelocation.count} <a onClick={this.handleAddClues(idx)}><Icon type= 'plus' /></a></span>} >
+
+              <Row gutter={16}>
+              {cluelocation.clues.map((clue, iidx) => (
+              <Col span={8}>
+                <Card title={<b style={{marginRight:30}}>{clue.cluenumber}</b>} extra={<a onClick={this.handleRemoveClues(idx,iidx)}>移除</a>} >
+                    {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>预览</button>}
+                    <Input.TextArea
+                    value={clue.content}
+                    onChange={this.handleclueContentChange(idx,iidx)}
+                    autosize={{ minRows: 3, maxRows: 3 }}/>
+                </Card>
+              </Col>
+              ))}
+              </Row>
+              </Card>
+            </Tabs.TabPane>
           ))}
           </Tabs>
-          </div>
-          </TabPanel>
-      </Tabs>
+        </Card>
       </Layout>
       <ScrollToTop showUnder={160} style={{zIndex:1}}>
          <img src={btop} className="btopImg" alt={btop}/>
