@@ -53,8 +53,13 @@
 
 
 
+  <MenuItem onClick={this.handleSave}>保存</MenuItem>
+  <MenuItem onClick={this.handleDelete}>删除</MenuItem>
+  <MenuItem onClick={this.handleSaveExit}>保存并退出</MenuItem>
+  <MenuItem onClick={this.handleExit}>退出</MenuItem>
+  {this.props.auth.user.id==="5a273150c55b0d1ce0d6754d" && <MenuItem onClick={this.handlePublish}>发表</MenuItem>
 
-
+(item, key, keyPath)=>{ ReactDOM.findDOMNode(this.refs[item.key]).scrollIntoView(true);window.scrollBy(0, -60);}
 
 
 
@@ -104,3 +109,130 @@
                   </div>
 
 onClick={this.handleAddCharacterPlot(idx,iidx)}
+
+
+
+handleGameImgUpload = (cat) => (evt) =>{
+       evt.preventDefault()
+         var filename=this.state.gameinfo.id+cat+'.'+files[0].name.split('.')[1]
+         console.log(cat)
+         const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+         let data = new FormData();
+           data.append('image', files.item(0), filename);
+           const config = {
+               headers: { 'content-type': 'multipart/form-data' }
+           }
+           axios.post(imageurl, data, config).then(response => {
+             switch (cat) {
+               case 'icon':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: filename }});
+                 break;
+               case 'cover':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: filename }});
+                 break;
+               case 'map':
+               console.log(cat)
+                 this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: filename }});
+                 break;
+               default:
+             }
+           })
+           .catch(error => {
+             console.log(error);
+           });
+        this.props.addFlashMessage({
+           type: 'success',
+           text: '图片上传成功!'
+         });
+}
+onDrop= (idx,iidx) => (files) => {
+  var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
+  console.log(filename)
+  const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
+  let data = new FormData();
+    data.append('image', files[0], filename);
+    const config = {
+        headers: { 'content-type': 'multipart/form-data' }
+    }
+    axios.post(imageurl, data, config).then(response => {
+    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+      if (iidx !== sidx) return clue;
+      return { ...clue, image: filename };
+    });
+    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, clues: newclueinfo };
+    });
+    this.setState({ clueinfo: newcluelist });
+    })
+}
+
+handleDelete = (evt) =>{
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    axios.delete(url+'/'+this.state.game_id,{
+      data:{ signature: md5(this.state.game_id+"xiaomaomi") }
+    }).then(response => {
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      var promises=[]
+      for (var i=0;i<this.state.characterlist.length;i++){
+        var promise = axios.delete(url+'/'+this.state.characterlist[i]._id,{
+          data:{ signature: md5(this.state.characterlist[i]._id+"xiaomaomi") }
+      }).then(response => {
+        })
+        .catch(error => {
+          console.log(error);
+        });
+            promises.push(promise)
+      }
+      Promise.all(promises).then((result)=>{
+        console.log("All done")
+        this.props.addFlashMessage({
+           type: 'failed',
+           text: '游戏剧本已被删除!'
+         });
+         this.props.getdraft(this.props.auth.user)
+         this.context.router.history.push('/draftList');
+      })
+}
+
+handlePublish = (evt) =>{
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    axios.post(url,{
+      type: "game",
+      name: this.state.gameinfo.name,
+      id: this.state.gameinfo.id,
+      author: this.state.gameinfo.author,
+      descripion: this.state.gameinfo.descripion,
+      detailDescription:this.state.gameinfo.detailDescription,
+      playernumber: this.state.gameinfo.playernumber,
+      malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+      femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
+      category: this.state.gameinfo.category,
+      characterlist: this.state.gameinfo.characterlist,
+      cluelocation:this.state.clueinfo,
+      mainplot:this.state.plotinfo,
+      instruction:this.state.instructinfo,
+      cluemethod:this.state.gameinfo.cluemethod,
+      mapurl:this.state.gameinfo.mapurl,
+      iconurl:this.state.gameinfo.iconurl,
+      coverurl:this.state.gameinfo.coverurl,
+      cluestatus:this.fillArray(this.state.clueinfo),
+      signature:md5("xiaomaomi")
+    }).then(response => {
+      axios.delete(url+'/' +this.state.game_id,{
+          data:{ signature: md5(this.state.game_id+"xiaomaomi")}
+      }).then(response=>{
+        this.props.getdraft(this.props.auth.user)
+        this.context.router.history.push('/draftList');
+        this.props.addFlashMessage({
+           type: 'success',
+           text: '游戏剧本已发表!'
+         });
+      })
+      })
+}

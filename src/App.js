@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {
   Route,
-  BrowserRouter
+  BrowserRouter,
+  Prompt
 } from 'react-router-dom';
 
 //compnents
@@ -36,6 +37,10 @@ class App extends Component {
       <BrowserRouter>
       <div className="App">
         <NavigationMenu/>
+        <Prompt
+          when={true}
+          message="Are you sure you want to leave?"
+        />
         <div className="content ">
           <FlashMessagesList />
           <Route exact path="/" component={Home}/>

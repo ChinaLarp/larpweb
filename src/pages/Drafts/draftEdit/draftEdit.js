@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import {BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 //import { Tab, Tabs, TabList, TabPane } from 'react-tabs';
+import { Prompt } from 'react-router'
 import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
 import md5 from 'md5'
@@ -153,92 +154,92 @@ class draftEdit extends React.Component {
   handleExit = (evt)=>{
     this.context.router.history.push('/draftList');
   }
-handleSaveExit = (evt) => {
-   const url = 'https://chinabackend.bestlarp.com/api/app';
-   axios.put(url+'/'+this.state.game_id,{
-   cluelocation:this.state.gameinfo.clueinfo,
-   mainplot:this.state.plotinfo,
-   name:this.state.gameinfo.name,
-   descripion:this.state.gameinfo.descripion,
-   detailDescription:this.state.gameinfo.detailDescription,
-   malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
-   femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-   category:this.state.gameinfo.category,
-   instruction:this.state.instructinfo,
-   cluemethod:this.state.gameinfo.cluemethod,
-   mapurl:this.state.gameinfo.mapurl,
-   iconurl:this.state.gameinfo.iconurl,
-   coverurl:this.state.gameinfo.coverurl,
-   cluestatus:this.fillArray(this.state.gameinfo.clueinfo),
-   signature:md5(this.state.game_id+"xiaomaomi")
- }).then(response => {
-     console.log("put game submitted" + this.state.name)
-   })
-   .catch(error => {
-     console.log(error);
-   });
-   var promises=[]
-   for (var i=0;i<this.state.characterlist.length;i++)
-       {
-       var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
-           gamename:this.state.gameinfo.name,
-           banlocation: this.state.characterlist[i].banlocation,
-           charactername: this.state.characterlist[i].charactername,
-           characterdescription: this.state.characterlist[i].characterdescription,
-           charactersex: this.state.characterlist[i].charactersex,
-           characterinfo: this.state.characterlist[i].characterinfo,
-           characterplot: this.state.characterlist[i].characterplot,
-           signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
-       }).then(response => {
-           console.log("put character submitted" + this.state.characterlist[i].name)
+  handleSaveExit = (evt) => {
+     const url = 'https://chinabackend.bestlarp.com/api/app';
+     axios.put(url+'/'+this.state.game_id,{
+     cluelocation:this.state.gameinfo.clueinfo,
+     mainplot:this.state.plotinfo,
+     name:this.state.gameinfo.name,
+     descripion:this.state.gameinfo.descripion,
+     detailDescription:this.state.gameinfo.detailDescription,
+     malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+     femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
+     category:this.state.gameinfo.category,
+     instruction:this.state.instructinfo,
+     cluemethod:this.state.gameinfo.cluemethod,
+     mapurl:this.state.gameinfo.mapurl,
+     iconurl:this.state.gameinfo.iconurl,
+     coverurl:this.state.gameinfo.coverurl,
+     cluestatus:this.fillArray(this.state.gameinfo.clueinfo),
+     signature:md5(this.state.game_id+"xiaomaomi")
+   }).then(response => {
+       console.log("put game submitted" + this.state.name)
+     })
+     .catch(error => {
+       console.log(error);
+     });
+     var promises=[]
+     for (var i=0;i<this.state.characterlist.length;i++)
+         {
+         var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+             gamename:this.state.gameinfo.name,
+             banlocation: this.state.characterlist[i].banlocation,
+             charactername: this.state.characterlist[i].charactername,
+             characterdescription: this.state.characterlist[i].characterdescription,
+             charactersex: this.state.characterlist[i].charactersex,
+             characterinfo: this.state.characterlist[i].characterinfo,
+             characterplot: this.state.characterlist[i].characterplot,
+             signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
+         }).then(response => {
+             console.log("put character submitted" + this.state.characterlist[i].name)
+           })
+           .catch(error => {
+             console.log(error);
+           });
+           promises.push(promise)
+         }
+         Promise.all(promises).then((result)=>{
+           console.log("All done")
+           this.props.addFlashMessage({
+              type: 'success',
+              text: '游戏剧本已保存!'
+            });
+            this.context.router.history.push('/draftList');
          })
-         .catch(error => {
-           console.log(error);
-         });
-         promises.push(promise)
-       }
-       Promise.all(promises).then((result)=>{
-         console.log("All done")
-         this.props.addFlashMessage({
-            type: 'success',
-            text: '游戏剧本已保存!'
-          });
-          this.context.router.history.push('/draftList');
-       })
-}
-handleAction = (item, key, keyPath) =>{
-  const url = 'https://chinabackend.bestlarp.com/api/app';
-  switch (item.key) {
-    case "save":
-    axios.put(url+'/'+this.state.game_id,{
-      ...this.state.gameinfo,
-      mainplot:this.state.plotinfo,
-      malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
-      femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-      instruction:this.state.instructinfo,
-      cluestatus:this.fillArray(this.state.gameinfo.cluelocation),
-      signature:md5(this.state.game_id+"xiaomaomi")
-    }).then(response => {}).catch(error => {console.log(error);});
-      var promises=[]
-      for (var i=0;i<this.state.characterlist.length;i++){
-          var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
-              ...this.state.characterlist[i],
-              gamename:this.state.gameinfo.name,
-              signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
-          }).then(response => {}).catch(error => {console.log(error);});
-            promises.push(promise)
-        }
-        Promise.all(promises).then((result)=>{
-          console.log("All done")
-          message.success("保存剧本成功！")
-        })
-      break;
-    case "exit":
-      this.context.router.history.push('/draftList');
-      break;
-    default:
   }
-}
+  handleAction = (item, key, keyPath) =>{
+    const url = 'https://chinabackend.bestlarp.com/api/app';
+    switch (item.key) {
+      case "save":
+      axios.put(url+'/'+this.state.game_id,{
+        ...this.state.gameinfo,
+        mainplot:this.state.plotinfo,
+        malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
+        femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
+        instruction:this.state.instructinfo,
+        cluestatus:this.fillArray(this.state.gameinfo.cluelocation),
+        signature:md5(this.state.game_id+"xiaomaomi")
+      }).then(response => {}).catch(error => {console.log(error);});
+        var promises=[]
+        for (var i=0;i<this.state.characterlist.length;i++){
+            var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+                ...this.state.characterlist[i],
+                gamename:this.state.gameinfo.name,
+                signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
+            }).then(response => {}).catch(error => {console.log(error);});
+              promises.push(promise)
+          }
+          Promise.all(promises).then((result)=>{
+            console.log("All done")
+            message.success("保存剧本成功！")
+          })
+        break;
+      case "exit":
+        this.context.router.history.push('/draftList');
+        break;
+      default:
+    }
+  }
   handleAddInstruction = () => {
       this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
   }
@@ -509,6 +510,8 @@ handleAction = (item, key, keyPath) =>{
           console.log(error);
         });
     }
+
+
   render() {
 
       message.config({
