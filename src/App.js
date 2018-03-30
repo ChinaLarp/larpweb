@@ -35,7 +35,7 @@ class App extends Component {
     return (
       <BrowserRouter>
       <div className="App">
-        <NavigationMenu style={{zIndex:1}}/>
+        <NavigationMenu/>
         <div className="content ">
           <FlashMessagesList />
           <Route exact path="/" component={Home}/>

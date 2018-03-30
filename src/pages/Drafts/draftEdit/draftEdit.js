@@ -5,8 +5,6 @@ import {BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, 
 import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
 import md5 from 'md5'
-import Toggle from 'material-ui/Toggle';
-import randomString from 'random-string';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -41,7 +39,6 @@ class draftEdit extends React.Component {
       openMenu:true,
       game_id:'',
       gameinfo:{},
-      clueinfo:[],
       plotinfo:[],
       instructinfo:[],
       characterlist: [],
@@ -72,114 +69,94 @@ class draftEdit extends React.Component {
             this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: info.file.response} })
             break;
           default:
-            const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+            const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.map((clue, sidx) => {
               if (iidx !== sidx) return clue;
               return { ...clue, image: info.file.response };
             });
-            const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+            const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
               if (idx !== sidx) return clueinfo;
               return { ...clueinfo, clues: newclueinfo };
             });
-            this.setState({ clueinfo: newcluelist });
+            this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
         }
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
     }
-confirmation = (command,idx) => (evt) => {
-  switch (command) {
-    case "AddCharacter":
-      this.setState({
-        openDialog:true,
-        Dialogtype:"AddCharacter",
-        actions:[
-            <RaisedButton
-              label="取消"
-              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-            />,
-            <RaisedButton
-              label="确认"
-              secondary={true}
-              onClick={this.handleAddCharacter}
-            />]
-      })
-      break;
-    case "AddPlot":
-      this.setState({
-        openDialog:true,
-        Dialogtype:"AddPlot",
-        actions:[
-            <RaisedButton
-              label="取消"
-              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-            />,
-            <RaisedButton
-              label="确认"
-              secondary={true}
-              onClick={this.handleAddPlot}
-            />]
-      })
-      break;
-    case "deletePlot":
-      this.setState({
-        openDialog:true,
-        Dialogtype:"deletePlot",
-        errorMessage:(
-          <p>确定要删除此阶段吗？点击确认将同时移除所有角色的该阶段剧本。</p>
-        ),
-        actions:[
-            <RaisedButton
-              label="取消"
-              onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-            />,
-            <RaisedButton
-              label="确认"
-              secondary={true}
-              onClick={this.handleRemovePlot(idx)}
-            />]
-      })
-      break;
-    default:
-  }
-}
-fillArray = (cluelocation) => {
-   if (cluelocation.length === 0) return [];
-   var cluestatus=[]
-   for  (var i=0;i<cluelocation.length;i++) {
-     var a = [true];
-     while (a.length * 2 <= cluelocation[i].clues.length) a = a.concat(a);
-     cluestatus = cluestatus.concat([a]);
-   }
-   console.log(cluestatus)
-   return cluestatus;
- }
-handlePreviewImage = (idx,iidx) => (evt) => {
-  var url =""
-  if (idx===-1){
-    switch (iidx) {
-      case 0:
-        url = this.state.gameinfo.iconurl
+  confirmation = (command,idx) => (evt) => {
+    switch (command) {
+      case "AddCharacter":
+        this.setState({
+          openDialog:true,
+          Dialogtype:"AddCharacter",
+          actions:[
+              <RaisedButton
+                label="取消"
+                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+              />,
+              <RaisedButton
+                label="确认"
+                secondary={true}
+                onClick={this.handleAddCharacter}
+              />]
+        })
         break;
-      case 1:
-        url = this.state.gameinfo.coverurl
+      case "AddPlot":
+        this.setState({
+          openDialog:true,
+          Dialogtype:"AddPlot",
+          actions:[
+              <RaisedButton
+                label="取消"
+                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+              />,
+              <RaisedButton
+                label="确认"
+                secondary={true}
+                onClick={this.handleAddPlot}
+              />]
+        })
         break;
-      case 2:
-        url = this.state.gameinfo.mapurl
+      case "deletePlot":
+        this.setState({
+          openDialog:true,
+          Dialogtype:"deletePlot",
+          errorMessage:(
+            <p>确定要删除此阶段吗？点击确认将同时移除所有角色的该阶段剧本。</p>
+          ),
+          actions:[
+              <RaisedButton
+                label="取消"
+                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
+              />,
+              <RaisedButton
+                label="确认"
+                secondary={true}
+                onClick={this.handleRemovePlot(idx)}
+              />]
+        })
         break;
       default:
     }
-  }else{
-    url = this.state.clueinfo[idx].clues[iidx].image
   }
- this.setState({ imageurl: url, isOpen:true });
-}
-handleExit = (evt)=>{
-  this.context.router.history.push('/draftList');
-}
+  fillArray = (cluelocation) => {
+     if (cluelocation.length === 0) return [];
+     var cluestatus=[]
+     for  (var i=0;i<cluelocation.length;i++) {
+       var a = [true];
+       while (a.length * 2 <= cluelocation[i].clues.length) a = a.concat(a);
+       cluestatus = cluestatus.concat([a]);
+     }
+     console.log(cluestatus)
+     return cluestatus;
+   }
+  handleExit = (evt)=>{
+    this.context.router.history.push('/draftList');
+  }
 handleSaveExit = (evt) => {
    const url = 'https://chinabackend.bestlarp.com/api/app';
    axios.put(url+'/'+this.state.game_id,{
-   cluelocation:this.state.clueinfo,
+   cluelocation:this.state.gameinfo.clueinfo,
    mainplot:this.state.plotinfo,
    name:this.state.gameinfo.name,
    descripion:this.state.gameinfo.descripion,
@@ -192,7 +169,7 @@ handleSaveExit = (evt) => {
    mapurl:this.state.gameinfo.mapurl,
    iconurl:this.state.gameinfo.iconurl,
    coverurl:this.state.gameinfo.coverurl,
-   cluestatus:this.fillArray(this.state.clueinfo),
+   cluestatus:this.fillArray(this.state.gameinfo.clueinfo),
    signature:md5(this.state.game_id+"xiaomaomi")
  }).then(response => {
      console.log("put game submitted" + this.state.name)
@@ -229,292 +206,146 @@ handleSaveExit = (evt) => {
           this.context.router.history.push('/draftList');
        })
 }
-handleSave = (evt) =>{
-    const url = 'https://chinabackend.bestlarp.com/api/app';
+handleAction = (item, key, keyPath) =>{
+  const url = 'https://chinabackend.bestlarp.com/api/app';
+  switch (item.key) {
+    case "save":
     axios.put(url+'/'+this.state.game_id,{
-      cluelocation:this.state.clueinfo,
+      ...this.state.gameinfo,
       mainplot:this.state.plotinfo,
-      name:this.state.gameinfo.name,
-      descripion:this.state.gameinfo.descripion,
-      detailDescription:this.state.gameinfo.detailDescription,
       malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
       femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-      category:this.state.gameinfo.category,
       instruction:this.state.instructinfo,
-      cluemethod:this.state.gameinfo.cluemethod,
-      mapurl:this.state.gameinfo.mapurl,
-      iconurl:this.state.gameinfo.iconurl,
-      coverurl:this.state.gameinfo.coverurl,
-      cluestatus:this.fillArray(this.state.clueinfo),
+      cluestatus:this.fillArray(this.state.gameinfo.cluelocation),
       signature:md5(this.state.game_id+"xiaomaomi")
-    }).then(response => {
-        console.log("put game submitted")
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    }).then(response => {}).catch(error => {console.log(error);});
       var promises=[]
-      for (var i=0;i<this.state.characterlist.length;i++)
-          {
+      for (var i=0;i<this.state.characterlist.length;i++){
           var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
+              ...this.state.characterlist[i],
               gamename:this.state.gameinfo.name,
-              banlocation: this.state.characterlist[i].banlocation,
-              characterinfo: this.state.characterlist[i].characterinfo,
-              charactername: this.state.characterlist[i].charactername,
-              characterdescription: this.state.characterlist[i].characterdescription,
-              charactersex: this.state.characterlist[i].charactersex,
-              characterplot: this.state.characterlist[i].characterplot,
               signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
-          }).then(response => {
-              console.log("put character submitted" + this.state.characterlist[i].name)
-            })
-            .catch(error => {
-              console.log(error);
-            });
+          }).then(response => {}).catch(error => {console.log(error);});
             promises.push(promise)
-          }
-          Promise.all(promises).then((result)=>{
-            console.log("All done")
-            this.props.addFlashMessage({
-               type: 'success',
-               text: '游戏剧本已保存!'
-             });
-          })
-
+        }
+        Promise.all(promises).then((result)=>{
+          console.log("All done")
+          message.success("保存剧本成功！")
+        })
+      break;
+    case "exit":
+      this.context.router.history.push('/draftList');
+      break;
+    default:
+  }
 }
-handleDelete = (evt) =>{
-    const url = 'https://chinabackend.bestlarp.com/api/app';
-    axios.delete(url+'/'+this.state.game_id,{
-      data:{ signature: md5(this.state.game_id+"xiaomaomi") }
-    }).then(response => {
-      })
-      .catch(error => {
-        console.log(error);
+  handleAddInstruction = () => {
+      this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
+  }
+  handleRemoveInstruction = (idx) => () => {
+
+      this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
+  }
+  handleInstructTypeChange = (idx) => (evt) => {
+      const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
+        if (idx !== sidx) return instruct;
+        return { ...instruct, type: evt.target.value };
       });
-      var promises=[]
-      for (var i=0;i<this.state.characterlist.length;i++)
-          {
-            var promise = axios.delete(url+'/'+this.state.characterlist[i]._id,{
-              data:{ signature: md5(this.state.characterlist[i]._id+"xiaomaomi") }
-          }).then(response => {
-            })
-            .catch(error => {
-              console.log(error);
-            });
-                promises.push(promise)
-          }
-          Promise.all(promises).then((result)=>{
-            console.log("All done")
-            this.props.addFlashMessage({
-               type: 'failed',
-               text: '游戏剧本已被删除!'
-             });
-             this.props.getdraft(this.props.auth.user)
-             this.context.router.history.push('/draftList');
-          })
 
-}
-handlePublish = (evt) =>{
-    const url = 'https://chinabackend.bestlarp.com/api/app';
-    axios.post(url,{
-      type: "game",
-      name: this.state.gameinfo.name,
-      id: this.state.gameinfo.id,
-      author: this.state.gameinfo.author,
-      descripion: this.state.gameinfo.descripion,
-      detailDescription:this.state.gameinfo.detailDescription,
-      playernumber: this.state.gameinfo.playernumber,
-      malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
-      femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-      category: this.state.gameinfo.category,
-      characterlist: this.state.gameinfo.characterlist,
-      cluelocation:this.state.clueinfo,
-      mainplot:this.state.plotinfo,
-      instruction:this.state.instructinfo,
-      cluemethod:this.state.gameinfo.cluemethod,
-      mapurl:this.state.gameinfo.mapurl,
-      iconurl:this.state.gameinfo.iconurl,
-      coverurl:this.state.gameinfo.coverurl,
-      cluestatus:this.fillArray(this.state.clueinfo),
-      signature:md5("xiaomaomi")
-    }).then(response => {
-      axios.delete(url+'/' +this.state.game_id,{
-          data:{ signature: md5(this.state.game_id+"xiaomaomi")}
-      }).then(response=>{
-        this.props.getdraft(this.props.auth.user)
-        this.context.router.history.push('/draftList');
-        this.props.addFlashMessage({
-           type: 'success',
-           text: '游戏剧本已发表!'
-         });
-      })
-      })
-}
-onDrop= (idx,iidx) => (files) => {
-  var filename=this.state.gameinfo.id+randomString({length: 2})+'.'+files[0].name.split('.')[1]
-  console.log(filename)
-  const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-  let data = new FormData();
-    data.append('image', files[0], filename);
-    const config = {
-        headers: { 'content-type': 'multipart/form-data' }
-    }
-    axios.post(imageurl, data, config).then(response => {
-    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
-      if (iidx !== sidx) return clue;
-      return { ...clue, image: filename };
-    });
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
-      if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo };
-    });
-    this.setState({ clueinfo: newcluelist });
-    })
-}
+      this.setState({ instructinfo: newinstructinfo });
+  }
+  handleInstructContentChange = (idx) => (evt) => {
+      const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
+        if (idx !== sidx) return instruct;
+        return { ...instruct, content: evt.target.value.split('\n') };
+      });
 
-handleGameImgUpload = (cat) => (evt) =>{
-       evt.preventDefault()
-         var filename=this.state.gameinfo.id+cat+'.'+files[0].name.split('.')[1]
-         console.log(cat)
-         const imageurl = 'https://chinabackend.bestlarp.com/uploadimage';
-         let data = new FormData();
-           data.append('image', files.item(0), filename);
-           const config = {
-               headers: { 'content-type': 'multipart/form-data' }
-           }
-           axios.post(imageurl, data, config).then(response => {
-             switch (cat) {
-               case 'icon':
-               console.log(cat)
-                 this.setState({gameinfo:{ ...this.state.gameinfo, iconurl: filename }});
-                 break;
-               case 'cover':
-               console.log(cat)
-                 this.setState({gameinfo:{ ...this.state.gameinfo, coverurl: filename }});
-                 break;
-               case 'map':
-               console.log(cat)
-                 this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: filename }});
-                 break;
-               default:
-             }
-           })
-           .catch(error => {
-             console.log(error);
-           });
-        this.props.addFlashMessage({
-           type: 'success',
-           text: '图片上传成功!'
-         });
-}
-
-handleAddInstruction = () => {
-    this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
-}
-handleRemoveInstruction = (idx) => () => {
-
-    this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
-}
-handleInstructTypeChange = (idx) => (evt) => {
-    const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
-      if (idx !== sidx) return instruct;
-      return { ...instruct, type: evt.target.value };
-    });
-
-    this.setState({ instructinfo: newinstructinfo });
-}
-handleInstructContentChange = (idx) => (evt) => {
-    const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
-      if (idx !== sidx) return instruct;
-      return { ...instruct, content: evt.target.value.split('\n') };
-    });
-
-    this.setState({ instructinfo: newinstructinfo });
-}
-handleAddCharacter =  ()  => {
-    const newcharacterlist=this.state.characterlist.concat([{...this.state.characterlist[0],charactername:this.state.insertCharactername,characterdescription:""}]).map((plot, sidx) => {
-        return { ...plot, characterid: sidx }
-    });
-    this.setState({ characterlist:newcharacterlist, errorMessage:null,openDialog:false});
-}
-handleAddPlot =  ()  => {
-    const idx=this.state.insertPlotlocation
-    const newplotinfo=[{plotid:-1}].concat(this.state.plotinfo).map((plot, sidx) => {
-      if (idx > sidx) {
-        return this.state.plotinfo[sidx]
-      }else if (idx===sidx) {
-        return { plotid: idx, plotname: this.state.insertPlotname, enableclue:0, enablevote:0, content: ['']};
-      }else{
-        return { ...plot, plotid: plot.plotid+1 };
-      }
-    });
-    const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
-      var newcharacterplot=[{plotid:-1}].concat(character.characterplot).map((plot, siidx) => {
-        if (idx > siidx) {
-          return character.characterplot[siidx]
-        }else if (idx===siidx) {
-          return { ...plot, plotid: idx, plotname: this.state.insertPlotname };
+      this.setState({ instructinfo: newinstructinfo });
+  }
+  handleAddCharacter =  ()  => {
+      const newcharacterlist=this.state.characterlist.concat([{...this.state.characterlist[0],charactername:this.state.insertCharactername,characterdescription:""}]).map((plot, sidx) => {
+          return { ...plot, characterid: sidx }
+      });
+      this.setState({ characterlist:newcharacterlist, errorMessage:null,openDialog:false});
+  }
+  handleAddPlot =  ()  => {
+      const idx=this.state.insertPlotlocation
+      const newplotinfo=[{plotid:-1}].concat(this.state.plotinfo).map((plot, sidx) => {
+        if (idx > sidx) {
+          return this.state.plotinfo[sidx]
+        }else if (idx===sidx) {
+          return { plotid: idx, plotname: this.state.insertPlotname, enableclue:0, enablevote:0, content: ['']};
         }else{
           return { ...plot, plotid: plot.plotid+1 };
         }
       });
-      return {...character,characterplot:newcharacterplot}
-    })
-    this.setState({ characterlist:newcharacterlist, plotinfo: newplotinfo, errorMessage:null,openDialog:false});
-}
-handleRemovePlot = (idx) => () => {
-    var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== idx).map((plot, sidx) => {return { ...plot, plotid: sidx }});
-    const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
-      var newcharacterplot=character.characterplot.filter((s, siidx) => siidx !== idx).map((plot, siidx) => {return { ...plot, plotid: siidx }});
-      return {...character,characterplot:newcharacterplot}
-    })
-    this.setState({characterlist:newcharacterlist, plotinfo: newplotinfo ,errorMessage:null,openDialog:false});
-}
-handlePlotNameChange = (idx) => (evt) => {
-    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
-      if (idx !== sidx) return plot;
-      return { ...plot, plotname: evt.target.value };
-    });
+      const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+        var newcharacterplot=[{plotid:-1}].concat(character.characterplot).map((plot, siidx) => {
+          if (idx > siidx) {
+            return character.characterplot[siidx]
+          }else if (idx===siidx) {
+            return { ...plot, plotid: idx, plotname: this.state.insertPlotname };
+          }else{
+            return { ...plot, plotid: plot.plotid+1 };
+          }
+        });
+        return {...character,characterplot:newcharacterplot}
+      })
+      this.setState({ characterlist:newcharacterlist, plotinfo: newplotinfo, errorMessage:null,openDialog:false});
+  }
+  handleRemovePlot = (idx) => () => {
+      var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== idx).map((plot, sidx) => {return { ...plot, plotid: sidx }});
+      const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+        var newcharacterplot=character.characterplot.filter((s, siidx) => siidx !== idx).map((plot, siidx) => {return { ...plot, plotid: siidx }});
+        return {...character,characterplot:newcharacterplot}
+      })
+      this.setState({characterlist:newcharacterlist, plotinfo: newplotinfo ,errorMessage:null,openDialog:false});
+  }
+  handlePlotNameChange = (idx) => (evt) => {
+      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+        if (idx !== sidx) return plot;
+        return { ...plot, plotname: evt.target.value };
+      });
 
-    this.setState({ plotinfo: newplotinfo });
-}
-handleToggleenablevote= (idx) => (event) => {
-    var newenablevote=event?1:0
-    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
-      if (idx !== sidx) return plot;
-      return { ...plot, enablevote:newenablevote };
-    });
+      this.setState({ plotinfo: newplotinfo });
+  }
+  handleToggleenablevote= (idx) => (event) => {
+      var newenablevote=event?1:0
+      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+        if (idx !== sidx) return plot;
+        return { ...plot, enablevote:newenablevote };
+      });
 
-    this.setState({ plotinfo: newplotinfo });
-}
-handleToggleenableclue= (idx) => (event) => {
-    var newenableclue=event?1:0
-    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
-      if (idx !== sidx) return plot;
-      return { ...plot, enableclue:newenableclue };
-    });
+      this.setState({ plotinfo: newplotinfo });
+  }
+  handleToggleenableclue= (idx) => (event) => {
+      var newenableclue=event?1:0
+      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+        if (idx !== sidx) return plot;
+        return { ...plot, enableclue:newenableclue };
+      });
 
-    this.setState({ plotinfo: newplotinfo });
-}
-handlePlotContentChange = (idx) => (evt) => {
-    const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
-      if (idx !== sidx) return plot;
-      return { ...plot, content: evt.target.value.split('\n')  };
-    });
+      this.setState({ plotinfo: newplotinfo });
+  }
+  handlePlotContentChange = (idx) => (evt) => {
+      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+        if (idx !== sidx) return plot;
+        return { ...plot, content: evt.target.value.split('\n')  };
+      });
 
-    this.setState({ plotinfo: newplotinfo });
-}
-handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
-    const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
-      if (iidx !== sidx) return plot;
-      return { ...plot, plotname: evt.target.value };
-    });
-    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
-      if (idx !== sidx) return characterlist;
-      return { ...characterlist, characterplot: newplotinfo };
-    });
-    this.setState({ characterlist: newcharacterlist });
-}
+      this.setState({ plotinfo: newplotinfo });
+  }
+  handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
+      const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
+        if (iidx !== sidx) return plot;
+        return { ...plot, plotname: evt.target.value };
+      });
+      const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+        if (idx !== sidx) return characterlist;
+        return { ...characterlist, characterplot: newplotinfo };
+      });
+      this.setState({ characterlist: newcharacterlist });
+  }
   handleCharacterPlotContentChange = (idx,iidx,iiidx) => (evt) => {
     const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.map((item, sidx) => {
       if (iiidx !== sidx) return item;
@@ -601,34 +432,31 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
     this.setState({ characterlist: newcharacterlist });
     //console.log(this.state.characterlist[idx].characterinfo.content)
   }
-
   handleclueContentChange = (idx,iidx) => (evt) => {
-    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+    const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.map((clue, sidx) => {
       if (iidx !== sidx) return clue;
       return { ...clue, content: evt.target.value };
     });
 
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
       return { ...clueinfo, clues: newclueinfo };
     });
 
-    this.setState({ clueinfo: newcluelist });
+    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
   }
-
-
   handleclueImageChange = (idx,iidx) => (evt) => {
-    const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+    const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.map((clue, sidx) => {
       if (iidx !== sidx) return clue;
       return { ...clue, image: evt.target.value };
     });
 
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
       return { ...clueinfo, clues: newclueinfo };
     });
 
-    this.setState({ clueinfo: newcluelist });
+    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
   }
   handleBanLocationChange = (idx) => (event) => {
     const newCharacter = this.state.characterlist.map((character, sidx) => {
@@ -638,31 +466,28 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
 
     this.setState({ characterlist: newCharacter });
   }
-
-  //??? Debug Required
   handleRemoveClues= (idx,iidx) => () => {
-    var newclueinfo=this.state.clueinfo[idx].clues.filter((clue, sidx) => iidx !== sidx);
+    var newclueinfo=this.state.gameinfo.cluelocation[idx].clues.filter((clue, sidx) => iidx !== sidx);
     newclueinfo = newclueinfo.map((plot, sidx) => {
     return { ...plot, cluenumber: sidx };
-  });
+    });
 
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
       return { ...clueinfo, clues: newclueinfo ,count:newclueinfo.length};
     });
 
     console.log(newcluelist);
-    this.setState({ clueinfo: newcluelist });
+    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
   }
-
   handleAddClues = (idx) => () => {
-    const newclueinfo = this.state.clueinfo[idx].clues.concat([{content: '', cluenumber:this.state.clueinfo[idx].clues.length, image:'', cluelocation: idx, passcode: '',}]);
-    const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+    const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.concat([{content: '', cluenumber:this.state.gameinfo.cluelocation[idx].clues.length, image:'', cluelocation: idx, passcode: '',}]);
+    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
       return { ...clueinfo, clues: newclueinfo ,count:newclueinfo.length};
     });
 
-    this.setState({ clueinfo: newcluelist });
+    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
   }
   componentWillMount(){
       const url = "https://chinabackend.bestlarp.com/api/app";
@@ -670,7 +495,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
           console.log(response.data.detailDescription)
-          this.setState({ gameinfo: response.data, clueinfo: response.data.cluelocation, instructinfo: response.data.instruction, plotinfo: response.data.mainplot});
+          this.setState({ gameinfo: response.data, instructinfo: response.data.instruction, plotinfo: response.data.mainplot});
           axios.get(url+'?type=character&gameid=' +response.data.id)
             .then(response => {
             	//console.log(response.data)
@@ -686,6 +511,10 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
     }
   render() {
 
+      message.config({
+        top: 70,
+        duration: 2,
+      })
     return (
       <Spin spinning={this.state.loading}>
       <BackTop />
@@ -725,17 +554,16 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
          </div>
        <Layout.Sider width={150}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
          <Menu
+           selectable="false"
            mode="inline"
            defaultSelectedKeys={['1']}
            defaultOpenKeys={['sub1']}
            style={{ height: '100%', borderRight: 0 }}
-           onClick={(item, key, keyPath)=>{ ReactDOM.findDOMNode(this.refs[item.key]).scrollIntoView(true);window.scrollBy(0, -60);}}
+           onClick={this.handleAction.bind(this)}
          >
            <Menu.ItemGroup key="basic" title={<b>{this.state.gameinfo.name}</b>}>
-             <Menu.Item key="basic">基本信息</Menu.Item>
-             <Menu.Item key="image">图片设计</Menu.Item>
-             <Menu.Item key="instruction">游戏说明</Menu.Item>
-             <Menu.Item key="plot">阶段剧情</Menu.Item>
+             <Menu.Item key="save">保存</Menu.Item>
+             <Menu.Item key="exit">退出</Menu.Item>
            </Menu.ItemGroup>
          </Menu>
        </Layout.Sider>
@@ -952,7 +780,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                   <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >禁止搜证地点：</Col><Col span={16} >
                   <Radio.Group value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
                     <Radio.Button value="-1">无</Radio.Button>
-                    {this.state.clueinfo.map((cluelocation, iidx) => (
+                    {this.state.gameinfo.cluelocation.map((cluelocation, iidx) => (
                        <Radio.Button value={iidx.toString()}>{cluelocation.name}</Radio.Button>
                      ))}
                   </Radio.Group></Col></Row>
@@ -1007,7 +835,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
 
           <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>}  style={{margin:20}}  >
           <Tabs tabPosition="right">
-          {this.state.clueinfo.map((cluelocation, idx) => (
+          {this.state.gameinfo.cluelocation?this.state.gameinfo.cluelocation.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
               <Card title={<b>{cluelocation.name}<Helper step={5} /></b>} extra={<span>线索数：{cluelocation.count} <a onClick={this.handleAddClues(idx)}><Icon type= 'plus' /></a></span>} >
 
@@ -1027,17 +855,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                     action= 'https://chinabackend.bestlarp.com/uploadimage'
                     >
                     <Button>
-                      <Icon type="upload" onClick={(e)=>{
-                          const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
-                            if (iidx !== sidx) return clue;
-                            return { ...clue, image: this.state.gameinfo.id+idx +"n"+iidx };
-                          });
-                          const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
-                            if (idx !== sidx) return clueinfo;
-                            return { ...clueinfo, clues: newclueinfo };
-                          });
-                          this.setState({ clueinfo: newcluelist });
-                          }} /> 点此上传
+                      <Icon type="upload" /> 点此上传
                     </Button>
                   </Upload>
                     <Input.TextArea
@@ -1050,7 +868,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               </Row>
               </Card>
             </Tabs.TabPane>
-          ))}
+          )):""}
           </Tabs>
         </Card>
       </Layout>

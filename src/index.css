@@ -34,6 +34,7 @@ logo{
 /* content page */
 
 .content {
+  margin-top: 35px;
   min-height: 700px;
 }
 .content h2 {
