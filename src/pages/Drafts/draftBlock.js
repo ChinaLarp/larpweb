@@ -61,8 +61,8 @@ delete=()=> {
       gamesList= <div>'想创作属于自己的剧本吗？点击右上角“创建新剧本”'</div>;
     } else {
       gamesList = this.props.auth.drafts.map((game, idx) => {
-      var link=(game.type==="template" ?'#/DraftCreate/' + game._id:'#/draftEdit/' + game._id)
-      var summary='#/draftSummary/' + game._id
+      var link=(game.type==="template" ?'/DraftCreate/' + game._id:'/draftEdit/' + game._id)
+      var summary='/draftSummary/' + game._id
       var status = ""
       switch (game.type) {
         case "template":

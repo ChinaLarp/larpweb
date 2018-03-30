@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {
   Route,
-  HashRouter
+  BrowserRouter
 } from 'react-router-dom';
 
 //compnents
@@ -33,7 +33,7 @@ injectTapEventPlugin();
 class App extends Component {
   render() {
     return (
-      <HashRouter>
+      <BrowserRouter>
       <div className="App">
         <NavigationMenu style={{zIndex:1}}/>
         <div className="content ">
@@ -56,7 +56,7 @@ class App extends Component {
         <Footer />
       </div>
 
-    </HashRouter>
+    </BrowserRouter>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
+import {BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 //import { Tab, Tabs, TabList, TabPane } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
@@ -12,8 +12,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addFlashMessage } from '../../../actions/flashmessages.js';
 import { getdraft } from '../../../actions/authAction.js';
-import ScrollToTop from 'react-scroll-up';
-import btop from '../../../assets/img/btop.png';
 import Lightbox from 'react-image-lightbox';
 import IconButton from 'material-ui/IconButton';
 import MenuItem from 'material-ui/MenuItem';
@@ -27,7 +25,7 @@ import AppBar from 'material-ui/AppBar';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import Dropzone from 'react-dropzone'
+import ImageIcon from './imageIcon'
 var files
 class draftEdit extends React.Component {
   constructor(props, context){
@@ -50,10 +48,11 @@ class draftEdit extends React.Component {
       cluemethod:'',
       intervalId: 0,
       isOpen: false,
-      imageurl:''
+      imageurl:'',
+      loading:true
     };
   }
-  onuploadChange(info) {
+  onuploadChange = (idx,iidx) => (info) => {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -73,6 +72,15 @@ class draftEdit extends React.Component {
             this.setState({gameinfo:{ ...this.state.gameinfo, mapurl: info.file.response} })
             break;
           default:
+            const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+              if (iidx !== sidx) return clue;
+              return { ...clue, image: info.file.response };
+            });
+            const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+              if (idx !== sidx) return clueinfo;
+              return { ...clueinfo, clues: newclueinfo };
+            });
+            this.setState({ clueinfo: newcluelist });
         }
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
@@ -133,16 +141,6 @@ confirmation = (command,idx) => (evt) => {
       break;
     default:
   }
-}
-scrollStep() {
-  if (window.pageYOffset === 0) {
-      clearInterval(this.state.intervalId);
-  }
-  window.scroll(0, window.pageYOffset - this.props.scrollStepInPx);
-}
-scrollToTop() {
-  let intervalId = setInterval(this.scrollStep.bind(this), this.props.delayInMs);
-  this.setState({ intervalId: intervalId });
 }
 fillArray = (cluelocation) => {
    if (cluelocation.length === 0) return [];
@@ -676,7 +674,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
           axios.get(url+'?type=character&gameid=' +response.data.id)
             .then(response => {
             	//console.log(response.data)
-              this.setState({ characterlist: response.data });
+              this.setState({ characterlist: response.data, loading:false });
             })
             .catch(error => {
               console.log(error);
@@ -689,14 +687,12 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
   render() {
 
     return (
-      <Layout id="containingDivs">
-      {this.state.isOpen && (
-        <Lightbox
-          mainSrc={"https://chinabackend.bestlarp.com/pic/"+this.state.imageurl}
-          onCloseRequest={() => this.setState({ isOpen: false })}
-          discourageDownloads="true"
-        />
-      )}
+      <Spin spinning={this.state.loading}>
+      <BackTop />
+      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
+        <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+      </Modal>
+      <Layout >
           <div>
             <Dialog
                title="确认信息"
@@ -727,7 +723,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
              </div>
            </Dialog>
          </div>
-       <Layout.Sider width={300}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+       <Layout.Sider width={150}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
          <Menu
            mode="inline"
            defaultSelectedKeys={['1']}
@@ -741,23 +737,24 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
              <Menu.Item key="instruction">游戏说明</Menu.Item>
              <Menu.Item key="plot">阶段剧情</Menu.Item>
            </Menu.ItemGroup>
-           <Menu.ItemGroup key="sub2" title={<span><Icon type="laptop" />人物剧本</span>}>
-             <Menu.Item key="5">option5</Menu.Item>
-             <Menu.Item key="6">option6</Menu.Item>
-             <Menu.Item key="7">option7</Menu.Item>
-             <Menu.Item key="8">option8</Menu.Item>
-           </Menu.ItemGroup>
-           <Menu.ItemGroup key="sub3" title={<span><Icon type="notification" />游戏线索</span>}>
-             <Menu.Item key="9">option9</Menu.Item>
-             <Menu.Item key="10">option10</Menu.Item>
-             <Menu.Item key="11">option11</Menu.Item>
-             <Menu.Item key="12">option12</Menu.Item>
-           </Menu.ItemGroup>
          </Menu>
        </Layout.Sider>
-      <Layout  style={{ marginLeft: 300 }}>
+       <Layout.Sider width={200}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', right: 0 }}>
+       <Menu style={{ height: '100%', borderRight: 0 }} >
+         <Anchor offsetTop="60">
+          <Anchor.Link href="#basic" title="基本信息" />
+          <Anchor.Link href="#image" title="图片设计" />
+          <Anchor.Link href="#instruction" title="基本信息" />
+          <Anchor.Link href="#plot" title="图片设计" />
+          <Anchor.Link href="#char" title="角色信息" />
+          <Anchor.Link href="#charplot" title="角色阶段剧本"/>
+          <Anchor.Link href="#clue" title="线索编辑"/>
+        </Anchor>
+      </Menu>
+       </Layout.Sider>
+      <Layout  style={{ marginLeft: 150,marginRight:200 }}>
 
-          <Card ref="basic" title={<b style={{fontSize:20, textAlign:"left"}} >基本信息</b>} style={{margin:20}}>
+          <Card id="basic" title={<b style={{fontSize:20, textAlign:"left"}} >基本信息</b>} style={{margin:20}}>
             <Row type="flex" justify="space-around" align="top" gutter={16}>
               <Col span={16} >
                 <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本名称：</Col><Col span={16} >
@@ -787,21 +784,32 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
                 </Row>
               </Col>
               <Col span={6} >
-                <img alt="cover" style={{height:350}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime()} />
+                <img alt="cover" onClick={(e) => {
+                  this.setState({
+                    previewImage: e.target.src,
+                    previewVisible: true,
+                  });
+                }} style={{height:350}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():""} />
+
               </Col>
             </Row>
           </Card>
 
-          <Card ref="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
+          <Card id="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
             <Row gutter={16}>
               <Col span={8}>
                 <Card title="剧本封面()">
                   <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本封面" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime()} />
+                  <img alt="剧本封面" onClick={(e) => {
+                    this.setState({
+                      previewImage: e.target.src,
+                      previewVisible: true,
+                    });
+                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():""} />
                   </div>
                   <div>
                   <Upload
-                    onChange={this.onuploadChange.bind(this)}
+                    onChange={this.onuploadChange(-1,-1)}
                     data={{name : this.state.gameinfo.id+"cover"}}
                     action= 'https://chinabackend.bestlarp.com/uploadimage'
                     >
@@ -815,11 +823,16 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               <Col span={8}>
                 <Card title="剧本图标()">
                   <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本图标" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime()} />
+                  <img alt="剧本图标" onClick={(e) => {
+                    this.setState({
+                      previewImage: e.target.src,
+                      previewVisible: true,
+                    });
+                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.iconurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime():""} />
                   </div>
                   <div>
                   <Upload
-                    onChange={this.onuploadChange.bind(this)}
+                    onChange={this.onuploadChange(-1,-1)}
                     data={{name : this.state.gameinfo.id+"icon"}}
                     action= 'https://chinabackend.bestlarp.com/uploadimage'
                     >
@@ -833,11 +846,16 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               <Col span={8}>
                 <Card title="剧本地图()">
                   <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本地图" style={{maxWidth:"80%"}} src={"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime()} />
+                  <img alt="剧本地图" onClick={(e) => {
+                    this.setState({
+                      previewImage: e.target.src,
+                      previewVisible: true,
+                    });
+                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.mapurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime():""} />
                   </div>
                   <div>
                   <Upload
-                    onChange={this.onuploadChange.bind(this)}
+                    onChange={this.onuploadChange(-1,-1)}
                     data={{name : this.state.gameinfo.id+"map"}}
                     action= 'https://chinabackend.bestlarp.com/uploadimage'
                     >
@@ -851,7 +869,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Row>
           </Card>
 
-          <Card ref="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
+          <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
             <Row gutter={16}>
             {this.state.instructinfo.map((instruct, idx) => (
               <Col span={12}>
@@ -874,7 +892,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Row>
           </Card>
 
-          <Card ref="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
+          <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
             <Row gutter={16}>
             {this.state.plotinfo.map((plot, idx) => (
               <Col span={12}>
@@ -909,7 +927,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Row>
           </Card>
 
-          <Card ref="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>}  style={{margin:20}}>
+          <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>}  style={{margin:20}}>
             <Tabs tabPosition="right">
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
@@ -963,7 +981,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Tabs>
           </Card>
 
-          <Card ref="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} extra={<Button type="button" style={{backgroundColor: '#4286f4'}} className="small">添加模块</Button>} >
+          <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} extra={<Button type="button" style={{backgroundColor: '#4286f4'}} className="small">添加模块</Button>} >
             <Tabs tabPosition="right">
 
             {this.state.characterlist.map((characterlist, idx) => (
@@ -987,7 +1005,7 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
             </Tabs>
           </Card>
 
-          <Card ref="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>}  style={{margin:20}}  >
+          <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>}  style={{margin:20}}  >
           <Tabs tabPosition="right">
           {this.state.clueinfo.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
@@ -997,7 +1015,31 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
               {cluelocation.clues.map((clue, iidx) => (
               <Col span={8}>
                 <Card title={<b style={{marginRight:30}}>{clue.cluenumber}</b>} extra={<a onClick={this.handleRemoveClues(idx,iidx)}>移除</a>} >
-                    {clue.image && <button type="button" className="small" onClick={this.handlePreviewImage(idx,iidx)}  id="deleteButton" style={{margin:2,widht:"10%",display:"inline"}}>预览</button>}
+                  <img alt="无图片" onClick={(e) => {
+                    this.setState({
+                      previewImage: e.target.src,
+                      previewVisible: true,
+                    });
+                  }}  style={{maxWidth:"80%"}} src={clue.image?"https://chinabackend.bestlarp.com/pic/"+clue.image + "?t="+ new Date().getTime():""} />
+                  <Upload
+                    onChange={this.onuploadChange(idx,iidx)}
+                    data={{name : this.state.gameinfo.id+idx +"n"+iidx}}
+                    action= 'https://chinabackend.bestlarp.com/uploadimage'
+                    >
+                    <Button>
+                      <Icon type="upload" onClick={(e)=>{
+                          const newclueinfo = this.state.clueinfo[idx].clues.map((clue, sidx) => {
+                            if (iidx !== sidx) return clue;
+                            return { ...clue, image: this.state.gameinfo.id+idx +"n"+iidx };
+                          });
+                          const newcluelist = this.state.clueinfo.map((clueinfo, sidx) => {
+                            if (idx !== sidx) return clueinfo;
+                            return { ...clueinfo, clues: newclueinfo };
+                          });
+                          this.setState({ clueinfo: newcluelist });
+                          }} /> 点此上传
+                    </Button>
+                  </Upload>
                     <Input.TextArea
                     value={clue.content}
                     onChange={this.handleclueContentChange(idx,iidx)}
@@ -1012,11 +1054,8 @@ handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
           </Tabs>
         </Card>
       </Layout>
-      <ScrollToTop showUnder={160} style={{zIndex:1}}>
-         <img src={btop} className="btopImg" alt={btop}/>
-      </ScrollToTop>
-
       </Layout>
+      </Spin>
     )
   }
 }

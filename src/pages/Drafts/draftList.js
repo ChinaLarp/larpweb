@@ -5,7 +5,7 @@
 
 import React from 'react';
 import DraftBlock from './draftBlock.js';
-import {  Row } from 'antd';
+import {  Layout, Row, Col } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -34,9 +34,13 @@ class DraftList extends React.Component {
       </Row>;
     }
     return(
-        <Row style={{maxWidth:1200, margin:'auto'}}>
+      <Layout>
+        <Row style={{marginTop:40}} gutter={16} >
+        <Col span={18} offset={3}>
                 {content}
+        </Col>
         </Row>
+      </Layout>
 
       )
  }
