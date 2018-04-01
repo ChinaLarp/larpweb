@@ -1,31 +1,30 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import {BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
-//import { Tab, Tabs, TabList, TabPane } from 'react-tabs';
+import {Select, BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 import { Prompt } from 'react-router'
-import 'react-tabs/style/react-tabs.css';
+//import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
 import md5 from 'md5'
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addFlashMessage } from '../../../actions/flashmessages.js';
+//import { addFlashMessage } from '../../../actions/flashmessages.js';
 import { getdraft } from '../../../actions/authAction.js';
-import Lightbox from 'react-image-lightbox';
-import IconButton from 'material-ui/IconButton';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import Drawer from 'material-ui/Drawer';
-import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import AppBar from 'material-ui/AppBar';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+//import Lightbox from 'react-image-lightbox';
+//import IconButton from 'material-ui/IconButton';
+//import MenuItem from 'material-ui/MenuItem';
+//import DropDownMenu from 'material-ui/DropDownMenu';
+//import Drawer from 'material-ui/Drawer';
+//import CircularProgress from 'material-ui/CircularProgress';
+//import RaisedButton from 'material-ui/RaisedButton';
+//import Dialog from 'material-ui/Dialog';
+//import TextField from 'material-ui/TextField';
+//import AppBar from 'material-ui/AppBar';
+//import NavigationClose from 'material-ui/svg-icons/navigation/close';
+//import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+//import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import ImageIcon from './imageIcon'
-var files
+//var files
 class draftEdit extends React.Component {
   constructor(props, context){
     super(props, context)
@@ -34,20 +33,18 @@ class draftEdit extends React.Component {
       Dialogtype:"",
       errorMessage:null,
       actions:[],
-      insertPlotlocation:1,
       insertPlotname:"",
       insertCharactername:"",
       openMenu:true,
       game_id:'',
       gameinfo:{},
-      plotinfo:[],
-      instructinfo:[],
       characterlist: [],
       cluemethod:'',
       intervalId: 0,
       isOpen: false,
       imageurl:'',
-      loading:true
+      loading:true,
+      prompt:true
     };
   }
   onuploadChange = (idx,iidx) => (info) => {
@@ -84,62 +81,6 @@ class draftEdit extends React.Component {
         message.error(`${info.file.name} file upload failed.`);
       }
     }
-  confirmation = (command,idx) => (evt) => {
-    switch (command) {
-      case "AddCharacter":
-        this.setState({
-          openDialog:true,
-          Dialogtype:"AddCharacter",
-          actions:[
-              <RaisedButton
-                label="取消"
-                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-              />,
-              <RaisedButton
-                label="确认"
-                secondary={true}
-                onClick={this.handleAddCharacter}
-              />]
-        })
-        break;
-      case "AddPlot":
-        this.setState({
-          openDialog:true,
-          Dialogtype:"AddPlot",
-          actions:[
-              <RaisedButton
-                label="取消"
-                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-              />,
-              <RaisedButton
-                label="确认"
-                secondary={true}
-                onClick={this.handleAddPlot}
-              />]
-        })
-        break;
-      case "deletePlot":
-        this.setState({
-          openDialog:true,
-          Dialogtype:"deletePlot",
-          errorMessage:(
-            <p>确定要删除此阶段吗？点击确认将同时移除所有角色的该阶段剧本。</p>
-          ),
-          actions:[
-              <RaisedButton
-                label="取消"
-                onClick={()=>(this.setState({openDialog:false,errorMessage:null}))}
-              />,
-              <RaisedButton
-                label="确认"
-                secondary={true}
-                onClick={this.handleRemovePlot(idx)}
-              />]
-        })
-        break;
-      default:
-    }
-  }
   fillArray = (cluelocation) => {
      if (cluelocation.length === 0) return [];
      var cluestatus=[]
@@ -151,72 +92,14 @@ class draftEdit extends React.Component {
      console.log(cluestatus)
      return cluestatus;
    }
-  handleExit = (evt)=>{
-    this.context.router.history.push('/draftList');
-  }
-  handleSaveExit = (evt) => {
-     const url = 'https://chinabackend.bestlarp.com/api/app';
-     axios.put(url+'/'+this.state.game_id,{
-     cluelocation:this.state.gameinfo.clueinfo,
-     mainplot:this.state.plotinfo,
-     name:this.state.gameinfo.name,
-     descripion:this.state.gameinfo.descripion,
-     detailDescription:this.state.gameinfo.detailDescription,
-     malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
-     femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-     category:this.state.gameinfo.category,
-     instruction:this.state.instructinfo,
-     cluemethod:this.state.gameinfo.cluemethod,
-     mapurl:this.state.gameinfo.mapurl,
-     iconurl:this.state.gameinfo.iconurl,
-     coverurl:this.state.gameinfo.coverurl,
-     cluestatus:this.fillArray(this.state.gameinfo.clueinfo),
-     signature:md5(this.state.game_id+"xiaomaomi")
-   }).then(response => {
-       console.log("put game submitted" + this.state.name)
-     })
-     .catch(error => {
-       console.log(error);
-     });
-     var promises=[]
-     for (var i=0;i<this.state.characterlist.length;i++)
-         {
-         var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
-             gamename:this.state.gameinfo.name,
-             banlocation: this.state.characterlist[i].banlocation,
-             charactername: this.state.characterlist[i].charactername,
-             characterdescription: this.state.characterlist[i].characterdescription,
-             charactersex: this.state.characterlist[i].charactersex,
-             characterinfo: this.state.characterlist[i].characterinfo,
-             characterplot: this.state.characterlist[i].characterplot,
-             signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
-         }).then(response => {
-             console.log("put character submitted" + this.state.characterlist[i].name)
-           })
-           .catch(error => {
-             console.log(error);
-           });
-           promises.push(promise)
-         }
-         Promise.all(promises).then((result)=>{
-           console.log("All done")
-           this.props.addFlashMessage({
-              type: 'success',
-              text: '游戏剧本已保存!'
-            });
-            this.context.router.history.push('/draftList');
-         })
-  }
   handleAction = (item, key, keyPath) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
     switch (item.key) {
       case "save":
       axios.put(url+'/'+this.state.game_id,{
         ...this.state.gameinfo,
-        mainplot:this.state.plotinfo,
         malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
         femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
-        instruction:this.state.instructinfo,
         cluestatus:this.fillArray(this.state.gameinfo.cluelocation),
         signature:md5(this.state.game_id+"xiaomaomi")
       }).then(response => {}).catch(error => {console.log(error);});
@@ -235,33 +118,65 @@ class draftEdit extends React.Component {
           })
         break;
       case "exit":
-        this.context.router.history.push('/draftList');
+        this.setState({prompt:false})
+        let self = this
+        Modal.confirm({
+          title: '保存修改',
+          content: '是否保存此次修改？',
+          cancelText: '不保存',
+          okText: '保存',
+          onOk() {
+            axios.put(url+'/'+self.state.game_id,{
+              ...self.state.gameinfo,
+              malenumber: self.state.characterlist.filter((char) => char.charactersex=="男").length,
+              femalenumber: self.state.characterlist.filter((char) => char.charactersex=="女").length,
+              cluestatus:self.fillArray(self.state.gameinfo.cluelocation),
+              signature:md5(self.state.game_id+"xiaomaomi")
+            }).then(response => {}).catch(error => {console.log(error);});
+              var promises=[]
+              for (var i=0;i<self.state.characterlist.length;i++){
+                  var promise = axios.put(url+'/'+self.state.characterlist[i]._id,{
+                      ...self.state.characterlist[i],
+                      gamename:self.state.gameinfo.name,
+                      signature:md5(self.state.characterlist[i]._id+"xiaomaomi")
+                  }).then(response => {}).catch(error => {console.log(error);});
+                    promises.push(promise)
+                }
+                Promise.all(promises).then((result)=>{
+                  console.log("All done")
+                  message.success("保存剧本成功！");
+                  self.context.router.history.push('/draftList');
+                })
+          },
+          onCancel() {self.context.router.history.push('/draftList');},
+        })
+
         break;
       default:
     }
   }
+
+  //instruction
   handleAddInstruction = () => {
-      this.setState({ instructinfo: this.state.instructinfo.concat([{ type: '',content: ['']}]) });
+      this.setState({gameinfo: {...this.state.gameinfo, instruction: this.state.gameinfo.instruction.concat([{ type: '',content: ['']}]) }});
   }
   handleRemoveInstruction = (idx) => () => {
-
-      this.setState({ instructinfo: this.state.instructinfo.filter((s, sidx) => idx !== sidx) });
+    this.setState({gameinfo: {...this.state.gameinfo, instruction: this.state.gameinfo.instruction.filter((s, sidx) => idx !== sidx) }});
   }
   handleInstructTypeChange = (idx) => (evt) => {
-      const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
+      const newinstructinfo = this.state.gameinfo.instruction.map((instruct, sidx) => {
         if (idx !== sidx) return instruct;
         return { ...instruct, type: evt.target.value };
       });
-
-      this.setState({ instructinfo: newinstructinfo });
+      this.setState({gameinfo: {...this.state.gameinfo, instruction: newinstructinfo}});
   }
   handleInstructContentChange = (idx) => (evt) => {
-      const newinstructinfo = this.state.instructinfo.map((instruct, sidx) => {
+      const newinstructinfo = this.state.gameinfo.instruction.map((instruct, sidx) => {
         if (idx !== sidx) return instruct;
         return { ...instruct, content: evt.target.value.split('\n') };
       });
 
-      this.setState({ instructinfo: newinstructinfo });
+      this.setState({gameinfo: {...this.state.gameinfo, instruction: newinstructinfo}});
   }
   handleAddCharacter =  ()  => {
       const newcharacterlist=this.state.characterlist.concat([{...this.state.characterlist[0],charactername:this.state.insertCharactername,characterdescription:""}]).map((plot, sidx) => {
@@ -269,84 +184,72 @@ class draftEdit extends React.Component {
       });
       this.setState({ characterlist:newcharacterlist, errorMessage:null,openDialog:false});
   }
-  handleAddPlot =  ()  => {
-      const idx=this.state.insertPlotlocation
-      const newplotinfo=[{plotid:-1}].concat(this.state.plotinfo).map((plot, sidx) => {
-        if (idx > sidx) {
-          return this.state.plotinfo[sidx]
-        }else if (idx===sidx) {
-          return { plotid: idx, plotname: this.state.insertPlotname, enableclue:0, enablevote:0, content: ['']};
-        }else{
-          return { ...plot, plotid: plot.plotid+1 };
-        }
-      });
-      const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
-        var newcharacterplot=[{plotid:-1}].concat(character.characterplot).map((plot, siidx) => {
-          if (idx > siidx) {
-            return character.characterplot[siidx]
-          }else if (idx===siidx) {
-            return { ...plot, plotid: idx, plotname: this.state.insertPlotname };
-          }else{
-            return { ...plot, plotid: plot.plotid+1 };
-          }
-        });
-        return {...character,characterplot:newcharacterplot}
-      })
-      this.setState({ characterlist:newcharacterlist, plotinfo: newplotinfo, errorMessage:null,openDialog:false});
+
+  //plot
+  handlePlotAdd(){
+    const newplotinfo=this.state.gameinfo.mainplot.concat({ plotname:"",enableclue:0,enablevote:0, plotid: this.state.gameinfo.mainplot.length,content:[] });
+    this.setState({ gameinfo: {...this.state.gameinfo, mainplot :newplotinfo}});
+    const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+      var newcharacterplot=character.characterplot.concat({ plotname:"",enableclue:0,enablevote:0, plotid: this.state.gameinfo.mainplot.length,content:[] })
+      return {...character,characterplot:newcharacterplot}
+    })
+    this.setState({ characterlist:newcharacterlist, gameinfo: {...this.state.gameinfo, mainplot :newplotinfo}});
   }
   handleRemovePlot = (idx) => () => {
-      var newplotinfo=this.state.plotinfo.filter((s, sidx) => sidx !== idx).map((plot, sidx) => {return { ...plot, plotid: sidx }});
-      const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
-        var newcharacterplot=character.characterplot.filter((s, siidx) => siidx !== idx).map((plot, siidx) => {return { ...plot, plotid: siidx }});
-        return {...character,characterplot:newcharacterplot}
-      })
-      this.setState({characterlist:newcharacterlist, plotinfo: newplotinfo ,errorMessage:null,openDialog:false});
+    let self=this
+    Modal.confirm({
+      title:"删除阶段",
+      onOk(){
+        var newplotinfo=self.state.gameinfo.mainplot.filter((s, sidx) => sidx !== idx).map((plot, sidx) => {return { ...plot, plotid: sidx }});
+        const newcharacterlist=self.state.characterlist.map((character,sidx)=>{
+          var newcharacterplot=character.characterplot.filter((s, siidx) => siidx !== idx).map((plot, siidx) => {return { ...plot, plotid: siidx }});
+          return {...character,characterplot:newcharacterplot}
+        })
+        self.setState({characterlist:newcharacterlist, gameinfo: {...self.state.gameinfo, mainplot :newplotinfo}});
+      },
+      onCancel(){}
+    })
   }
   handlePlotNameChange = (idx) => (evt) => {
-      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      const newplotinfo = this.state.gameinfo.mainplot.map((plot, sidx) => {
         if (idx !== sidx) return plot;
         return { ...plot, plotname: evt.target.value };
       });
+      const newcharacterlist=this.state.characterlist.map((character,sidx)=>{
+        var newcharacterplot=character.characterplot.map((plot, siidx) => {if (siidx!==idx) return plot; return { ...plot, plotname: evt.target.value }});
+        return {...character,characterplot:newcharacterplot}
+      })
 
-      this.setState({ plotinfo: newplotinfo });
+      this.setState({ characterlist:newcharacterlist, gameinfo:{...this.state.gameinfo,mainplot: newplotinfo }});
   }
   handleToggleenablevote= (idx) => (event) => {
       var newenablevote=event?1:0
-      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      const newplotinfo = this.state.gameinfo.mainplot.map((plot, sidx) => {
         if (idx !== sidx) return plot;
         return { ...plot, enablevote:newenablevote };
       });
 
-      this.setState({ plotinfo: newplotinfo });
+      this.setState({ gameinfo:{...this.state.gameinfo,mainplot: newplotinfo }});
   }
   handleToggleenableclue= (idx) => (event) => {
       var newenableclue=event?1:0
-      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      const newplotinfo = this.state.gameinfo.mainplot.map((plot, sidx) => {
         if (idx !== sidx) return plot;
         return { ...plot, enableclue:newenableclue };
       });
 
-      this.setState({ plotinfo: newplotinfo });
+      this.setState({ gameinfo:{...this.state.gameinfo,mainplot: newplotinfo }});
   }
   handlePlotContentChange = (idx) => (evt) => {
-      const newplotinfo = this.state.plotinfo.map((plot, sidx) => {
+      const newplotinfo = this.state.gameinfo.mainplot.map((plot, sidx) => {
         if (idx !== sidx) return plot;
         return { ...plot, content: evt.target.value.split('\n')  };
       });
 
-      this.setState({ plotinfo: newplotinfo });
+      this.setState({ gameinfo:{...this.state.gameinfo,mainplot: newplotinfo }});
   }
-  handleCharacterPlotNameChange = (idx,iidx) => (evt) => {
-      const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
-        if (iidx !== sidx) return plot;
-        return { ...plot, plotname: evt.target.value };
-      });
-      const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
-        if (idx !== sidx) return characterlist;
-        return { ...characterlist, characterplot: newplotinfo };
-      });
-      this.setState({ characterlist: newcharacterlist });
-  }
+
+  //characterplot
   handleCharacterPlotContentChange = (idx,iidx,iiidx) => (evt) => {
     const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.map((item, sidx) => {
       if (iiidx !== sidx) return item;
@@ -390,7 +293,7 @@ class draftEdit extends React.Component {
     this.setState({ characterlist: newcharacterlist });
   }
   handleAddCharacterPlot = (idx,iidx) => (evt) => {
-      const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.concat({ content: ["无内容"],type: ""})
+      const newtypeinfo = this.state.characterlist[idx].characterplot[iidx].content.concat({ content: [],type: ""})
       const newplotinfo = this.state.characterlist[idx].characterplot.map((plot, sidx) => {
         if (iidx !== sidx) return plot;
         return { ...plot, content: newtypeinfo };
@@ -401,21 +304,8 @@ class draftEdit extends React.Component {
       });
       this.setState({ characterlist: newcharacterlist });
     }
-  handlecharacterinfoTypeChange = (idx,iidx) => (evt) => {
-    const newcharacterinfo = this.state.characterlist[idx].characterinfo.map((characterinfo, sidx) => {
-      if (iidx !== sidx) return characterinfo;
-      return { ...characterinfo, type: evt.target.value };
-    });
 
-    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
-      if (idx !== sidx) return characterlist;
-      return { ...characterlist, characterinfo: newcharacterinfo };
-    });
-
-    this.setState({ characterlist: newcharacterlist });
-  }
-
-  // !!!Debug required
+  //characterinfo
   handlecharacterinfoContentChange = (idx,iidx) => (evt) => {
    var contentList = evt.target.value.split('\n');
 
@@ -433,6 +323,29 @@ class draftEdit extends React.Component {
     this.setState({ characterlist: newcharacterlist });
     //console.log(this.state.characterlist[idx].characterinfo.content)
   }
+  handleBanLocationChange = (idx) => (event) => {
+    const newCharacter = this.state.characterlist.map((character, sidx) => {
+      if (idx !== sidx) return character;
+      return { ...character, banlocation: event.target.value };
+    });
+
+    this.setState({ characterlist: newCharacter });
+  }
+
+  //clues
+  handleAddCluelocation = () =>{
+    const newcluelocation = this.state.gameinfo.cluelocation.concat({ clues: [],name: ""})
+    this.setState({ gameinfo: {...this.state.gameinfo, cluelocation:newcluelocation } });
+
+  }
+  handleCluelocationNameChange = (idx) => (evt) => {
+    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
+      if (idx !== sidx) return clueinfo;
+      return { ...clueinfo, name: evt.target.name };
+    });
+    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
+
+  }
   handleclueContentChange = (idx,iidx) => (evt) => {
     const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.map((clue, sidx) => {
       if (iidx !== sidx) return clue;
@@ -445,27 +358,6 @@ class draftEdit extends React.Component {
     });
 
     this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
-  }
-  handleclueImageChange = (idx,iidx) => (evt) => {
-    const newclueinfo = this.state.gameinfo.cluelocation[idx].clues.map((clue, sidx) => {
-      if (iidx !== sidx) return clue;
-      return { ...clue, image: evt.target.value };
-    });
-
-    const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
-      if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, clues: newclueinfo };
-    });
-
-    this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
-  }
-  handleBanLocationChange = (idx) => (event) => {
-    const newCharacter = this.state.characterlist.map((character, sidx) => {
-      if (idx !== sidx) return character;
-      return { ...character, banlocation: event.target.value };
-    });
-
-    this.setState({ characterlist: newCharacter });
   }
   handleRemoveClues= (idx,iidx) => () => {
     var newclueinfo=this.state.gameinfo.cluelocation[idx].clues.filter((clue, sidx) => iidx !== sidx);
@@ -490,13 +382,14 @@ class draftEdit extends React.Component {
 
     this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
   }
+
   componentWillMount(){
       const url = "https://chinabackend.bestlarp.com/api/app";
       this.setState({ game_id: this.props.match.params._id });
       axios.get(url+'/' +this.props.match.params._id)
         .then(response => {
           console.log(response.data.detailDescription)
-          this.setState({ gameinfo: response.data, instructinfo: response.data.instruction, plotinfo: response.data.mainplot});
+          this.setState({ gameinfo: response.data});
           axios.get(url+'?type=character&gameid=' +response.data.id)
             .then(response => {
             	//console.log(response.data)
@@ -510,10 +403,7 @@ class draftEdit extends React.Component {
           console.log(error);
         });
     }
-
-
   render() {
-
       message.config({
         top: 70,
         duration: 2,
@@ -521,40 +411,16 @@ class draftEdit extends React.Component {
     return (
       <Spin spinning={this.state.loading}>
       <BackTop />
+       <Prompt
+          when={this.state.prompt}
+          message={(location,action) => {console.log(location);console.log(action);
+            return location.pathname.startsWith('/draftEdit') ? true : `Are you sure you want to go to ${location.pathname}?`
+          }}
+        />
       <Modal visible={this.state.previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
         <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
       </Modal>
       <Layout >
-          <div>
-            <Dialog
-               title="确认信息"
-               actions={this.state.actions}
-                 modal={false}
-                 open={this.state.openDialog}
-                 onRequestClose={()=>(this.setState({openDialog:false}))}
-               >
-               <div>
-                {this.state.Dialogtype=="AddPlot" && <div>你想在<DropDownMenu style={{marginBottom:0}} value={this.state.insertPlotlocation} onChange={(event, index, value) => {this.setState({insertPlotlocation: value  });console.log(this.state) }}>
-                <MenuItem value={0} primaryText="最前面" />
-                 {this.state.plotinfo.map((plot,sidx)=>(<MenuItem value={sidx+1} primaryText={plot.plotname} />))}
-               </DropDownMenu>阶段后插入
-               <TextField
-                 hintText="阶段名称"
-                id="text-field-controlled"
-                 value={this.state.insertPlotname}
-                 onChange={(event) => {this.setState({insertPlotname: event.target.value  }); }}
-               /></div>}
-               {this.state.Dialogtype=="AddCharacter" && <div>
-              <TextField
-                hintText="角色名称"
-               id="text-field-controlled"
-                value={this.state.insertCharactername}
-                onChange={(event) => {this.setState({insertCharactername: event.target.value  });  }}
-              /></div>}
-               {this.state.Dialogtype=="deletePlot" && this.state.errorMessage}
-             </div>
-           </Dialog>
-         </div>
        <Layout.Sider width={150}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
          <Menu
            selectable="false"
@@ -702,10 +568,10 @@ class draftEdit extends React.Component {
 
           <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
             <Row gutter={16}>
-            {this.state.instructinfo.map((instruct, idx) => (
+            {this.state.gameinfo.instruction && this.state.gameinfo.instruction.map((instruct, idx) => (
               <Col span={12}>
               <Card style={{margin:20}} title={<Input
-                style={{maxWidth:300}}
+                style={{maxWidth:200}}
                 placeholder="说明标题"
                 value={instruct.type}
                 onChange={this.handleInstructTypeChange(idx)} />}
@@ -725,10 +591,14 @@ class draftEdit extends React.Component {
 
           <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
             <Row gutter={16}>
-            {this.state.plotinfo.map((plot, idx) => (
-              <Col span={12}>
-              <Card style={{margin:20}} title={"第"+plot.plotid+"阶段："+plot.plotname}
-               extra={<a onClick={this.confirmation("deletePlot",idx)}>移除</a>} >
+            {this.state.gameinfo.mainplot?this.state.gameinfo.mainplot.map((plot, idx) => (
+              <Col span={12} key={plot.plotid}>
+              <Card style={{margin:20}} title={<div>第{plot.plotid}阶段：<Input
+                style={{maxWidth:200}}
+                placeholder="阶段标题"
+                value={plot.plotname}
+                onChange={this.handlePlotNameChange(idx)} /></div>}
+               extra={<a onClick={this.handleRemovePlot(idx)}>移除</a>} >
                <b>剧情概要：</b>
               <Input.TextArea value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)}  autosize={{ minRows: 8, maxRows: 8 }} />
               <div style={{marginTop:10}}><b>在此阶段开启搜证功能：</b>
@@ -748,9 +618,9 @@ class draftEdit extends React.Component {
               /></div>
               </Card>
               </Col>
-            ))}
+            )):""}
             <Col span={12}>
-            <Card hoverable onClick={this.confirmation("AddPlot")} style={{margin:20, textAlign:"center"}} >
+            <Card hoverable onClick={this.handlePlotAdd.bind(this)} style={{margin:20, textAlign:"center"}} >
               <Icon type= 'plus' />
               <div>添加阶段</div>
               </Card>
@@ -758,7 +628,7 @@ class draftEdit extends React.Component {
             </Row>
           </Card>
 
-          <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>}  style={{margin:20}}>
+          <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>} extra={<a >添加角色</a>} style={{margin:20}}>
             <Tabs tabPosition="right">
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
@@ -812,35 +682,49 @@ class draftEdit extends React.Component {
             </Tabs>
           </Card>
 
-          <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} extra={<Button type="button" style={{backgroundColor: '#4286f4'}} className="small">添加模块</Button>} >
+          <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} >
             <Tabs tabPosition="right">
 
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
-              <Row gutter={16}>
-              {characterlist.characterplot.map((plot, iidx) =>
-                  {return plot.content.map((item, iiidx) => (
+
+                  <Row gutter={16}>
+              {characterlist.characterplot.map((plot, iidx) =>(
+                  <Col span={24}>
+                  <Card title={plot.plotname}>
+                  <Row gutter={16}>
+                  {plot.content.map((item, iiidx) => (
                   <Col span={12}>
-                    <Card title={<div><b style={{marginRight:30}}>{plot.plotname}</b><Input style={{maxWidth:200}}
+                    <Card title={
+                    <Input style={{maxWidth:150}}
                         value={item.type}
                         onChange={this.handleCharacterPlotTypeChange(idx,iidx,iiidx)}
-                      /></div>} extra={<a onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)}>移除</a>} >
+                      />} extra={<a onClick={this.handleRemoveCharacterPlot(idx,iidx,iiidx)}>移除</a>} >
                         <Input.TextArea value={item.content.join('\n')}  onChange={this.handleCharacterPlotContentChange(idx,iidx,iiidx)} autosize={{ minRows: 6, maxRows: 6 }}/>
                     </Card>
                   </Col>
                   ))}
-                )}
+                  <Col span={12}>
+                  <Card hoverable onClick={this.handleAddCharacterPlot(idx,iidx)} style={{margin:20, textAlign:"center"}} >
+                    <Icon type= 'plus' />
+                    <div>添加项目</div>
+                    </Card>
+                  </Col>
+                  </Row>
+                  </Card>
+                  </Col>
+                ))}
                 </Row>
               </Tabs.TabPane>
             ))}
             </Tabs>
           </Card>
 
-          <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>}  style={{margin:20}}  >
+          <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>} extra={<a onClick={this.handleAddCluelocation.bind(this)}>添加地点</a>} style={{margin:20}}  >
           <Tabs tabPosition="right">
           {this.state.gameinfo.cluelocation?this.state.gameinfo.cluelocation.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
-              <Card title={<b>{cluelocation.name}<Helper step={5} /></b>} extra={<span>线索数：{cluelocation.count} <a onClick={this.handleAddClues(idx)}><Icon type= 'plus' /></a></span>} >
+              <Card title={<div><Input style={{width:200}} value={cluelocation.name} onChange={this.handleCluelocationNameChange(idx)} /><Helper step={5} /></div>} extra={<span>线索数：{cluelocation.count} </span>} >
 
               <Row gutter={16}>
               {cluelocation.clues.map((clue, iidx) => (
@@ -868,6 +752,12 @@ class draftEdit extends React.Component {
                 </Card>
               </Col>
               ))}
+              <Col span={8}>
+              <Card hoverable onClick={this.handleAddClues(idx)} style={{margin:20, textAlign:"center"}} >
+                <Icon type= 'plus' />
+                <div>添加线索</div>
+                </Card>
+              </Col>
               </Row>
               </Card>
             </Tabs.TabPane>
@@ -884,7 +774,6 @@ draftEdit.contextTypes = {
   router: PropTypes.object.isRequired
 }
 draftEdit.propTypes = {
-  addFlashMessage: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   getdraft: PropTypes.func.isRequired
 }
@@ -894,4 +783,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { addFlashMessage, getdraft })(draftEdit);
+export default connect(mapStateToProps, { getdraft })(draftEdit);

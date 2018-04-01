@@ -28,7 +28,7 @@ class Menu extends Component {
       User_info =
       <Nav pullRight>
       <NavDropdown   title={this.props.auth.user.username} id="basic-nav-dropdown">
-          <NavItem href="draftList"> 我的剧本</NavItem>
+          <NavItem href="/draftList"> 我的剧本</NavItem>
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=table">房间列表</NavItem>}
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=cleanup">清理数据</NavItem>}
           {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=openidlist">用户列表</NavItem>}
@@ -44,13 +44,13 @@ class Menu extends Component {
             <Navbar.Brand >
               <a href="/"><b>全民侦探社</b></a>
             </Navbar.Brand>
-            <Navbar.Toggle style={{float:"right", width:44, textAligh:"center"}}/>
+            <Navbar.Toggle style={{float:"right", width:44, textAlign:"center"}}/>
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem><NavLink className="link" to="/games" style={{ textDecoration: 'none' }} >游戏介绍</NavLink></NavItem>
-              <NavItem><NavLink to="/draftList">我要创作</NavLink></NavItem>
-              <NavItem to="/contact">关于我们</NavItem>
+              <NavItem><NavLink className="link" to="/games" activeClassName="link" >游戏介绍</NavLink></NavItem>
+              <NavItem><NavLink className="link" activeClassName="link" to="/draftList">我要创作</NavLink></NavItem>
+              <NavItem><NavLink className="link" activeClassName="link"  to="/contact">关于我们</NavLink></NavItem>
             </Nav>
             {User_info}
           </Navbar.Collapse>

@@ -37,10 +37,6 @@ class App extends Component {
       <BrowserRouter>
       <div className="App">
         <NavigationMenu/>
-        <Prompt
-          when={true}
-          message="Are you sure you want to leave?"
-        />
         <div className="content ">
           <FlashMessagesList />
           <Route exact path="/" component={Home}/>
