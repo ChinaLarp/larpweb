@@ -39,6 +39,7 @@ class draftEdit extends React.Component {
       game_id:'',
       gameinfo:{},
       characterlist: [],
+      tobedeleted: [],
       cluemethod:'',
       intervalId: 0,
       isOpen: false,
@@ -94,6 +95,7 @@ class draftEdit extends React.Component {
    }
   handleAction = (item, key, keyPath) =>{
     const url = 'https://chinabackend.bestlarp.com/api/app';
+    let self = this
     switch (item.key) {
       case "save":
       axios.put(url+'/'+this.state.game_id,{
@@ -104,22 +106,38 @@ class draftEdit extends React.Component {
         signature:md5(this.state.game_id+"xiaomaomi")
       }).then(response => {}).catch(error => {console.log(error);});
         var promises=[]
-        for (var i=0;i<this.state.characterlist.length;i++){
-            var promise = axios.put(url+'/'+this.state.characterlist[i]._id,{
-                ...this.state.characterlist[i],
-                gamename:this.state.gameinfo.name,
-                signature:md5(this.state.characterlist[i]._id+"xiaomaomi")
+        for (var i=0;i<self.state.characterlist.length;i++){
+          if (self.state.characterlist[i]._id){
+            var promise = axios.put(url+'/'+self.state.characterlist[i]._id,{
+                ...self.state.characterlist[i],
+                gamename:self.state.gameinfo.name,
+                signature:md5(self.state.characterlist[i]._id+"xiaomaomi")
             }).then(response => {}).catch(error => {console.log(error);});
-              promises.push(promise)
+            promises.push(promise)
+          }else{
+            var promise = axios.post(url,{
+                ...self.state.characterlist[i],
+                gamename:self.state.gameinfo.name,
+                signature:md5("xiaomaomi")
+            }).then(response => {console.log("posted a character")}).catch(error => {console.log(error);});
+            promises.push(promise)
           }
-          Promise.all(promises).then((result)=>{
-            console.log("All done")
-            message.success("保存剧本成功！")
-          })
+        }
+        for (var i=0;i<self.state.tobedeleted.length;i++){
+          if (self.state.tobedeleted[i]){
+            var promise = axios.delete(url+'/'+self.state.tobedeleted[i],{
+                data:{ signature: md5(this.state.tobedeleted[i]+"xiaomaomi") }
+            }).then(response => {console.log("deleted a character")}).catch(error => {console.log(error);});
+            promises.push(promise)
+          }
+        }
+        Promise.all(promises).then((result)=>{
+          console.log("All done")
+          message.success("保存剧本成功！")
+        })
         break;
       case "exit":
         this.setState({prompt:false})
-        let self = this
         Modal.confirm({
           title: '保存修改',
           content: '是否保存此次修改？',
@@ -135,23 +153,47 @@ class draftEdit extends React.Component {
             }).then(response => {}).catch(error => {console.log(error);});
               var promises=[]
               for (var i=0;i<self.state.characterlist.length;i++){
+                if (self.state.characterlist[i]._id){
                   var promise = axios.put(url+'/'+self.state.characterlist[i]._id,{
                       ...self.state.characterlist[i],
                       gamename:self.state.gameinfo.name,
                       signature:md5(self.state.characterlist[i]._id+"xiaomaomi")
                   }).then(response => {}).catch(error => {console.log(error);});
-                    promises.push(promise)
+                  promises.push(promise)
+                }else{
+                  var promise = axios.post(url,{
+                      ...self.state.characterlist[i],
+                      gamename:self.state.gameinfo.name,
+                      signature:md5("xiaomaomi")
+                  }).then(response => {console.log("posted a character")}).catch(error => {console.log(error);});
+                  promises.push(promise)
                 }
-                Promise.all(promises).then((result)=>{
-                  console.log("All done")
-                  message.success("保存剧本成功！");
-                  self.context.router.history.push('/draftList');
-                })
+              }
+              for (var i=0;i<self.state.tobedeleted.length;i++){
+                if (self.state.tobedeleted[i]){
+                  var promise = axios.delete(url+'/'+self.state.tobedeleted[i],{
+                      data:{ signature: md5(self.state.tobedeleted[i]+"xiaomaomi") }
+                  }).then(response => {console.log("deleted a character")}).catch(error => {console.log(error);});
+                  promises.push(promise)
+                }
+              }
+              Promise.all(promises).then((result)=>{
+                console.log("All done")
+                message.success("保存剧本成功！");
+                self.context.router.history.push('/draftList');
+              })
           },
           onCancel() {self.context.router.history.push('/draftList');},
         })
 
         break;
+        case "submit":
+          Modal.info({
+            title: '提交审核',
+            content: '这里放提交审核的步骤。',
+            okText: '了解'
+          })
+          break;
       default:
     }
   }
@@ -178,11 +220,59 @@ class draftEdit extends React.Component {
 
       this.setState({gameinfo: {...this.state.gameinfo, instruction: newinstructinfo}});
   }
-  handleAddCharacter =  ()  => {
-      const newcharacterlist=this.state.characterlist.concat([{...this.state.characterlist[0],charactername:this.state.insertCharactername,characterdescription:""}]).map((plot, sidx) => {
-          return { ...plot, characterid: sidx }
-      });
-      this.setState({ characterlist:newcharacterlist, errorMessage:null,openDialog:false});
+
+  //Character
+  handleAddCharacter =  ()  =>  ()  => {
+    const newcharacterinfo = [{content: [],type: "故事背景"},{content: [],type: "你所知道的事"},{type: "你的目的",content: []}]
+    const newcharacterplot = this.state.gameinfo.mainplot.map((plot,idx)=>{return {...plot,content:[]}})
+    const newcharacterlist=this.state.characterlist.concat([{
+      gameid:this.state.gameinfo.id,
+      gamename:this.state.gameinfo.name,
+      type:"character",
+      characterid:this.state.characterlist.length,
+      charactername:"新建角色",
+      charactersex:"男",characterdescription:"",
+      banlocation:-1,
+      characterinfo:newcharacterinfo,
+      characterplot:newcharacterplot}]).map((plot, sidx) => {
+        return { ...plot, characterid: sidx }
+    });
+    this.setState({ characterlist:newcharacterlist });
+  }
+  handleRemoveCharacter = (idx) =>  ()  => {
+      const newcharacterlist=this.state.characterlist.filter((s, sidx) => sidx !== idx).map((character, sidx) => {
+        return { ...character, characterid: sidx }
+    });
+      this.setState({ characterlist:newcharacterlist, tobedeleted:this.state.tobedeleted.concat(this.state.characterlist[idx]._id)});
+  }
+  handleCharacterInfoTypeChange = (idx,iidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterinfo.map((item, sidx) => {
+      if (iidx !== sidx) return item;
+      return { ...item, type: evt.target.value};
+    });
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterinfo: newtypeinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
+  }
+  handleAddCharacterInfo = (idx,iidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterinfo.concat([{
+      type:"新建项目",
+      content:[]}])
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterinfo: newtypeinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
+  }
+  handleRemoveCharacterInfo = (idx,iidx) => (evt) => {
+    const newtypeinfo = this.state.characterlist[idx].characterinfo.filter((s, sidx) => sidx !== iidx)
+    const newcharacterlist = this.state.characterlist.map((characterlist, sidx) => {
+      if (idx !== sidx) return characterlist;
+      return { ...characterlist, characterinfo: newtypeinfo };
+    });
+    this.setState({ characterlist: newcharacterlist });
   }
 
   //plot
@@ -333,15 +423,20 @@ class draftEdit extends React.Component {
   }
 
   //clues
-  handleAddCluelocation = () =>{
-    const newcluelocation = this.state.gameinfo.cluelocation.concat({ clues: [],name: ""})
+  handleAddCluelocation(){
+    const newcluelocation = this.state.gameinfo.cluelocation.concat({ count:0, clues: [], index: this.state.gameinfo.cluelocation.length ,name: "新建搜证地点"})
+    console.log(newcluelocation)
     this.setState({ gameinfo: {...this.state.gameinfo, cluelocation:newcluelocation } });
-
+  }
+  handleRemoveCluelocation = (idx) => () => {
+    const newcluelocation = this.state.gameinfo.cluelocation.filter((clue, sidx) => idx !== sidx)
+    console.log(newcluelocation)
+    this.setState({ gameinfo: {...this.state.gameinfo, cluelocation:newcluelocation } });
   }
   handleCluelocationNameChange = (idx) => (evt) => {
     const newcluelist = this.state.gameinfo.cluelocation.map((clueinfo, sidx) => {
       if (idx !== sidx) return clueinfo;
-      return { ...clueinfo, name: evt.target.name };
+      return { ...clueinfo, name: evt.target.value };
     });
     this.setState({ gameinfo:{...this.state.gameinfo, cluelocation: newcluelist }});
 
@@ -433,6 +528,7 @@ class draftEdit extends React.Component {
            <Menu.ItemGroup key="basic" title={<b>{this.state.gameinfo.name}</b>}>
              <Menu.Item key="save">保存</Menu.Item>
              <Menu.Item key="exit">退出</Menu.Item>
+             <Menu.Item key="submit">提交审核</Menu.Item>
            </Menu.ItemGroup>
          </Menu>
        </Layout.Sider>
@@ -441,9 +537,10 @@ class draftEdit extends React.Component {
          <Anchor offsetTop="60">
           <Anchor.Link href="#basic" title="基本信息" />
           <Anchor.Link href="#image" title="图片设计" />
-          <Anchor.Link href="#instruction" title="基本信息" />
-          <Anchor.Link href="#plot" title="图片设计" />
+          <Anchor.Link href="#instruction" title="游戏说明" />
+          <Anchor.Link href="#plot" title="阶段剧情" />
           <Anchor.Link href="#char" title="角色信息" />
+          <Anchor.Link href="#charback" title="角色背景" />
           <Anchor.Link href="#charplot" title="角色阶段剧本"/>
           <Anchor.Link href="#clue" title="线索编辑"/>
         </Anchor>
@@ -628,11 +725,10 @@ class draftEdit extends React.Component {
             </Row>
           </Card>
 
-          <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>} extra={<a >添加角色</a>} style={{margin:20}}>
-            <Tabs tabPosition="right">
+          <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>} extra={<a onClick={this.handleAddCharacter()}>添加角色</a>} style={{margin:20}}>
+            <Tabs tabPosition="right" tabBarStyle={{width:200}}>
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
-              <Card title={<h4>自然信息</h4>} style={{margin:10}}>
                 <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >角色名称：</Col><Col span={16} >
                     <Input
                     value={characterlist.charactername}
@@ -665,25 +761,39 @@ class draftEdit extends React.Component {
                       return { ...characterlist, characterdescription: evt.target.value };
                     })})}}
                     /></Col></Row>
+                  <Row style={{margin:10}}><Col span={4} offset={4} style={{textAlign:"Right", fontWeight:"bold"}} ><Button type="danger" onClick={this.handleRemoveCharacter(idx)}>移除此角色</Button></Col></Row>
+              </Tabs.TabPane>
+            ))}
+            </Tabs>
+          </Card>
+
+
+          <Card id="charback" title={<b style={{fontSize:20, textAlign:"left"}} >角色背景</b>} style={{margin:20}}>
+            <Tabs tabPosition="right" tabBarStyle={{width:200}}>
+            {this.state.characterlist.map((characterlist, idx) => (
+              <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
+              <Row gutter={16}>
+              {characterlist.characterinfo.map((characterinfo, iidx) => (
+                <Col span={24}>
+                <Card title={<Input value={characterinfo.type} onChange={this.handleCharacterInfoTypeChange(idx,iidx)} style={{width:200}}/>} extra={<a onClick={this.handleRemoveCharacterInfo(idx,iidx)}>移除</a>} >
+                <Input.TextArea value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}  autosize={{ minRows: 6, maxRows: 10 }} />
                 </Card>
-                <Card title={<h4>角色背景<Helper step={2} /></h4>} style={{margin:10}}>
-                <Row gutter={16}>
-                {characterlist.characterinfo.map((characterinfo, iidx) => (
-                  <Col span={24}>
-                  <Card title={<b>{characterinfo.type}</b>} >
-                  <Input.TextArea value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}  autosize={{ minRows: 6, maxRows: 10 }} />
-                  </Card>
-                  </Col>
-                ))}
-                </Row>
+                </Col>
+              ))}
+              <Col span={24}>
+              <Card hoverable onClick={this.handleAddCharacterInfo(idx)} style={{margin:20, textAlign:"center"}} >
+                <Icon type= 'plus' />
+                <div>添加项目</div>
                 </Card>
+              </Col>
+              </Row>
               </Tabs.TabPane>
             ))}
             </Tabs>
           </Card>
 
           <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} >
-            <Tabs tabPosition="right">
+            <Tabs tabPosition="right" tabBarStyle={{width:200}}>
 
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
@@ -721,10 +831,10 @@ class draftEdit extends React.Component {
           </Card>
 
           <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>} extra={<a onClick={this.handleAddCluelocation.bind(this)}>添加地点</a>} style={{margin:20}}  >
-          <Tabs tabPosition="right">
+          <Tabs tabPosition="right" tabBarStyle={{width:200}}>
           {this.state.gameinfo.cluelocation?this.state.gameinfo.cluelocation.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
-              <Card title={<div><Input style={{width:200}} value={cluelocation.name} onChange={this.handleCluelocationNameChange(idx)} /><Helper step={5} /></div>} extra={<span>线索数：{cluelocation.count} </span>} >
+              <Card title={<div><Input style={{width:200}} value={cluelocation.name} onChange={this.handleCluelocationNameChange(idx)} /><Helper step={5} /></div>} extra={<span>线索数：{cluelocation.count}{' '}<a onClick={this.handleRemoveCluelocation(cluelocation.index)}>移除地点</a> </span>} >
 
               <Row gutter={16}>
               {cluelocation.clues.map((clue, iidx) => (
