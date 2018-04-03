@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import {Select, BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
+import {InputNumber ,Divider ,Select, BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 import { Prompt } from 'react-router'
 //import 'react-tabs/style/react-tabs.css';
 import Helper from '../helper.js';
@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 //import { addFlashMessage } from '../../../actions/flashmessages.js';
 import { getdraft } from '../../../actions/authAction.js';
+import cluenopic from '../../../assets/img/cluenopic.png';
+import gameicon from '../../../assets/img/gameicon.png';
 //import Lightbox from 'react-image-lightbox';
 //import IconButton from 'material-ui/IconButton';
 //import MenuItem from 'material-ui/MenuItem';
@@ -47,6 +49,12 @@ class draftEdit extends React.Component {
       loading:true,
       prompt:true
     };
+  }
+  previewImage(e){
+    this.setState({
+      previewImage: e.target.src,
+      previewVisible: true,
+    });
   }
   onuploadChange = (idx,iidx) => (info) => {
       if (info.file.status !== 'uploading') {
@@ -100,6 +108,7 @@ class draftEdit extends React.Component {
       case "save":
       axios.put(url+'/'+this.state.game_id,{
         ...this.state.gameinfo,
+        playernumber: self.state.characterlist.length,
         malenumber: this.state.characterlist.filter((char) => char.charactersex=="男").length,
         femalenumber: this.state.characterlist.filter((char) => char.charactersex=="女").length,
         cluestatus:this.fillArray(this.state.gameinfo.cluelocation),
@@ -146,6 +155,7 @@ class draftEdit extends React.Component {
           onOk() {
             axios.put(url+'/'+self.state.game_id,{
               ...self.state.gameinfo,
+              playernumber: self.state.characterlist.length,
               malenumber: self.state.characterlist.filter((char) => char.charactersex=="男").length,
               femalenumber: self.state.characterlist.filter((char) => char.charactersex=="女").length,
               cluestatus:self.fillArray(self.state.gameinfo.cluelocation),
@@ -509,7 +519,7 @@ class draftEdit extends React.Component {
        <Prompt
           when={this.state.prompt}
           message={(location,action) => {console.log(location);console.log(action);
-            return location.pathname.startsWith('/draftEdit') ? true : `Are you sure you want to go to ${location.pathname}?`
+            return location.pathname.startsWith('/draftEdit') ? true : `确认离开此页面吗？`
           }}
         />
       <Modal visible={this.state.previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
@@ -536,13 +546,13 @@ class draftEdit extends React.Component {
        <Menu style={{ height: '100%', borderRight: 0 }} >
          <Anchor offsetTop="60">
           <Anchor.Link href="#basic" title="基本信息" />
-          <Anchor.Link href="#image" title="图片设计" />
-          <Anchor.Link href="#instruction" title="游戏说明" />
-          <Anchor.Link href="#plot" title="阶段剧情" />
           <Anchor.Link href="#char" title="角色信息" />
           <Anchor.Link href="#charback" title="角色背景" />
+          <Anchor.Link href="#plot" title="阶段剧情" />
           <Anchor.Link href="#charplot" title="角色阶段剧本"/>
           <Anchor.Link href="#clue" title="线索编辑"/>
+          <Anchor.Link href="#instruction" title="游戏说明" />
+          <Anchor.Link href="#image" title="图片设计" />
         </Anchor>
       </Menu>
        </Layout.Sider>
@@ -558,13 +568,9 @@ class draftEdit extends React.Component {
                     /></Col></Row>
                   <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本简介：</Col><Col span={16} >
                     <Input
+                      placeholder="一句话概括故事内容"
                       value={this.state.gameinfo.descripion}
                       onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
-                    /></Col></Row>
-                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本类别：</Col><Col span={16} >
-                    <Input
-                      value={this.state.gameinfo.category}
-                      onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, category: evt.target.value}})}}
                     /></Col></Row>
                   <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >搜证方式：</Col><Col span={16} >
                   <Radio.Group onChange={(e)=>{this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: e.target.value } })}} value={this.state.gameinfo.cluemethod}>
@@ -573,157 +579,33 @@ class draftEdit extends React.Component {
                     <Radio.Button value="return">随机返还</Radio.Button>
                   </Radio.Group>              </Col></Row>
                   <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >详细介绍：</Col><Col span={16} >
-                    <Input.TextArea value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""} onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}} autosize={{ minRows: 2, maxRows: 6 }} />
+                    <Input.TextArea
+                      placeholder="例如：故事的设定，难度等。吸引玩家体验你的剧本"
+                      value={this.state.gameinfo.detailDescription?this.state.gameinfo.detailDescription.join('\n'):""}
+                      onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, detailDescription: evt.target.value.split('\n')}})}}
+                      autosize={{ minRows: 2, maxRows: 6 }} />
                   </Col>
                 </Row>
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本类别：</Col><Col span={16} >
+                  <Input
+                    value={this.state.gameinfo.category}
+                    disabled="true"
+                  /></Col></Row>
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本价格：</Col><Col span={16} >
+                  <InputNumber
+                    size="small"
+                    value={this.state.gameinfo.price}
+                    disabled="true"
+                  />元</Col></Row>
               </Col>
               <Col span={6} >
-                <img alt="cover" onClick={(e) => {
-                  this.setState({
-                    previewImage: e.target.src,
-                    previewVisible: true,
-                  });
-                }} style={{height:350}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():""} />
-
+                <img alt="cover" onClick={this.previewImage.bind(this)} style={{maxHeight:350,maxWidth:350}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():gameicon} />
               </Col>
             </Row>
           </Card>
 
-          <Card id="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
-            <Row gutter={16}>
-              <Col span={8}>
-                <Card title="剧本封面()">
-                  <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本封面" onClick={(e) => {
-                    this.setState({
-                      previewImage: e.target.src,
-                      previewVisible: true,
-                    });
-                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():""} />
-                  </div>
-                  <div>
-                  <Upload
-                    onChange={this.onuploadChange(-1,-1)}
-                    data={{name : this.state.gameinfo.id+"cover"}}
-                    action= 'https://chinabackend.bestlarp.com/uploadimage'
-                    >
-                    <Button>
-                      <Icon type="upload" /> 点此上传
-                    </Button>
-                  </Upload>
-                  </div>
-                </Card>
-              </Col>
-              <Col span={8}>
-                <Card title="剧本图标()">
-                  <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本图标" onClick={(e) => {
-                    this.setState({
-                      previewImage: e.target.src,
-                      previewVisible: true,
-                    });
-                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.iconurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime():""} />
-                  </div>
-                  <div>
-                  <Upload
-                    onChange={this.onuploadChange(-1,-1)}
-                    data={{name : this.state.gameinfo.id+"icon"}}
-                    action= 'https://chinabackend.bestlarp.com/uploadimage'
-                    >
-                    <Button>
-                      <Icon type="upload" /> 点此上传
-                    </Button>
-                  </Upload>
-                  </div>
-                </Card>
-              </Col>
-              <Col span={8}>
-                <Card title="剧本地图()">
-                  <div style={{maxWidth:"80%"}} >
-                  <img alt="剧本地图" onClick={(e) => {
-                    this.setState({
-                      previewImage: e.target.src,
-                      previewVisible: true,
-                    });
-                  }}  style={{maxWidth:"80%"}} src={this.state.gameinfo.mapurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime():""} />
-                  </div>
-                  <div>
-                  <Upload
-                    onChange={this.onuploadChange(-1,-1)}
-                    data={{name : this.state.gameinfo.id+"map"}}
-                    action= 'https://chinabackend.bestlarp.com/uploadimage'
-                    >
-                    <Button>
-                      <Icon type="upload" /> 点此上传
-                    </Button>
-                  </Upload>
-                  </div>
-                </Card>
-              </Col>
-            </Row>
-          </Card>
 
-          <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
-            <Row gutter={16}>
-            {this.state.gameinfo.instruction && this.state.gameinfo.instruction.map((instruct, idx) => (
-              <Col span={12}>
-              <Card style={{margin:20}} title={<Input
-                style={{maxWidth:200}}
-                placeholder="说明标题"
-                value={instruct.type}
-                onChange={this.handleInstructTypeChange(idx)} />}
-               extra={<a onClick={this.handleRemoveInstruction(idx)}>移除</a>} >
-              <Input.TextArea value={instruct.content.length ? instruct.content.join('\n'):""} onChange={this.handleInstructContentChange(idx)}  autosize={{ minRows: 6, maxRows: 6 }} />
-              </Card>
-              </Col>
-            ))}
-            <Col span={12}>
-            <Card hoverable onClick={this.handleAddInstruction.bind(this)} style={{margin:20, textAlign:"center"}} >
-              <Icon type= 'plus' />
-              <div>添加新说明</div>
-              </Card>
-            </Col>
-            </Row>
-          </Card>
 
-          <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
-            <Row gutter={16}>
-            {this.state.gameinfo.mainplot?this.state.gameinfo.mainplot.map((plot, idx) => (
-              <Col span={12} key={plot.plotid}>
-              <Card style={{margin:20}} title={<div>第{plot.plotid}阶段：<Input
-                style={{maxWidth:200}}
-                placeholder="阶段标题"
-                value={plot.plotname}
-                onChange={this.handlePlotNameChange(idx)} /></div>}
-               extra={<a onClick={this.handleRemovePlot(idx)}>移除</a>} >
-               <b>剧情概要：</b>
-              <Input.TextArea value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)}  autosize={{ minRows: 8, maxRows: 8 }} />
-              <div style={{marginTop:10}}><b>在此阶段开启搜证功能：</b>
-              <Switch
-              checked={plot.enableclue>0}
-              onChange={this.handleToggleenableclue(idx)}
-              checkedChildren="可搜证"
-              unCheckedChildren="不可搜证"
-              />
-              </div>
-              <div style={{marginTop:10}}><b>在此阶段开启投票功能：</b>
-              <Switch
-              checked={plot.enablevote>0}
-              onChange={this.handleToggleenablevote(idx)}
-              checkedChildren="开启投票"
-              unCheckedChildren="关闭投票"
-              /></div>
-              </Card>
-              </Col>
-            )):""}
-            <Col span={12}>
-            <Card hoverable onClick={this.handlePlotAdd.bind(this)} style={{margin:20, textAlign:"center"}} >
-              <Icon type= 'plus' />
-              <div>添加阶段</div>
-              </Card>
-            </Col>
-            </Row>
-          </Card>
 
           <Card id="char" title={<b style={{fontSize:20, textAlign:"left"}} >角色信息</b>} extra={<a onClick={this.handleAddCharacter()}>添加角色</a>} style={{margin:20}}>
             <Tabs tabPosition="right" tabBarStyle={{width:200}}>
@@ -754,7 +636,9 @@ class draftEdit extends React.Component {
                      ))}
                   </Radio.Group></Col></Row>
                   <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >角色简介：</Col><Col span={16} >
-                    <Input.TextArea autosize={{ minRows: 2, maxRows: 6 }}
+                    <Input.TextArea
+                    placeholder="角色简介：请说明角色的公开身份，当日装扮，年龄，性格等，一边玩家进行选择。"
+                    autosize={{ minRows: 2, maxRows: 6 }}
                     value={characterlist.characterdescription}
                     onChange={(evt)=>{this.setState({characterlist:this.state.characterlist.map((characterlist, sidx) => {
                       if (idx !== sidx) return characterlist;
@@ -776,7 +660,9 @@ class draftEdit extends React.Component {
               {characterlist.characterinfo.map((characterinfo, iidx) => (
                 <Col span={24}>
                 <Card title={<Input value={characterinfo.type} onChange={this.handleCharacterInfoTypeChange(idx,iidx)} style={{width:200}}/>} extra={<a onClick={this.handleRemoveCharacterInfo(idx,iidx)}>移除</a>} >
-                <Input.TextArea value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}  autosize={{ minRows: 6, maxRows: 10 }} />
+                <Input.TextArea
+                placeholder="尽可能详细地介绍关于角色的一切游戏当天之前需要知道的事情，以便玩家投入到角色中。"
+                value={characterinfo.content.join('\n')}  onChange={this.handlecharacterinfoContentChange(idx,iidx)}  autosize={{ minRows: 6, maxRows: 10 }} />
                 </Card>
                 </Col>
               ))}
@@ -790,6 +676,46 @@ class draftEdit extends React.Component {
               </Tabs.TabPane>
             ))}
             </Tabs>
+          </Card>
+
+          <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
+            <Row gutter={16}>
+            {this.state.gameinfo.mainplot?this.state.gameinfo.mainplot.map((plot, idx) => (
+              <Col span={12} key={plot.plotid}>
+              <Card style={{margin:20}} title={<div>第{plot.plotid}阶段：<Input
+                style={{maxWidth:200}}
+                placeholder="阶段标题"
+                value={plot.plotname}
+                onChange={this.handlePlotNameChange(idx)} /></div>}
+               extra={<a onClick={this.handleRemovePlot(idx)}>移除</a>} >
+               <b>剧情概要：</b>
+              <Input.TextArea
+              placeholder="剧情概要在相应的阶段，提供给所有角色共享的信息，如：发现死者，验尸报告等。如信息为少数角色独有，请不要再此处填写" value={plot.content.join('\n')}  onChange={this.handlePlotContentChange(idx)}  autosize={{ minRows: 8, maxRows: 8 }} />
+              <div style={{marginTop:10}}><b>在此阶段开启（禁用）搜证功能：</b>
+              <Switch
+              checked={plot.enableclue>0}
+              onChange={this.handleToggleenableclue(idx)}
+              checkedChildren="可搜证"
+              unCheckedChildren="不可搜证"
+              />
+              </div>
+              <div style={{marginTop:10}}><b>在此阶段开启（禁用）投票功能：</b>
+              <Switch
+              checked={plot.enablevote>0}
+              onChange={this.handleToggleenablevote(idx)}
+              checkedChildren="开启投票"
+              unCheckedChildren="关闭投票"
+              /></div>
+              </Card>
+              </Col>
+            )):""}
+            <Col span={12}>
+            <Card hoverable onClick={this.handlePlotAdd.bind(this)} style={{margin:20, textAlign:"center"}} >
+              <Icon type= 'plus' />
+              <div>添加阶段</div>
+              </Card>
+            </Col>
+            </Row>
           </Card>
 
           <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} >
@@ -830,7 +756,7 @@ class draftEdit extends React.Component {
             </Tabs>
           </Card>
 
-          <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >游戏线索</b>} extra={<a onClick={this.handleAddCluelocation.bind(this)}>添加地点</a>} style={{margin:20}}  >
+          <Card id="clue" title={<b style={{fontSize:20, textAlign:"left"}} >搜证线索</b>} extra={<a onClick={this.handleAddCluelocation.bind(this)}>添加地点</a>} style={{margin:20}}  >
           <Tabs tabPosition="right" tabBarStyle={{width:200}}>
           {this.state.gameinfo.cluelocation?this.state.gameinfo.cluelocation.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
@@ -839,13 +765,9 @@ class draftEdit extends React.Component {
               <Row gutter={16}>
               {cluelocation.clues.map((clue, iidx) => (
               <Col span={8}>
-                <Card title={<b style={{marginRight:30}}>{clue.cluenumber}</b>} extra={<a onClick={this.handleRemoveClues(idx,iidx)}>移除</a>} >
-                  <img alt="无图片" onClick={(e) => {
-                    this.setState({
-                      previewImage: e.target.src,
-                      previewVisible: true,
-                    });
-                  }}  style={{maxWidth:"80%"}} src={clue.image?"https://chinabackend.bestlarp.com/pic/"+clue.image + "?t="+ new Date().getTime():""} />
+                <Card title={<b style={{marginRight:30}}>{clue.cluenumber}</b>} style={{height: 500}} extra={<a onClick={this.handleRemoveClues(idx,iidx)}>移除</a>} >
+                  <b>图片内容</b><br/>
+                  <img alt="此线索无图片" onClick={this.previewImage.bind(this)} style={{maxWidth:"80%", marginLeft:'10%'}} src={clue.image?"https://chinabackend.bestlarp.com/pic/"+clue.image + "?t="+ new Date().getTime():cluenopic} />
                   <Upload
                     onChange={this.onuploadChange(idx,iidx)}
                     data={{name : this.state.gameinfo.id+idx +"n"+iidx}}
@@ -855,6 +777,8 @@ class draftEdit extends React.Component {
                       <Icon type="upload" /> 点此上传
                     </Button>
                   </Upload>
+                  <Divider/>
+                    <b>文字内容</b>
                     <Input.TextArea
                     value={clue.content}
                     onChange={this.handleclueContentChange(idx,iidx)}
@@ -874,6 +798,84 @@ class draftEdit extends React.Component {
           )):""}
           </Tabs>
         </Card>
+
+        <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
+          <Row gutter={16}>
+          {this.state.gameinfo.instruction && this.state.gameinfo.instruction.map((instruct, idx) => (
+            <Col span={12}>
+            <Card style={{margin:20}} title={<Input
+              style={{maxWidth:200}}
+              placeholder="说明标题，如：关于游戏"
+              value={instruct.type}
+              onChange={this.handleInstructTypeChange(idx)} />}
+             extra={<a onClick={this.handleRemoveInstruction(idx)}>移除</a>} >
+            <Input.TextArea
+            placeholder="说明正文" value={instruct.content.length ? instruct.content.join('\n'):""} onChange={this.handleInstructContentChange(idx)}  autosize={{ minRows: 6, maxRows: 6 }} />
+            </Card>
+            </Col>
+          ))}
+          <Col span={12}>
+          <Card hoverable onClick={this.handleAddInstruction.bind(this)} style={{margin:20, textAlign:"center"}} >
+            <Icon type= 'plus' />
+            <div>添加新说明</div>
+            </Card>
+          </Col>
+          </Row>
+        </Card>
+
+        <Card id="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card title="剧本封面">
+                <img alt="剧本封面" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():gameicon} />
+                <div>
+                <Upload
+                  onChange={this.onuploadChange(-1,-1)}
+                  data={{name : this.state.gameinfo.id+"cover"}}
+                  action= 'https://chinabackend.bestlarp.com/uploadimage'
+                  >
+                  <Button>
+                    <Icon type="upload" /> 点此上传
+                  </Button>
+                </Upload>
+                </div>
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card title="剧本图标">
+                <img alt="剧本图标" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.iconurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime():gameicon} />
+                <div>
+                <Upload
+                  onChange={this.onuploadChange(-1,-1)}
+                  data={{name : this.state.gameinfo.id+"icon"}}
+                  action= 'https://chinabackend.bestlarp.com/uploadimage'
+                  >
+                  <Button>
+                    <Icon type="upload" /> 点此上传
+                  </Button>
+                </Upload>
+                </div>
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card title="剧本地图(任何尺寸)">
+                <img alt="剧本地图" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.mapurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime():gameicon} />
+                <div>
+                <Upload
+                  onChange={this.onuploadChange(-1,-1)}
+                  data={{name : this.state.gameinfo.id+"map"}}
+                  action= 'https://chinabackend.bestlarp.com/uploadimage'
+                  >
+                  <Button>
+                    <Icon type="upload" /> 点此上传
+                  </Button>
+                </Upload>
+                </div>
+              </Card>
+            </Col>
+          </Row>
+        </Card>
+
       </Layout>
       </Layout>
       </Spin>

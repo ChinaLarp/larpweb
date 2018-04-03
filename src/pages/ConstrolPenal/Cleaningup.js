@@ -11,7 +11,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 import { Badge, Table } from 'react-bootstrap';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
 import UserItem from './UserItem.js'
 import queryString from 'query-string'
@@ -35,7 +35,7 @@ class Cleaningup extends React.Component {
           axios.delete(url+'/'+userid,{
             data:{ signature: md5(userid+"xiaomaomi") }
           }).then(response => {
-            console.log("deleted"+userid)
+            message.success("deleted"+userid)
             })
             .catch(error => {
               console.log(error);
@@ -55,7 +55,7 @@ class Cleaningup extends React.Component {
     const url = "https://chinabackend.bestlarp.com/api/app";
     axios.get(url+'?type=user&select=_id%20tableid')
       .then(res => {
-        console.log()
+        //console.log()
         this.detectanddeleteuser(res.data,0)
       })
       .catch(error => {
@@ -72,7 +72,7 @@ class Cleaningup extends React.Component {
           axios.delete(url+'/'+tableid,{
             data:{ signature: md5(tableid+"xiaomaomi") }
           }).then(response => {
-            console.log("deleted"+tableid)
+            message.success("deleted"+tableid)
             })
             .catch(error => {
               console.log(error);
@@ -108,7 +108,7 @@ class Cleaningup extends React.Component {
           var userreferencesres = res.data.map(user=>user['_id'])
           console.log({ userreferences:userreferencesres, signature: md5(tableid+"xiaomaomi"), tableid: tableid })
           axios.put(url+'/'+tableid,{userreferences:res.data, signature: md5(tableid+"xiaomaomi")}).then(response => {
-            console.log("done"+tableid)
+            message.success("done"+tableid)
             })
             .catch(error => {
               console.log(error);
@@ -144,7 +144,7 @@ class Cleaningup extends React.Component {
           console.log({ reference:res.data[0]._id, signature: md5(userid+"xiaomaomi"), userid: userid })
           axios.put(url+'/'+userid,{reference:res.data[0]._id, signature: md5(userid+"xiaomaomi")
           }).then(response => {
-            console.log("done"+userid)
+            message.success("done"+userid)
             })
             .catch(error => {
               console.log(error);
@@ -171,6 +171,12 @@ class Cleaningup extends React.Component {
         console.log(error);
       });
   }
+  componentWillMount(){
+      message.config({
+        top: 70,
+        duration: 2,
+      })
+    }
   render() {
     return (
       <div >
