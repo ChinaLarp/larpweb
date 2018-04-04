@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pagination, Card, Col, Row } from 'antd';
+import { Pagination, Card, Col, Row, Layout, Spin } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Gameitem from './gameitem.js'
@@ -9,7 +9,7 @@ class Products extends React.Component {
     super(props);
     this.state={
       currentpage:1,
-      pagesize:6,
+      pagesize:3,
     }
   }
   inpage(page,size,index){
@@ -22,9 +22,7 @@ class Products extends React.Component {
   }
   render() {
     let gameList;
-    if (this.props.products.fetched===false) {
-      gameList= <div>'Loading'</div>;
-    } else {
+    if (this.props.products.fetched) {
       gameList = this.props.products.products.map((game, index) => {
       var link='/gamedetails/' + game._id;
       if (!this.inpage(this.state.currentpage,this.state.pagesize,index)){
@@ -40,17 +38,25 @@ class Products extends React.Component {
 
 
     return(
-      <Card style={{maxWidth:1200, margin:"auto"}} title={<b>全部剧本</b>}>
-        <Row gutter={16} type="flex" justify="space-between" style={{maxWidth:1200}}>
-          {gameList}
+      <Layout>
+        <Row style={{marginTop:40}} gutter={16} >
+        <Col span={18} offset={3}>
+        <Card  title={<b>全部剧本</b>}>
+          {!this.props.products.fetched && <div style={{textAlign: 'center'}}><Spin/></div>}
+          <Row gutter={32} style={{minHeight:700}} type="flex"  >
+            {this.props.products.fetched && gameList}
+          </Row>
+          <Pagination style={{paddingTop:40}}
+            total={this.props.products.products.length}
+            onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
+            onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
+            current={this.state.currentpage}
+            pageSize={this.state.pagesize}/>
+        </Card>
+        </Col>
         </Row>
-        <Pagination style={{paddingTop:40}}
-          total={this.props.products.products.length}
-          onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
-          onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
-          current={this.state.currentpage}
-          pageSize={this.state.pagesize}/>
-      </Card>
+      </Layout>
+
 
       )
  }

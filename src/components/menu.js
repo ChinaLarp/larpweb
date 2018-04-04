@@ -3,10 +3,13 @@ import {
   NavLink,
   HashRouter
 } from 'react-router-dom';
+import axios from 'axios';
 import {Navbar, Nav,NavItem,NavDropdown} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login,logout } from '../actions/authAction';
+import Login from './Login/login';
+import Register from './Login/register';
 import { userSignupRequest } from '../actions/signupActions';
 import { addFlashMessage } from '../actions/flashmessages.js';
 import { Popover, Button, Form, Icon, Input, Checkbox, message  } from 'antd';
@@ -22,7 +25,9 @@ class Menu extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      console.log(err,values)
       if (!err) {
+        console.log("login")
         this.props.login({...values,errors:{}})
         .then(
           (res) => {
@@ -33,6 +38,33 @@ class Menu extends Component {
             message.error("用户名或密码错误")
             this.setState({ errors: '用户名或密码错误!'})}
         )
+       }
+     })
+  }
+  handleRegister = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      console.log(err,values)
+      if (!err) {
+        var apiBaseUrl = "https://chinabackend.bestlarp.com";
+        var payload={
+        "email":values.email,
+        "password":values.password,
+        "username": values.username
+        }
+        axios.post(apiBaseUrl+'/user', payload).then((res)=>{
+          if (res.data.success){
+            message.success('你已成功注册. 欢迎!')
+            window.location.reload()
+          }else{
+            message.error("邮箱已被注册")
+            this.setState({ errors: '邮箱已被注册!'})
+          }
+        })
+          ,(res,err)=>{
+            message.error("邮箱已被注册")
+            this.setState({ errors: '邮箱已被注册!'})
+            }
        }
      })
   }
@@ -60,81 +92,12 @@ class Menu extends Component {
       User_info=
       <Nav pullRight>
       <Popover placement="bottom" title={<span>登录</span>} content={
-        <Form onSubmit={this.handleSubmit} >
-          {this.state.errors && <div style={{color:'red'}}>{this.state.errors}</div>}
-          <Form.Item>
-            {this.props.form.getFieldDecorator('email', {
-              rules: [{ required: true, message: '请输入用户名！' }],
-            })(
-              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {this.props.form.getFieldDecorator('password', {
-              rules: [{ required: true, message: '请输入密码！' }],
-            })(
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="密码" />
-            )}
-          </Form.Item>
-          <Form.Item>
-            <a href="">忘记密码</a>
-            <Button type="primary" htmlType="submit" >
-              登录
-            </Button>
-            <Button style={{backgroundColor:'#51e25f', color:'white', width:'100%'}} href={weixinurl}>
-              微信登录
-            </Button>
-          </Form.Item>
-        </Form>
+        <Login login={this.props.login} auth={auth}/>
       } trigger="click">
         <NavItem>登录</NavItem>
       </Popover>
       <Popover placement="bottom" title={<span>注册</span>} content={
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Item label="用户名" {...formItemLayout}>
-            {this.props.form.getFieldDecorator('nickname', {
-              rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
-            })(
-              <Input />
-            )}
-          </Form.Item>
-         <Form.Item label="E-mail" {...formItemLayout}>
-           {this.props.form.getFieldDecorator('email', {
-             rules: [{
-               type: 'email', message: 'The input is not valid E-mail!',
-             }, {
-               required: true, message: 'Please input your E-mail!',
-             }],
-           })(
-             <Input />
-           )}
-         </Form.Item>
-         <Form.Item label="密码" {...formItemLayout}>
-           {this.props.form.getFieldDecorator('password', {
-             rules: [{
-               required: true, message: 'Please input your password!',
-             }, {
-               validator: this.validateToNextPassword,
-             }],
-           })(
-             <Input type="password" />
-           )}
-         </Form.Item>
-         <Form.Item label="确认密码" {...formItemLayout}>
-           {this.props.form.getFieldDecorator('confirm', {
-             rules: [{
-               required: true, message: 'Please confirm your password!',
-             }, {
-               validator: this.compareToFirstPassword,
-             }],
-           })(
-             <Input type="password" onBlur={this.handleConfirmBlur} />
-           )}
-         </Form.Item>
-         <Form.Item >
-            <Button type="primary" htmlType="submit">注册</Button>
-         </Form.Item>
-        </Form>
+        <Register  auth={auth}/>
       } trigger="click">
         <NavItem>注册</NavItem>
       </Popover>
@@ -154,7 +117,7 @@ class Menu extends Component {
 ;
     }
     return (
-         <Navbar inverse collapseOnSelect fixedTop style={{ fontSize:20, fontWeight:500 }} >
+         <Navbar inverse collapseOnSelect fixedTop style={{ backgroundColor: '#020202',fontSize:20, fontWeight:500 }} >
           <Navbar.Header>
             <Navbar.Brand >
               <a href="/"><b>全民侦探社</b></a>
@@ -165,7 +128,6 @@ class Menu extends Component {
             <Nav>
               <NavItem><NavLink className="link" to="/games" activeClassName="link" >游戏介绍</NavLink></NavItem>
               <NavItem><NavLink className="link" activeClassName="link" to="/draftList">我要创作</NavLink></NavItem>
-              <NavItem><NavLink className="link" activeClassName="link"  to="/contact">关于我们</NavLink></NavItem>
             </Nav>
             {User_info}
           </Navbar.Collapse>

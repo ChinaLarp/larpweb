@@ -31,7 +31,9 @@ logo{
 /* content page */
 
 .content {
-  margin-top: 35px;
+  margin: -20px;
+  margin-top: 31px;
+  margin-bottom: 0px;
   min-height: 700px;
 }
 .content h2 {
@@ -381,15 +383,15 @@ display: -webkit-box;
 /* footer starts*/
 .footer{
   padding-top: 10px;
-  background-color: gray;
+  background-color: #020202;
   background-size: 100%;
   background-position: top center;
   font-size:14px;
+  color:white;
   vertical-align:bottom;
   text-align:center;
-   left:0px;
-   bottom:0px;
-   width:100%;
+  margin-left: -20px;
+  margin-right: -20px;
 }
 
 /* footer ends*/

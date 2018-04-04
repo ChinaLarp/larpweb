@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Carousel, Tabs } from 'antd';
-import top1 from '../assets/img/top1.png';
-import top2 from '../assets/img/top2.png';
-import top3 from '../assets/img/top3.png';
+import { Carousel, Tabs, Button,Row, Col } from 'antd';
+import top1 from '../assets/img/home1.jpg';
+import top2 from '../assets/img/home2.jpg';
+import top3 from '../assets/img/home3.jpg';
+import weapp from '../assets/img/weixinapp.jpg';
+import weunion from '../assets/img/wechat_erCode.jpg';
 import axios from 'axios';
 import queryString from 'query-string'
 import { wxlogin } from '../actions/authAction';
@@ -25,7 +27,7 @@ class Home extends React.Component {
       weixinappid:'wx53e46ac9090180ea'
     }
   }
-    componentWillMount(){
+  componentWillMount(){
     console.log(this.props.location.search)
       const params=queryString.parse(this.props.location.search)
       console.log(params)
@@ -59,23 +61,67 @@ class Home extends React.Component {
 
 	 return (
 
-	      <div className="row" style={{maxWidth:1000, margin:'auto'}}>
-		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
-		        <Carousel autoplay >
-		           <div><img src={top1} className="aligncenter" alt="top1" /></div>
-		           <div><img src={top2} className="aligncenter" alt="top2" /></div>
-		           <div><img src={top3} className="aligncenter" alt="top3" /></div>
-		        </Carousel>
-		      </div>
+	      <div style={{margin:0, padding:0}}>
+		      <div style={{backgroundImage: `url(${top1})`,backgroundSize:'contain', width:'100%',height:1050,padding:80}}>
+            <Row>
+            <Col span={12}>
+              <div style={{backgroundColor:'rgba(0, 0, 0, 0.4)',height:700, marginLeft:70,padding:50}}>
+              <h2 style={{color:'white'}}>角色扮演推理游戏</h2><br/>
+              <p style={{color:'white'}}> 剧本杀源自欧美非常流行的一种桌游，</p>
+              <p style={{color:'white'}}> 每个剧本都是一宗离奇的谋杀案，</p>
+              <p style={{color:'white'}}> 其中一名宾客在其他人不知道的情况下扮演凶手，</p>
+              <p style={{color:'white'}}> 而其他宾客作为嫌疑人需要为自己洗脱嫌疑，</p>
+              <p style={{color:'white'}}> 并通过调查和推理还原真相，找出真凶。</p><br/>
+              <p style={{color:'white'}}> 当然凶手并非那么容易找到，</p>
+              <p style={{color:'white'}}> 因为每位在场宾客都与案情有着千丝万缕的关系，</p>
+              <p style={{color:'white'}}> 甚至暗藏着某些不可告人的秘密，</p>
+              <p style={{color:'white'}}> 而真相就隐藏在这些离奇的线索背后......</p><br/>
+              <p style={{color:'white'}}> 游戏中每位玩家都有机会成为福尔摩斯，</p>
+              <p style={{color:'white'}}> 没有人知道故事的背后到底隐藏着什么？</p>
+              <p style={{color:'white'}}> 这一切的一切都等着你来解开！</p>
+              </div>
+            </Col>
+            <Col span={8} offset={2}>
+              <div style={{backgroundColor:'rgba(0, 0, 0, 0.4)',height:700, marginLeft:70,padding:50}}>
+              <p style={{color:'white'}}> 全民侦探社是一个角色扮演推理游戏爱好者的社区。</p>
+              <p style={{color:'white'}}> 在这里每一个人都是名侦探，玩家可以在任何地方用我们的微信小程序进行推理秀，</p>
+              <p style={{color:'white'}}> 这里有诸多经典剧本，也有许多十分好玩的原创剧本，</p>
+              <p style={{color:'white'}}> 如果你也喜欢推理，如果你也是戏精，不要犹豫，拉上你的小伙伴，扫描下方二维码，组一局推理party吧，</p><br/>
+              <Button href="/game" ghost>浏览剧本</Button><br/><br/><br/>
+              <img src={weapp} style={{width:'70%',margin:'auto'}}/>
+              </div>
 
-		      <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-		      	<Tabs tabBarExtraContent={operations} tabBarStyle={tabBarStyle}>
-				    <TabPane tab="最新" key="1" className="news-block"><Postsblock count={7} type='all'/></TabPane>
-				    <TabPane tab="新闻" key="2" className="news-block"><Postsblock count={7} type='news'/></TabPane>
-				    <TabPane tab="活动" key="3" className="news-block"><Postsblock count={7} type='activity' /></TabPane>
-	  		    </Tabs>
-		     </div>
-	      </div>
+            </Col>
+            </Row>
+          </div>
+          <div style={{backgroundImage: `url(${top2})`,backgroundSize:'contain', width:'100%',height:1050,padding:80}}>
+            <Row>
+            <Col span={12}>
+              <div style={{backgroundColor:'rgba(0, 0, 0, 0.4)',height:700, marginLeft:70,padding:80}}>
+              <h2 style={{color:'white'}}>剧本创作</h2><br/>
+              <p style={{color:'white'}}> 在全民侦探社，任何人都可以是大作家，</p>
+              <p style={{color:'white'}}> 不同于许多营利性的实体店，全民侦探社没有签约作者或者任何购买剧本的渠道。我们相信每一推理迷心中都有属于自己的推理故事。出于这个想法，我们为所有推理迷创建了一个创作剧本的平台。</p>
+              <p style={{color:'white'}}> 你可以是阅尽各种推理剧和小说的推理达人，也可以是只看看柯南或明星大侦探的推理小白，只要你发散你的想象力，任何人都可以在我们的平台下创造属于自己的推理游戏剧本。</p><br/>
+              <p style={{color:'white'}}> 作为奖励，审核通过并向玩家开放的剧本将经过商讨给出定价，作者可以得到丰厚的分成。</p><br/>
+                <Button href="/draftList" ghost>创作剧本</Button>
+              </div>
+            </Col>
+            </Row>
+          </div>
+          <div style={{backgroundImage: `url(${top3})`,backgroundSize:'contain', width:'100%',height:650,padding:0}}>
+            <Row>
+            <Col span={12} offset={10}>
+              <div style={{backgroundColor:'rgba(0, 0, 0, 0.4)',height:700, marginLeft:70,padding:80}}>
+              <h2 style={{color:'white'}}>关于我们</h2><br/>
+              <p style={{color:'white'}}> 全民侦探社来自于一群喜欢扮演的推理迷，一个才华横溢的剧作者，一个简单的想法，一些愿意牺牲自己时间的人，</p>
+              <p style={{color:'white'}}> 由于精力有限，还有好多想法还在完善中。如果您对小程序有哪些建议，期待或者问题，欢迎通过我们的邮箱chinalarp@gmail.com反馈给我们。</p>
+              <p style={{color:'white'}}> 你也可以通过扫码或者搜索“全民侦探社”关注我们的公众号，了解最新的动态，给我们提建议，与我们互动。由于团队人数少得可怜，而且大家都没有整块时间。如果你想帮助我们把全民侦探社做下去，欢迎和我们合作。</p><br/>
+              <img src={weunion} style={{width:'40%',margin:'auto'}}/>
+              </div>
+            </Col>
+            </Row>
+          </div>
+        </div>
     );
   }
 }
