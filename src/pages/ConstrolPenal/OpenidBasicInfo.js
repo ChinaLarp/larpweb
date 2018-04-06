@@ -8,15 +8,11 @@ class TableItem extends React.Component {
   }
 
   render() {
+    var name, category
     if (this.props.name){
-      var name = this.props.name.split(';')
+      name = this.props.name.split(';')
     }else{
-      var name = ["无信息","无信息","无信息"]
-    }
-    if (this.props.broadcast){
-      var broadcast = this.props.broadcast.split(';')
-    }else{
-      var broadcast = ["无信息","无信息","无信息"]
+      name = ["无信息","无信息","无信息"]
     }
     return (
       <div>

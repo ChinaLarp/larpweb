@@ -18,9 +18,9 @@ import Contact from './pages/contact.js';
 import draftList from './pages/Drafts/draftList.js';
 import draftEdit from './pages/Drafts/draftEdit/draftEdit.js';
 import draftSummary from './pages/Drafts/draftSummary.js';
-import DraftCreate from './pages/Drafts/DraftCreate.js';
-import Loginscreen from './pages/Login/Loginscreen';
-import Register from './pages/Login/Register.js';
+//import DraftCreate from './pages/Drafts/DraftCreate.js';
+//import Loginscreen from './pages/Login/Loginscreen';
+//import Register from './pages/Login/Register.js';
 import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
@@ -44,12 +44,9 @@ class App extends Component {
           <Route path="/posts" component={posts}/>
           <Route path="/games" component={Games}/>
           <Route path="/draftList" component={draftList}/>
-          <Route path="/DraftCreate/:_id?" component={DraftCreate}/>
           <Route path="/draftEdit/:_id" component={draftEdit}/>
           <Route path="/draftSummary/:_id" component={draftSummary}/>
           <Route path="/contact" component={Contact}/>
-          <Route path="/Loginscreen" component={Loginscreen}/>
-          <Route path="/Register" component={Register}/>
 		      <Route path="/details/:_id" component={postsDetail}></Route>
           <Route path="/gamedetails/:_id" component={GameDetail}></Route>
           <Route path="/ConstrolPenal" component={ConstrolPenal}></Route>

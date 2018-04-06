@@ -2,6 +2,8 @@
   font-family: "Microsoft YaHei";
 
 }
+
+
 .NavBarTest{
   z-index: 1;
 }
@@ -34,7 +36,7 @@ logo{
   margin: -20px;
   margin-top: 31px;
   margin-bottom: 0px;
-  min-height: 700px;
+  min-height: 90vh;
 }
 .content h2 {
   padding: 0;

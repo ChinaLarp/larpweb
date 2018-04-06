@@ -37,7 +37,7 @@ class Login extends Component {
   render() {
     let User_info;
     var { auth } = this.props
-    const weixinurl="https://open.weixin.qq.com/connect/qrconnect?appid="+this.state.weixinappid+"&redirect_uri=https%3A%2F%2Fbestlarp.com%2F%23&response_type=code&scope=snsapi_login&state=3d6be0a4035d839573b04816624a415e#wechat_redirect"
+    const weixinurl="https://open.weixin.qq.com/connect/qrconnect?appid="+this.state.weixinappid+"&redirect_uri=https%3A%2F%2Fbestlarp.com&response_type=code&scope=snsapi_login&state=3d6be0a4035d839573b04816624a415e#wechat_redirect"
     return (
       <Form onSubmit={this.handleSubmit} >
         {this.state.errors && <div style={{color:'red'}}>{this.state.errors}</div>}

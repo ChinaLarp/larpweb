@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
-  NavLink,
-  HashRouter
+  NavLink
 } from 'react-router-dom';
 import axios from 'axios';
 import {Navbar, Nav,NavItem,NavDropdown} from 'react-bootstrap';
@@ -12,8 +11,9 @@ import Login from './Login/login';
 import Register from './Login/register';
 import { userSignupRequest } from '../actions/signupActions';
 import { addFlashMessage } from '../actions/flashmessages.js';
-import { Popover, Button, Form, Icon, Input, Checkbox, message  } from 'antd';
-import wechatlogo from '../assets/img/wechatlogo.png';
+import logo from '../assets/img/logo.png';
+import { Popover, Form, message } from 'antd';
+//import wechatlogo from '../assets/img/wechatlogo.png';
 class Menu extends Component {
   constructor(props){
     super(props)
@@ -77,17 +77,6 @@ class Menu extends Component {
   render() {
     let User_info;
     var { auth } = this.props
-    const weixinurl="https://open.weixin.qq.com/connect/qrconnect?appid="+this.state.weixinappid+"&redirect_uri=https%3A%2F%2Fbestlarp.com%2F%23&response_type=code&scope=snsapi_login&state=3d6be0a4035d839573b04816624a415e#wechat_redirect"
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-      },
-    };
     if (auth.isAuthenticated===false) {
       User_info=
       <Nav pullRight>
@@ -107,9 +96,9 @@ class Menu extends Component {
       <Nav pullRight>
       <NavDropdown   title={this.props.auth.user.username} id="basic-nav-dropdown">
           <NavItem href="/draftList"> 我的剧本</NavItem>
-          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=table">房间列表</NavItem>}
-          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=cleanup">清理数据</NavItem>}
-          {auth.user.id=="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=openidlist">用户列表</NavItem>}
+          {auth.user.id==="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=table">房间列表</NavItem>}
+          {auth.user.id==="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=cleanup">清理数据</NavItem>}
+          {auth.user.id==="5a273150c55b0d1ce0d6754d"&&<NavItem href="/ConstrolPenal/?type=openidlist">用户列表</NavItem>}
           <NavItem divider />
           <NavItem ><div onClick={this.props.logout}>登出</div></NavItem>
         </NavDropdown>
@@ -119,8 +108,8 @@ class Menu extends Component {
     return (
          <Navbar inverse collapseOnSelect fixedTop style={{ backgroundColor: '#020202',fontSize:20, fontWeight:500 }} >
           <Navbar.Header>
-            <Navbar.Brand >
-              <a href="/"><b>全民侦探社</b></a>
+            <Navbar.Brand href="/" style={{ margin:'auto', padding:0, margin:0}}>
+              <img alt="img" style={{height:'100', margin:'auto', padding:0, margin:0}} onClick={()=>{this.context.router.history.push("/")}} src={logo}/>
             </Navbar.Brand>
             <Navbar.Toggle style={{float:"right", width:44, textAlign:"center"}}/>
           </Navbar.Header>
@@ -135,7 +124,9 @@ class Menu extends Component {
     );
   }
 }
-
+Menu.contextTypes = {
+  router: PropTypes.object.isRequired
+}
 Menu.propTypes = {
   auth: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,

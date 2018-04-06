@@ -4,11 +4,7 @@ import md5 from 'md5'
 import {Card} from 'antd'
 import PropTypes from 'prop-types';
 import CircularProgress from 'material-ui/CircularProgress';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
 import { Badge } from 'react-bootstrap';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import GameBasicInfo from './gameBasicinfo.js'
 import PurchaseTrack from './purchaseTrack.js'
 class OpenidPanelBlock extends React.Component {

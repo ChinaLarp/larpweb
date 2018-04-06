@@ -5,16 +5,7 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import PropTypes from 'prop-types';
-import { getdraft } from '../../actions/authAction.js';
-import CircularProgress from 'material-ui/CircularProgress';
-import FontIcon from 'material-ui/FontIcon';
-import Dialog from 'material-ui/Dialog';
-import { Badge, Table } from 'react-bootstrap';
 import { Button, message } from 'antd';
-import OpenidBasicInfo from './OpenidBasicInfo.js'
-import UserItem from './UserItem.js'
-import queryString from 'query-string'
 class Cleaningup extends React.Component {
   constructor(props){
     super(props);
@@ -30,7 +21,7 @@ class Cleaningup extends React.Component {
     var userid=userdata[i]._id
     axios.get(url+'?type=table&tableid='+userdata[i].tableid+'&select=_id%20tableid')
       .then(res => {
-        if (res.data.length==0){
+        if (res.data.length===0){
           console.log("deleting"+userid+", tableid:"+userdata[i].tableid)
           axios.delete(url+'/'+userid,{
             data:{ signature: md5(userid+"xiaomaomi") }
@@ -67,7 +58,7 @@ class Cleaningup extends React.Component {
     var tableid=tabledata[i]._id
     axios.get(url+'?type=openid&id='+tabledata[i].hostid+'&select=_id%20id%20name')
       .then(res => {
-        if (res.data.length!=0 && !res.data[0].name){
+        if (res.data.length!==0 && !res.data[0].name){
           console.log("deleting"+tableid+", hostid:"+tabledata[i].hostid)
           axios.delete(url+'/'+tableid,{
             data:{ signature: md5(tableid+"xiaomaomi") }
@@ -104,7 +95,7 @@ class Cleaningup extends React.Component {
     var tableid=tabledata[i]._id
     axios.get(url+'?type=user&tableid='+tabledata[i].tableid+'&select=_id')
       .then(res => {
-        if (res.data.length!=0){
+        if (res.data.length!==0){
           var userreferencesres = res.data.map(user=>user['_id'])
           console.log({ userreferences:userreferencesres, signature: md5(tableid+"xiaomaomi"), tableid: tableid })
           axios.put(url+'/'+tableid,{userreferences:res.data, signature: md5(tableid+"xiaomaomi")}).then(response => {
@@ -140,7 +131,7 @@ class Cleaningup extends React.Component {
     var userid=userdata[i]._id
     axios.get(url+'?type=openid&id='+userdata[i].usernickname+'&select=_id')
       .then(res => {
-        if (res.data.length!=0){
+        if (res.data.length!==0){
           console.log({ reference:res.data[0]._id, signature: md5(userid+"xiaomaomi"), userid: userid })
           axios.put(url+'/'+userid,{reference:res.data[0]._id, signature: md5(userid+"xiaomaomi")
           }).then(response => {
@@ -187,17 +178,5 @@ class Cleaningup extends React.Component {
      </div>
     )
   }
-  }
-  Cleaningup.contextTypes = {
-  router: PropTypes.object.isRequired
-  }
-  Cleaningup.propTypes = {
-  auth: PropTypes.object.isRequired,
-  getdraft: PropTypes.func.isRequired,
-  }
-  function mapStateToProps(state) {
-  return {
-    auth: state.auth
-  };
   }
 export default Cleaningup;

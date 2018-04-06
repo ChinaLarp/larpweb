@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import {InputNumber ,Divider ,Select, BackTop, Anchor, Spin, Tabs, Upload, Switch, Icon, Modal, Menu,message, Layout, Button, Card, Radio, Input, Col, Row,Form } from 'antd';
 import { Prompt } from 'react-router'
 //import 'react-tabs/style/react-tabs.css';
@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { getdraft } from '../../../actions/authAction.js';
 import cluenopic from '../../../assets/img/cluenopic.png';
 import gameicon from '../../../assets/img/gameicon.png';
+import admin from '../../../assets/img/admin.png';
 //import Lightbox from 'react-image-lightbox';
 //import IconButton from 'material-ui/IconButton';
 //import MenuItem from 'material-ui/MenuItem';
@@ -200,7 +201,7 @@ class draftEdit extends React.Component {
         case "submit":
           Modal.info({
             title: '提交审核',
-            content: '这里放提交审核的步骤。',
+            content: (<div><p>感谢您对全民侦探社的支持。</p><p>提交审核请扫描下方二维码，申请加管理员好友，并说明想要提交审核的剧本，建议分类和建议价格，管理员将根据剧本质量与您协商最终价格并最终上架。</p><img style={{width:'70%',margin:'auto'}} alt="img" src={admin}/></div>),
             okText: '了解'
           })
           break;
@@ -515,51 +516,48 @@ class draftEdit extends React.Component {
       })
     return (
       <Spin spinning={this.state.loading}>
-      <BackTop />
-       <Prompt
-          when={this.state.prompt}
-          message={(location,action) => {console.log(location);console.log(action);
-            return location.pathname.startsWith('/draftEdit') ? true : `确认离开此页面吗？`
-          }}
-        />
-      <Modal visible={this.state.previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
-        <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
-      </Modal>
+        <BackTop />
+         <Prompt
+            when={this.state.prompt}
+            message={(location,action) => {console.log(location);console.log(action);
+              return location.pathname.startsWith('/draftEdit') ? true : `确认离开此页面吗？`
+            }}
+          />
+        <Modal visible={this.state.previewVisible} footer={null} onCancel={() => this.setState({ previewVisible: false })}>
+          <img alt="example" style={{ width: '100%' }} src={this.state.previewImage} />
+        </Modal>
       <Layout >
-       <Layout.Sider width={150}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+       <Layout.Sider breakpoint="lg" collapsedWidth="0"  width={150}   style={{position:'fixed', zIndex:1}}>
          <Menu
-           selectable="false"
            mode="inline"
-           defaultSelectedKeys={['1']}
-           defaultOpenKeys={['sub1']}
-           style={{ height: '100%', borderRight: 0 }}
+           style={{ height: '100vh'}}
            onClick={this.handleAction.bind(this)}
          >
            <Menu.ItemGroup key="basic" title={<b>{this.state.gameinfo.name}</b>}>
              <Menu.Item key="save">保存</Menu.Item>
              <Menu.Item key="exit">退出</Menu.Item>
-             <Menu.Item key="submit">提交审核</Menu.Item>
+             <Menu.Item key="submit">提交方法</Menu.Item>
            </Menu.ItemGroup>
          </Menu>
        </Layout.Sider>
-       <Layout.Sider width={200}  style={{ overflow: 'auto', height: '100vh', position: 'fixed', right: 0 }}>
-       <Menu style={{ height: '100%', borderRight: 0 }} >
-         <Anchor offsetTop="60">
-          <Anchor.Link href="#basic" title="基本信息" />
-          <Anchor.Link href="#char" title="角色信息" />
-          <Anchor.Link href="#charback" title="角色背景" />
-          <Anchor.Link href="#plot" title="阶段剧情" />
-          <Anchor.Link href="#charplot" title="角色阶段剧本"/>
-          <Anchor.Link href="#clue" title="线索编辑"/>
-          <Anchor.Link href="#instruction" title="游戏说明" />
-          <Anchor.Link href="#image" title="图片设计" />
-        </Anchor>
-      </Menu>
-       </Layout.Sider>
-      <Layout  style={{ marginLeft: 150,marginRight:200 }}>
-
+       <Layout.Sider  breakpoint="lg" collapsedWidth="0" width={150}   style={{ zIndex:1,position: 'fixed',right:0}}>
+         <Menu style={{ height: '100vh', borderRight: 0 }} >
+            <Anchor offsetTop="60">
+              <Anchor.Link href="#basic" title="基本信息" />
+              <Anchor.Link href="#char" title="角色信息" />
+              <Anchor.Link href="#charback" title="角色背景" />
+              <Anchor.Link href="#plot" title="阶段剧情" />
+              <Anchor.Link href="#charplot" title="角色阶段剧本"/>
+              <Anchor.Link href="#clue" title="线索编辑"/>
+              <Anchor.Link href="#instruction" title="游戏说明" />
+              <Anchor.Link href="#image" title="图片设计" />
+            </Anchor>
+          </Menu>
+         </Layout.Sider>
+      <Layout  style={{margin:'auto', maxWidth:'1100px'}}>
+        <Layout.Content>
           <Card id="basic" title={<b style={{fontSize:20, textAlign:"left"}} >基本信息</b>} style={{margin:20}}>
-            <Row type="flex" justify="space-around" align="top" gutter={16}>
+            <Row type="flex"  gutter={16}>
               <Col span={16} >
                 <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本名称：</Col><Col span={16} >
                     <Input
@@ -572,7 +570,7 @@ class draftEdit extends React.Component {
                       value={this.state.gameinfo.descripion}
                       onChange={(evt)=>{this.setState({gameinfo:{ ...this.state.gameinfo, descripion: evt.target.value}})}}
                     /></Col></Row>
-                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >搜证方式：</Col><Col span={16} >
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >搜证方式<Helper type='text' content="根据抽取方式是否随机和是否返还，决定搜证方式" />：</Col><Col span={16} >
                   <Radio.Group onChange={(e)=>{this.setState({gameinfo: { ...this.state.gameinfo, cluemethod: e.target.value } })}} value={this.state.gameinfo.cluemethod}>
                     <Radio.Button value="random">随机不返还</Radio.Button>
                     <Radio.Button value="order">顺次不返还</Radio.Button>
@@ -586,12 +584,12 @@ class draftEdit extends React.Component {
                       autosize={{ minRows: 2, maxRows: 6 }} />
                   </Col>
                 </Row>
-                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本类别：</Col><Col span={16} >
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本类别<Helper type='text' content="将在提交审核后，商议决定" />：</Col><Col span={16} >
                   <Input
                     value={this.state.gameinfo.category}
                     disabled="true"
                   /></Col></Row>
-                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本价格：</Col><Col span={16} >
+                <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >剧本价格<Helper type='text' content="将在提交审核后，商议决定" />：</Col><Col span={16} >
                   <InputNumber
                     size="small"
                     value={this.state.gameinfo.price}
@@ -628,7 +626,7 @@ class draftEdit extends React.Component {
                     <Radio.Button value="男">男性</Radio.Button>
                     <Radio.Button value="女">女性</Radio.Button>
                   </Radio.Group></Col></Row>
-                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >禁止搜证地点：</Col><Col span={16} >
+                  <Row style={{margin:10}}><Col span={4} style={{textAlign:"Right", fontWeight:"bold"}} >禁止搜证地点<Helper type='text' content="通常角色不能搜查属于自己的物品或房间" />：</Col><Col span={16} >
                   <Radio.Group value={characterlist.banlocation.toString()} onChange={this.handleBanLocationChange(idx)}>
                     <Radio.Button value="-1">无</Radio.Button>
                     {this.state.gameinfo.cluelocation.map((cluelocation, iidx) => (
@@ -645,14 +643,14 @@ class draftEdit extends React.Component {
                       return { ...characterlist, characterdescription: evt.target.value };
                     })})}}
                     /></Col></Row>
-                  <Row style={{margin:10}}><Col span={4} offset={4} style={{textAlign:"Right", fontWeight:"bold"}} ><Button type="danger" onClick={this.handleRemoveCharacter(idx)}>移除此角色</Button></Col></Row>
+                  <Row style={{margin:10}}><Col span={20} offset={4} style={{ fontWeight:"bold"}} ><Button style={{width:200}} type="danger" onClick={this.handleRemoveCharacter(idx)}>移除此角色</Button></Col></Row>
               </Tabs.TabPane>
             ))}
             </Tabs>
           </Card>
 
 
-          <Card id="charback" title={<b style={{fontSize:20, textAlign:"left"}} >角色背景</b>} style={{margin:20}}>
+          <Card id="charback" title={<b style={{fontSize:20, textAlign:"left"}} >角色背景<Helper type='img' content="charinfo" /></b>} style={{margin:20}}>
             <Tabs tabPosition="right" tabBarStyle={{width:200}}>
             {this.state.characterlist.map((characterlist, idx) => (
               <Tabs.TabPane tab={characterlist.charactername} key={characterlist.characterid}>
@@ -678,7 +676,7 @@ class draftEdit extends React.Component {
             </Tabs>
           </Card>
 
-          <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper step={6} /></b>}  style={{margin:20}}>
+          <Card id="plot" title={<b style={{fontSize:20, textAlign:"left"}} >阶段剧情<Helper type='img' content="plot" /></b>}  style={{margin:20}}>
             <Row gutter={16}>
             {this.state.gameinfo.mainplot?this.state.gameinfo.mainplot.map((plot, idx) => (
               <Col span={12} key={plot.plotid}>
@@ -718,7 +716,7 @@ class draftEdit extends React.Component {
             </Row>
           </Card>
 
-          <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本</b>}  style={{margin:20}} >
+          <Card id="charplot" title={<b style={{fontSize:20, textAlign:"left"}} >角色阶段剧本<Helper type='img' content="charplot" /></b>}  style={{margin:20}} >
             <Tabs tabPosition="right" tabBarStyle={{width:200}}>
 
             {this.state.characterlist.map((characterlist, idx) => (
@@ -760,7 +758,7 @@ class draftEdit extends React.Component {
           <Tabs tabPosition="right" tabBarStyle={{width:200}}>
           {this.state.gameinfo.cluelocation?this.state.gameinfo.cluelocation.map((cluelocation, idx) => (
             <Tabs.TabPane tab={cluelocation.name} key={idx}>
-              <Card title={<div><Input style={{width:200}} value={cluelocation.name} onChange={this.handleCluelocationNameChange(idx)} /><Helper step={5} /></div>} extra={<span>线索数：{cluelocation.count}{' '}<a onClick={this.handleRemoveCluelocation(cluelocation.index)}>移除地点</a> </span>} >
+              <Card title={<div><Input style={{width:200}} value={cluelocation.name} onChange={this.handleCluelocationNameChange(idx)} /><Helper type='img' content="clue" /></div>} extra={<span>线索数：{cluelocation.count}{' '}<a onClick={this.handleRemoveCluelocation(cluelocation.index)}>移除地点</a> </span>} >
 
               <Row gutter={16}>
               {cluelocation.clues.map((clue, iidx) => (
@@ -799,7 +797,7 @@ class draftEdit extends React.Component {
           </Tabs>
         </Card>
 
-        <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper step={6} /></b>}  style={{margin:20}}>
+        <Card id="instruction" title={<b style={{fontSize:20, textAlign:"left"}} >游戏说明<Helper type='img' content="instruction" /></b>}  style={{margin:20}}>
           <Row gutter={16}>
           {this.state.gameinfo.instruction && this.state.gameinfo.instruction.map((instruct, idx) => (
             <Col span={12}>
@@ -823,10 +821,10 @@ class draftEdit extends React.Component {
           </Row>
         </Card>
 
-        <Card id="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计</b>}  style={{margin:20}}>
+        <Card id="image" title={<b style={{fontSize:20, textAlign:"left"}} >图片设计<Helper type='text' content="剧本相关的图片设计" /></b>}  style={{margin:20}}>
           <Row gutter={16}>
             <Col span={8}>
-              <Card title="剧本封面">
+              <Card title={<div>剧本封面<Helper type='img' content="cover" /></div>}>
                 <img alt="剧本封面" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.coverurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.coverurl + "?t="+ new Date().getTime():gameicon} />
                 <div>
                 <Upload
@@ -842,7 +840,7 @@ class draftEdit extends React.Component {
               </Card>
             </Col>
             <Col span={8}>
-              <Card title="剧本图标">
+              <Card title={<div>剧本图标<Helper type='img' content="icon" /></div>}>
                 <img alt="剧本图标" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.iconurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.iconurl + "?t="+ new Date().getTime():gameicon} />
                 <div>
                 <Upload
@@ -858,7 +856,7 @@ class draftEdit extends React.Component {
               </Card>
             </Col>
             <Col span={8}>
-              <Card title="剧本地图(任何尺寸)">
+              <Card title={<div>剧本地图(任何尺寸)<Helper type='img' content="map" /></div>}>
                 <img alt="剧本地图" onClick={this.previewImage.bind(this)}  style={{maxWidth:"80%",marginLeft:'10%'}} src={this.state.gameinfo.mapurl?"https://chinabackend.bestlarp.com/pic/"+this.state.gameinfo.mapurl + "?t="+ new Date().getTime():gameicon} />
                 <div>
                 <Upload
@@ -876,6 +874,7 @@ class draftEdit extends React.Component {
           </Row>
         </Card>
 
+        </Layout.Content >
       </Layout>
       </Layout>
       </Spin>

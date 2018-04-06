@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pagination, Card, Col, Row, Layout, Spin } from 'antd';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import Gameitem from './gameitem.js'
 
 class Products extends React.Component {
@@ -26,10 +25,10 @@ class Products extends React.Component {
       gameList = this.props.products.products.map((game, index) => {
       var link='/gamedetails/' + game._id;
       if (!this.inpage(this.state.currentpage,this.state.pagesize,index)){
-        return
+        return null
       }
         return (
-        <Col span={8} key = {index} >
+        <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 8, offset: 0 }} key = {index} >
           <Gameitem link={link} game={game} src={require("../../assets/pic/"+game.coverurl)}/>
         </Col>
         );
@@ -40,7 +39,7 @@ class Products extends React.Component {
     return(
       <Layout>
         <Row style={{marginTop:40}} gutter={16} >
-        <Col span={18} offset={3}>
+        <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 18, offset: 3 }}>
         <Card  title={<b>全部剧本</b>}>
           {!this.props.products.fetched && <div style={{textAlign: 'center'}}><Spin/></div>}
           <Row gutter={32} style={{minHeight:700}} type="flex"  >

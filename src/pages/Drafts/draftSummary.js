@@ -1,9 +1,8 @@
 import React from 'react';
-import DraftBlock from './draftBlock.js';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import GameStates from './gameStats';
+import GameStats from './gameStats';
 
 class draftSummary extends React.Component {
   constructor(props){
@@ -19,7 +18,7 @@ class draftSummary extends React.Component {
   render(){
     let content
     if (this.props.auth.isAuthenticated) {
-      content= <GameStates gameid={this.props.match.params._id} />;
+      content= <GameStats gameid={this.props.match.params._id} />;
     } else {
       content = <div>请先登录</div>;
     }

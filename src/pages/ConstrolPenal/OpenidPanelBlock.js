@@ -8,11 +8,6 @@ import md5 from 'md5'
 import {Card} from 'antd'
 import PropTypes from 'prop-types';
 import CircularProgress from 'material-ui/CircularProgress';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import { Badge } from 'react-bootstrap';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
 import LoginTrack from './LoginTrack.js'
 import Tabletrack from './Tabletrack.js'
@@ -32,7 +27,7 @@ class OpenidPanelBlock extends React.Component {
     var userid=userdata[i]._id
     axios.get(url+'?type=table&tableid='+userdata[i].tableid+'&select=_id%20tableid')
       .then(res => {
-        if (res.data.length==0){
+        if (res.data.length===0){
           console.log("deleting"+userid+", tableid:"+userdata[i].tableid)
           axios.delete(url+'/'+userid,{
             data:{ signature: md5(userid+"xiaomaomi") }

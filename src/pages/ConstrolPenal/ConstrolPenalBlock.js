@@ -4,22 +4,15 @@
 
 import React  from 'react';
 import axios from 'axios';
-import md5 from 'md5'
-import {Card,Button} from 'antd';
-import { Link } from 'react-router-dom';
+import {Card} from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getdraft } from '../../actions/authAction.js';
 import CircularProgress from 'material-ui/CircularProgress';
-import FontIcon from 'material-ui/FontIcon';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
 import { Badge, Table } from 'react-bootstrap';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import TableItem from './TableItem.js'
 import UserItem from './UserItem.js'
 import OpenItem from './OpenItem.js'
-import queryString from 'query-string'
 class ConstrolPenalBlock extends React.Component {
   constructor(props){
     super(props);

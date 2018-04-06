@@ -8,15 +8,16 @@ class GameBasicInfo extends React.Component {
   }
 
   render() {
+    var name, category
     if (this.props.name){
-      var name = this.props.name
+      name = this.props.name
     }else{
-      var name = "无信息"
+       name = "无信息"
     }
     if (this.props.category){
-      var category = this.props.category
+      category = this.props.category
     }else{
-      var category = "无信息"
+      category = "无信息"
     }
     return (
       <div>
