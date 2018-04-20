@@ -34,25 +34,23 @@ class Products extends React.Component {
         );
       });
     }
-
-
     return(
       <Layout>
         <Row style={{marginTop:40}} gutter={16} >
-        <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 18, offset: 3 }}>
-        <Card  title={<b>全部剧本</b>}>
-          {!this.props.products.fetched && <div style={{textAlign: 'center'}}><Spin/></div>}
-          <Row gutter={32} style={{minHeight:700}} type="flex"  >
-            {this.props.products.fetched && gameList}
-          </Row>
-          <Pagination style={{paddingTop:40}}
-            total={this.props.products.products.length}
-            onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
-            onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
-            current={this.state.currentpage}
-            pageSize={this.state.pagesize}/>
-        </Card>
-        </Col>
+          <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 18, offset: 3 }}>
+            <Card  title={<b>全部剧本</b>}>
+              {!this.props.products.fetched && <div style={{textAlign: 'center'}}><Spin/></div>}
+              <Row gutter={32} style={{minHeight:700}} type="flex"  >
+                {this.props.products.fetched && gameList}
+              </Row>
+              <Pagination style={{paddingTop:40}}
+                total={this.props.products.products.length}
+                onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
+                onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
+                current={this.state.currentpage}
+                pageSize={this.state.pagesize}/>
+            </Card>
+          </Col>
         </Row>
       </Layout>
 

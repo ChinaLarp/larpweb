@@ -22,7 +22,7 @@ class UserItem extends React.Component {
       });
   }
   render() {
-    const hosturl = '/#/ConstrolPenal/?type=openid&openid=' + this.props.usernickname
+    const hosturl = '/ConstrolPenal/?type=openid&openid=' + this.props.usernickname
     return (
       <tr>
       <td>{this.state.deleted?"已删":this.props.tableid}</td>

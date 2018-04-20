@@ -31,8 +31,8 @@ class TableItem extends React.Component {
       })
   }
   render() {
-    const hosturl = '/#/ConstrolPenal/?type=openid&openid=' + this.props.hostid
-    const roomurl = '/#/ConstrolPenal/?type=user&tableid=' + this.props.tableid
+    const hosturl = '/ConstrolPenal/?type=openid&openid=' + this.props.hostid
+    const roomurl = '/ConstrolPenal/?type=user&tableid=' + this.props.tableid
 
     return (
       <tr>

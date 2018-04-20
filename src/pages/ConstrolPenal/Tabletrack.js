@@ -1,6 +1,6 @@
 import React  from 'react';
 import axios from 'axios';
-import CircularProgress from 'material-ui/CircularProgress';
+import {Spin} from 'antd';
 import TableItem from './TableItem.js'
 import { Table } from 'react-bootstrap';
 class LoginTrack extends React.Component {
@@ -46,7 +46,7 @@ class LoginTrack extends React.Component {
        </tbody>
      </Table>;
     }else {
-      content=(<CircularProgress size={80} thickness={5} />)
+      content=(<div style={{textAlign:'center'}}><Spin /></div>)
       console.log("loading")
     }
     return (

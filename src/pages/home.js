@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tabs, Button,Row, Col,message } from 'antd';
-import top1 from '../assets/img/home1.jpg';
-import top2 from '../assets/img/home2.jpg';
-import top3 from '../assets/img/home3.jpg';
+import top1 from '../assets/img/home1.png';
+import top2 from '../assets/img/home2.png';
+import top3 from '../assets/img/home3.png';
 import weapp from '../assets/img/weixinapp.jpg';
 import weunion from '../assets/img/wechat_erCode.jpg';
 import axios from 'axios';
@@ -78,7 +78,7 @@ class Home extends React.Component {
               <p style={{color:'white'}}> 在这里每一个人都是名侦探，玩家可以在任何地方用我们的微信小程序进行推理秀，</p>
               <p style={{color:'white'}}> 这里有诸多经典剧本，也有许多十分好玩的原创剧本，</p>
               <p style={{color:'white'}}> 如果你也喜欢推理，如果你也是戏精，不要犹豫，拉上你的小伙伴，扫描下方二维码，组一局推理party吧，</p><br/>
-              <Button href="/game" ghost>浏览剧本</Button><br/><br/><br/>
+              <Button href="/games" ghost>浏览剧本</Button><br/><br/><br/>
               <img alt='img' src={weapp} style={{width:'70%',margin:'auto'}}/>
               </div>
 

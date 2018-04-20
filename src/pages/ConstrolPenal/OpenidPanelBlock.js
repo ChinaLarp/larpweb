@@ -5,9 +5,8 @@
 import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
-import {Card} from 'antd'
+import {Card, Spin} from 'antd'
 import PropTypes from 'prop-types';
-import CircularProgress from 'material-ui/CircularProgress';
 import OpenidBasicInfo from './OpenidBasicInfo.js'
 import LoginTrack from './LoginTrack.js'
 import Tabletrack from './Tabletrack.js'
@@ -99,7 +98,7 @@ class OpenidPanelBlock extends React.Component {
     }else if (this.state.display==="nothing"){
       content = <h1>用户不存在</h1>
     } else  {
-      content=(<CircularProgress size={80} thickness={5} />)
+      content=(<div style={{textAlign:'center'}}><Spin /></div>)
       console.log("loading")
     }
 

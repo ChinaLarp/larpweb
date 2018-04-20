@@ -5,7 +5,7 @@ class OpenItem extends React.Component {
     super(props);
   }
   render() {
-    const hosturl = '/#/ConstrolPenal/?type=openid&openid=' + this.props.id
+    const hosturl = '/ConstrolPenal/?type=openid&openid=' + this.props.id
     return (
       <tr>
       <td>{this.props.name}</td>

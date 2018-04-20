@@ -170,11 +170,12 @@ class Cleaningup extends React.Component {
     }
   render() {
     return (
-      <div >
+      <div>
       <Button type="primary" style={{width:200}} onClick={this.cleanupuser.bind(this)}>清理无房间用户</Button><br/>
       <Button type="primary" style={{width:200}} onClick={this.cleanuptable.bind(this)}>清理远古房间</Button><br/>
       <Button type="primary" style={{width:200}} onClick={this.tableuserreferences.bind(this)}>创建房间userreferences</Button><br/>
       <Button type="primary" style={{width:200}} onClick={this.userreference.bind(this)}>创建用户reference</Button><br/>
+
      </div>
     )
   }

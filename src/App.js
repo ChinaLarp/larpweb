@@ -1,46 +1,50 @@
-import React, { Component } from 'react';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import {
-  Route,
-  BrowserRouter,
-  Prompt
-} from 'react-router-dom';
-
+import React from 'react';
+import {  Route, BrowserRouter } from 'react-router-dom';
 //compnents
 import Header from './components/header.js'
 import Footer from './components/footer.js'
 import NavigationMenu from './components/menu.js'
 import Home from './pages/home.js';
-import postEdit from './pages/PostEdit/postEdit.js';
+import PostEdit from './pages/PostEdit/postEdit.js';
 import posts from './pages/Posts/posts.js';
 import Games from './pages/Products/games.js';
 import Contact from './pages/contact.js';
 import draftList from './pages/Drafts/draftList.js';
 import draftEdit from './pages/Drafts/draftEdit/draftEdit.js';
 import draftSummary from './pages/Drafts/draftSummary.js';
-//import DraftCreate from './pages/Drafts/DraftCreate.js';
-//import Loginscreen from './pages/Login/Loginscreen';
-//import Register from './pages/Login/Register.js';
-import FlashMessagesList from './components/flashmessage/flashmessagelist';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
 import ConstrolPenal from './pages/ConstrolPenal/ConstrolPenal.js';
+import { message } from 'antd';
+
+const BaseStyle={
+  padding:0,
+  margin:0,
+  fontFamily:'Microsoft YaHei',
+}
+const ContentStyle={
+  minHeight: '90vh',
+  paddingTop: '5rem',
+  display:'block',
+}
 
 
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin();
-
-class App extends Component {
+class App extends React.Component {
+  //config antd message position
+  componentWillMount(){
+      message.config({
+        top: 70,
+        duration: 2,
+      })
+  }
   render() {
     return (
       <BrowserRouter>
-      <div className="App">
+      <div style={BaseStyle}>
         <NavigationMenu/>
-        <div className="content ">
-          <FlashMessagesList />
+        <div  style={ContentStyle}>
           <Route exact path="/" component={Home}/>
-          <Route path="/13478545921/:_id" component={postEdit}/>
+          <Route path="/13478545921/:_id" component={PostEdit}/>
           <Route path="/posts" component={posts}/>
           <Route path="/games" component={Games}/>
           <Route path="/draftList" component={draftList}/>
@@ -53,8 +57,7 @@ class App extends Component {
         </div>
         <Footer />
       </div>
-
-    </BrowserRouter>
+      </BrowserRouter>
     );
   }
 }

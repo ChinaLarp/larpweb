@@ -4,11 +4,10 @@
 
 import React  from 'react';
 import axios from 'axios';
-import {Card} from 'antd';
+import {Card, Spin} from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getdraft } from '../../actions/authAction.js';
-import CircularProgress from 'material-ui/CircularProgress';
 import { Badge, Table } from 'react-bootstrap';
 import TableItem from './TableItem.js'
 import UserItem from './UserItem.js'
@@ -159,7 +158,7 @@ class ConstrolPenalBlock extends React.Component {
        </tbody>
      </Table>;
     }else {
-      content=(<CircularProgress size={80} thickness={5} />)
+      content=(<div style={{textAlign:'center'}}><Spin /></div>)
       console.log("loading")
     }
 
