@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card ,Tag  } from 'antd';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 class Gameitem extends React.Component {
   constructor(props){
@@ -13,15 +13,17 @@ class Gameitem extends React.Component {
     const description = <div>{game.playernumber}人局<br/>{game.category}<br/>{game.descripion}</div>
     console.log(src)
     return(
-      <Card
-          hoverable
-          cover={<img alt="example" src={src} />}
-        >
-        <Card.Meta
-        title={<div><Link to = {link}>{game.name}</Link><Tag color="green">免费</Tag></div>}
-        description={description}
-        />
-      </Card>
+      <NavLink to = {link}>
+        <Card
+            hoverable
+            cover={<img alt="example" src={src} />}
+          >
+          <Card.Meta
+            title={<div>{game.name}<Tag color="green">免费</Tag></div>}
+            description={description}
+          />
+        </Card>
+      </NavLink>
 
       )
  }

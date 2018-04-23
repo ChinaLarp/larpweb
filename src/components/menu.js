@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { login, logout } from '../actions/authAction';
 import Login from './Login/login';
 import Register from './Login/register';
-import { userSignupRequest } from '../actions/signupActions';
 import logo from '../assets/img/logo.png';
 import { Popover } from 'antd';
 
@@ -61,17 +60,17 @@ class NavigationMenu extends React.Component {
     if (!auth.isAuthenticated) {
       User_info=
       <Nav pullRight style={Style.nav}>
-        <Popover placement="bottom" title={<span>登录</span>} content={<Login login={this.props.login} auth={auth}/>} trigger="click">
-          <NavItem><NavLink className="link" to="#"  >登录</NavLink></NavItem>
+        <Popover  overlayStyle={{position:"fixed"}} placement="bottom" title={<span>登录</span>} content={<Login login={this.props.login} auth={auth}/>} trigger="click">
+          <NavItem ><NavLink to="#"  className="navLink" >登录</NavLink></NavItem>
         </Popover>
-        <Popover placement="bottom" title={<span>注册</span>} content={<Register  auth={auth}/>} trigger="click">
-          <NavItem><NavLink className="link" to="#"  >注册</NavLink></NavItem>
+        <Popover overlayStyle={{position:"fixed"}} placement="bottom" title={<span>注册</span>} content={<Register  auth={auth}/>} trigger="click">
+          <NavItem><NavLink className="navLink" to="#" >注册</NavLink></NavItem>
         </Popover>
       </Nav>;
     } else {
       User_info =
       <Nav pullRight style={Style.nav}>
-        <NavDropdown title={this.props.auth.user.username} id="basic-nav-dropdown">
+        <NavDropdown title={this.props.auth.user.username}  id="basic-nav-dropdown">
           <NavItem href="/draftList"> 我的剧本</NavItem>
             {auth.user.id===this.state.adminid&&<NavItem href="/ConstrolPenal/?type=table">房间列表</NavItem>}
             {auth.user.id===this.state.adminid&&<NavItem href="/ConstrolPenal/?type=cleanup">清理数据</NavItem>}
@@ -83,7 +82,7 @@ class NavigationMenu extends React.Component {
 ;
     }
     return (
-         <Navbar collapseOnSelect fixedTop style={Style.base} >
+         <Navbar inverse  collapseOnSelect fixedTop style={Style.base} >
           <Navbar.Header>
             <Navbar.Brand href="/" style={Style.brand}>
               <img alt="img" style={Style.brand.img} onClick={()=>{this.context.router.history.push("/")}} src={logo}/>
@@ -92,8 +91,8 @@ class NavigationMenu extends React.Component {
           </Navbar.Header>
           <Navbar.Collapse style={Style.brand.Collapse}>
             <Nav style={Style.nav}>
-              <NavItem><NavLink className="link" to="/games"  >游戏介绍</NavLink></NavItem>
-              <NavItem><NavLink className="link"  to="/draftList">我要创作</NavLink></NavItem>
+              <NavItem><NavLink className="navLink" to="/games"  >游戏介绍</NavLink></NavItem>
+              <NavItem><NavLink className="navLink" to="/draftList" >我要创作</NavLink></NavItem>
             </Nav>
             {User_info}
           </Navbar.Collapse>
@@ -107,7 +106,6 @@ NavigationMenu.contextTypes = {
 NavigationMenu.propTypes = {
   auth: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
-  userSignupRequest: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired
 }
 function mapStateToProps(state) {
@@ -116,4 +114,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { userSignupRequest, login,logout })(NavigationMenu);
+export default connect(mapStateToProps, { login,logout })(NavigationMenu);

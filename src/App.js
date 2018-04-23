@@ -1,31 +1,34 @@
 import React from 'react';
 import {  Route, BrowserRouter } from 'react-router-dom';
 //compnents
-import Header from './components/header.js'
 import Footer from './components/footer.js'
 import NavigationMenu from './components/menu.js'
 import Home from './pages/home.js';
 import PostEdit from './pages/PostEdit/postEdit.js';
 import posts from './pages/Posts/posts.js';
 import Games from './pages/Products/games.js';
-import Contact from './pages/contact.js';
 import draftList from './pages/Drafts/draftList.js';
 import draftEdit from './pages/Drafts/draftEdit/draftEdit.js';
-import draftSummary from './pages/Drafts/draftSummary.js';
+import draftSummary from './pages/Drafts/draftSummary/draftSummary.js';
 import postsDetail from './pages/Posts/postsDetail.js';
 import GameDetail from './pages/Products/gameDetail.js';
 import ConstrolPenal from './pages/ConstrolPenal/ConstrolPenal.js';
-import { message } from 'antd';
+import { message,Layout } from 'antd';
 
-const BaseStyle={
-  padding:0,
-  margin:0,
-  fontFamily:'Microsoft YaHei',
-}
-const ContentStyle={
-  minHeight: '90vh',
-  paddingTop: '5rem',
-  display:'block',
+const Style = {
+  base:{
+    padding:0,
+    margin:0,
+    fontFamily:'Microsoft YaHei',
+  },
+  content:{
+    minHeight: '90vh',
+    paddingTop: '7rem',
+    display:'block',
+  },
+  layout:{
+
+  }
 }
 
 
@@ -40,20 +43,21 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-      <div style={BaseStyle}>
+      <div style={Style.base}>
         <NavigationMenu/>
-        <div  style={ContentStyle}>
-          <Route exact path="/" component={Home}/>
-          <Route path="/13478545921/:_id" component={PostEdit}/>
-          <Route path="/posts" component={posts}/>
-          <Route path="/games" component={Games}/>
-          <Route path="/draftList" component={draftList}/>
-          <Route path="/draftEdit/:_id" component={draftEdit}/>
-          <Route path="/draftSummary/:_id" component={draftSummary}/>
-          <Route path="/contact" component={Contact}/>
-		      <Route path="/details/:_id" component={postsDetail}></Route>
-          <Route path="/gamedetails/:_id" component={GameDetail}></Route>
-          <Route path="/ConstrolPenal" component={ConstrolPenal}></Route>
+        <div style={Style.content}>
+          <Layout style={Style.layout}>
+            <Route exact path="/" component={Home}/>
+            <Route path="/13478545921/:_id" component={PostEdit}/>
+            <Route path="/posts" component={posts}/>
+            <Route path="/games" component={Games}/>
+            <Route path="/draftList" component={draftList}/>
+            <Route path="/draftEdit/:_id" component={draftEdit}/>
+            <Route path="/draftSummary/:gameid" component={draftSummary}/>
+  		      <Route path="/details/:_id" component={postsDetail}></Route>
+            <Route path="/gamedetails/:_id" component={GameDetail}></Route>
+            <Route path="/ConstrolPenal" component={ConstrolPenal}></Route>
+          </Layout>
         </div>
         <Footer />
       </div>

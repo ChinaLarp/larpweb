@@ -6,12 +6,29 @@ import React  from 'react';
 import axios from 'axios';
 import md5 from 'md5'
 import randomstring from 'randomstring'
-import {Card,  List,Tag, Icon, Avatar,Modal, message,Layout, Row, Col } from 'antd';
+import {Card,  List,Tag, Icon, Avatar,Modal, message,Layout, Row, Col,Badge, Spin } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getdraft } from '../../actions/authAction.js';
 import CircularProgress from 'material-ui/CircularProgress';
-import { Badge } from 'react-bootstrap';
+
+const Style={
+  content:{
+    margin: '3rem auto',
+    width: '90vw',
+    maxWidth:'1200px',
+    minHeight:'700px',
+    padding:'0 5rem',
+  },
+  row:{
+    minHeight:'70rem',
+  },
+  pagination:{
+    margin:"3rem auto",
+    textAlign:'center',
+  }
+}
+
 class DraftList extends React.Component {
   constructor(props){
     super(props);
@@ -20,14 +37,6 @@ class DraftList extends React.Component {
       errorMessage:""
     };
   }
-removeItem = (idx) => (evt) => {
-  this.setState({
-    openDialog:true,
-    errorMessage:"确认删除"+this.props.auth.drafts[idx].name+"吗？",
-    deleteitem_id:this.props.auth.drafts[idx]._id
-  })
-}
-
 DraftCreate(){
   const url = 'https://chinabackend.bestlarp.com/api/app';
   let self = this
@@ -116,9 +125,6 @@ DraftCreate(){
     }
   })
 }
-
-
-
 delete = (id,oid) => (evt) => {
   const url = 'https://chinabackend.bestlarp.com/api/app';
   let self = this
@@ -154,10 +160,6 @@ delete = (id,oid) => (evt) => {
 
 }
 componentWillMount(){
-    message.config({
-      top: 70,
-      duration: 2,
-    })
     if (!this.props.auth.isAuthenticated){
       Modal.warning({
       title:"请先登陆",
@@ -165,14 +167,11 @@ componentWillMount(){
       okText:"好"
     })
   }
-  }
+}
   render() {
     let gamesList;
     let self=this
-    if(this.props.auth.drafts==="loading"){
-      gamesList=(<CircularProgress size={80} thickness={5} />)
-      console.log("loading")
-    }else if (this.props.auth.drafts.length>=1){
+    if (this.props.auth.drafts!='loading'){
       gamesList = this.props.auth.drafts.map((game, idx) => {
       var link=(game.type==="template" ?'/DraftCreate/' + game._id:'/draftEdit/' + game._id)
       var summary='/draftSummary/' + game._id
@@ -198,12 +197,10 @@ componentWillMount(){
       </span>
     );
     return (
-      <Layout>
-        <Row style={{marginTop:40}} gutter={16} >
-        <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 18, offset: 3 }} md={{ span: 18, offset: 3 }} sm={{ span: 18, offset: 3 }}>
-      <Card  style={{minHeight:800}} title={<span>我的剧本<Badge>{this.props.auth.drafts.length}</Badge></span>} extra={<a style={{display:"inline"}} onClick={this.DraftCreate.bind(this)}>创建新剧本</a>}>
-        {(this.props.auth.drafts.length<1) && <div>'想创作属于自己的剧本吗？点击右上角“创建新剧本”'</div>}
-       {(this.props.auth.drafts.length>=1) &&
+      <Card  style={Style.content} title={<span>我的剧本<Badge count={this.props.auth.drafts.length} /></span>} extra={this.props.auth.isAuthenticated && <a style={{display:"inline"}} onClick={this.DraftCreate.bind(this)}>创建新剧本</a>}>
+      {(!this.props.auth.isAuthenticated) && <div>注册账号，或用微信登陆，编辑属于你自己的剧本。</div>}
+      {(this.props.auth.isAuthenticated && this.props.auth.drafts.length===0) && <div>想创作属于自己的剧本吗？点击右上角“创建新剧本”</div>}
+      {(this.props.auth.drafts.length>=1) &&
        <List
           loading={this.props.auth.drafts==="loading"}
           size="large"
@@ -227,10 +224,7 @@ componentWillMount(){
             }
             }
           />}
-     </Card>
-     </Col>
-     </Row>
-   </Layout>
+      </Card>
     )
   }
 }

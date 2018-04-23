@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { Popover, Button, Form, Icon, Input, Checkbox, message  } from 'antd';
+import { Popover, Button, Form, Icon, Input, Checkbox, message, Spin  } from 'antd';
 import wechatlogo from '../../assets/img/wechatlogo.png';
 class Login extends Component {
   constructor(props){
     super(props)
     this.state = {
     weixinkey:'a21a422100ca899de42b0f3cbe107bd3',
-    weixinappid:'wx53e46ac9090180ea'
+    weixinappid:'wx53e46ac9090180ea',
+    loading:false,
     };
   }
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({loading:true})
     this.props.form.validateFields((err, values) => {
       console.log(err,values)
       if (!err) {
@@ -18,27 +20,24 @@ class Login extends Component {
         this.props.login({...values,errors:{}})
         .then(
           (res) => {
+            this.setState({loading:false})
             message.success("欢迎回来")
             //this.context.router.history.push('/draftList');
           },
           (err) => {
+            this.setState({loading:false})
             message.error("用户名或密码错误")
             this.setState({ errors: '用户名或密码错误!'})}
         )
        }
      })
   }
-  componentWillMount(){
-      message.config({
-        top: 70,
-        duration: 2,
-      })
-    }
   render() {
     let User_info;
     var { auth } = this.props
     const weixinurl="https://open.weixin.qq.com/connect/qrconnect?appid="+this.state.weixinappid+"&redirect_uri=https%3A%2F%2Fbestlarp.com&response_type=code&scope=snsapi_login&state=3d6be0a4035d839573b04816624a415e#wechat_redirect"
     return (
+      <Spin  spinning={this.state.loading}>
       <Form onSubmit={this.handleSubmit} >
         {this.state.errors && <div style={{color:'red'}}>{this.state.errors}</div>}
         <Form.Item>
@@ -65,6 +64,7 @@ class Login extends Component {
           </Button>
         </Form.Item>
       </Form>
+      </Spin>
     );
   }
 }

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Popover, Button, Form, Icon, Input, Checkbox, message  } from 'antd';
+import { Popover, Button, Form, Icon, Input, Checkbox, message, Spin  } from 'antd';
 class Register extends Component {
   constructor(props){
     super(props)
     this.state = {
     weixinkey:'a21a422100ca899de42b0f3cbe107bd3',
-    weixinappid:'wx53e46ac9090180ea'
+    weixinappid:'wx53e46ac9090180ea',
+    loading:false,
     };
   }
   handleRegister = (e) => {
@@ -20,7 +21,9 @@ class Register extends Component {
         "password":values.password,
         "username": values.username
         }
+        this.setState({loading:true})
         axios.post(apiBaseUrl+'/user', payload).then((res)=>{
+          this.setState({loading:false})
           if (res.data.success){
             message.success('你已成功注册. 欢迎!')
             window.location.reload()
@@ -36,7 +39,7 @@ class Register extends Component {
        }
      })
   }
-  compareToFirstPassword = (rule, value, callback) => {
+compareToFirstPassword = (rule, value, callback) => {
   const form = this.props.form;
   if (value && value !== form.getFieldValue('password')) {
     callback('两次输入密码不同！');
@@ -51,12 +54,6 @@ validateToNextPassword = (rule, value, callback) => {
   }
   callback();
 }
-  componentWillMount(){
-      message.config({
-        top: 70,
-        duration: 2,
-      })
-    }
   render() {
     let User_info;
     var { auth } = this.props
@@ -73,6 +70,7 @@ validateToNextPassword = (rule, value, callback) => {
     };
 
     return (
+      <Spin  spinning={this.state.loading}>
       <Form onSubmit={this.handleRegister}>
       {this.state.errors && <div style={{color:'red'}}>{this.state.errors}</div>}
         <Form.Item label="用户名" {...formItemLayout}>
@@ -119,6 +117,7 @@ validateToNextPassword = (rule, value, callback) => {
           <Button type="primary" htmlType="submit">注册</Button>
        </Form.Item>
       </Form>
+      </Spin>
     );
   }
 }

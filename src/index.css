@@ -4,65 +4,46 @@ html{
   padding:0;
   margin:0;
   font-family:'Microsoft YaHei';
+  overflow:auto;
 }
-
-
-
-
-
-logo{
-  width:80%;
-  margin-top: 20px;
-  margin-bottom: 0px;
-  background-color: red;
-}
-
-
-
-.header li a {
-  color: #FFF;
-  font-weight: bold;
+a, a:hover, a:visited, a:active, a:link {
   text-decoration: none;
-  padding: 20px;
-  display: inline-block;
 }
+
+.navLink:link,
+.navLink:visited {
+    margin: 0 1rem;
+    color: #a9a9a9;
+    text-decoration: none;
+    -webkit-transition: all .2s;
+    -o-transition:all .2s;
+    transition: all .2s;
+    background-color: transparent;
+}
+
+/* mouse over link */
+.navLink:hover {
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background-color: transparent;
+}
+.navLink:active  {
+  color: #fff;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+
+
+
+
+
 /* content page */
 
-.content {
-  margin-top: 31px;
-  margin-bottom: 0px;
-}
-.content h2 {
-  padding: 0;
-  margin: 0;
-}
-.content li {
-  margin-bottom: 10px;
-}
 
-.active {
-  color: #0099FF;
-}
 
-/* Homepage starts: */
-/* carousel*/
 
-.ant-carousel .slick-slide {
-  text-align: center;
-  height: 330px;
-  line-height: 160px;
-  background: #364d79;
-  overflow: hidden;
-  margin-top: 10px;
-  margin-bottom: 0px;
-}
-
-.ant-carousel .slick-slide img{
-  display: block;
-  width: 100%;
-  height: 330px;
-  margin: 0 auto;
-}
 
 /* NewsBlock*/
 .news-block{
@@ -112,18 +93,7 @@ logo{
   -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
   -o-transform:rotate(90deg);   /* Opera */
 }
-.link:link,
-.link:visited {
-    color: #a9a9a9;
-    text-decoration: none;
-}
 
-/* mouse over link */
-.link:hover,
-.link:active  {
-  color: #fff;
-  text-decoration: none;
-}
 
 
 .time{
@@ -344,8 +314,8 @@ button.small:hover {
   float: right;
   width: 70%;
   overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
 }
 

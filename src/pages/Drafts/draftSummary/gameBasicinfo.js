@@ -1,4 +1,15 @@
 import React  from 'react';
+const Style={
+  basicinfo:{
+    textAlign:'left',
+    listStyleType:"none",
+    lineHeight:'5rem',
+    fontSize:'130%',
+    paddingLeft:0,
+  },
+}
+
+
 class GameBasicInfo extends React.Component {
   constructor(props){
     super(props);
@@ -20,11 +31,11 @@ class GameBasicInfo extends React.Component {
       category = "无信息"
     }
     return (
-      <div>
-      <h3>剧本名称：{name}</h3>
-      <h3>剧本分类：{category}</h3>
-      <h3>创建日期：{this.props.date}</h3>
-      </div>
+      <ul style={Style.basicinfo}>
+        <li><b>剧本名称：</b>{name}</li>
+        <li><b>剧本分类：</b>{category}</li>
+        <li><b>创建日期：</b>{this.props.date}</li>
+      </ul>
     )
   }
 }

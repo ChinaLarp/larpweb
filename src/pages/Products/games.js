@@ -3,6 +3,23 @@ import { Pagination, Card, Col, Row, Layout, Spin } from 'antd';
 import { connect } from 'react-redux';
 import Gameitem from './gameitem.js'
 
+const Style={
+  content:{
+    margin: '3rem auto',
+    width: '90vw',
+    maxWidth:'1200px',
+    padding:'0 5rem',
+    textAlign:'center',
+    fontSize:'150%',
+  },
+  row:{
+    minHeight:'70rem',
+  },
+  pagination:{
+    margin:"3rem auto",
+    textAlign:'center',
+  }
+}
 class Products extends React.Component {
   constructor(props){
     super(props);
@@ -28,33 +45,26 @@ class Products extends React.Component {
         return null
       }
         return (
-        <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 8, offset: 0 }} key = {index} >
+        <Col  xs={24} lg={8} key = {index} >
           <Gameitem link={link} game={game} src={require("../../assets/pic/"+game.coverurl)}/>
         </Col>
         );
       });
     }
     return(
-      <Layout>
-        <Row style={{marginTop:40}} gutter={16} >
-          <Col  xs={{ span: 22, offset: 1 }} lg={{ span: 18, offset: 3 }}>
-            <Card  title={<b>全部剧本</b>}>
-              {!this.props.products.fetched && <div style={{textAlign: 'center'}}><Spin/></div>}
-              <Row gutter={32} style={{minHeight:700}} type="flex"  >
-                {this.props.products.fetched && gameList}
-              </Row>
-              <Pagination style={{paddingTop:40}}
-                total={this.props.products.products.length}
-                onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
-                onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
-                current={this.state.currentpage}
-                pageSize={this.state.pagesize}/>
-            </Card>
-          </Col>
-        </Row>
-      </Layout>
-
-
+        <Spin spinning={!this.props.products.fetched}>
+          <Card style={Style.content} title={<b>全部剧本</b>}>
+            <Row gutter={150} style={Style.row} type="flex" >
+              {this.props.products.fetched && gameList}
+            </Row>
+            <Pagination style={Style.pagination}
+              total={this.props.products.products.length}
+              onChange={(page,pagesize)=>{this.setState({currentpage:page})}}
+              onShowSizeChange={(page,pagesize)=>{this.setState({pagesize})}}
+              current={this.state.currentpage}
+              pageSize={this.state.pagesize}/>
+          </Card>
+        </Spin>
       )
  }
 }

@@ -7,6 +7,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import { Badge } from 'react-bootstrap';
 import GameBasicInfo from './gameBasicinfo.js'
 import PurchaseTrack from './purchaseTrack.js'
+
 class OpenidPanelBlock extends React.Component {
   constructor(props){
     super(props);
